@@ -10,7 +10,25 @@
  *  Created on: 11. jun. 2021
  *      Author: Marius Mainz
  */
+typedef struct vector_t {
+	int32_t x, y;
+} vector_t;
 
-void build_ship(){
+typedef struct ship {
+	vector_t position;
+} ship;
 
+void print_ship(vector_t *position){
+	gotoxy(position->x, position->y-2);
+	color(0,14);
+		printf(" \n");
+		printf("    \n");
+		printf("      \n");
+		printf("    \n");
+		printf(" \n");
+	gotoxy(position->x-1, position->y-1);
+		color(0,13);
+		printf(" ");
+		gotoxy(position->x-1, position->y+1);
+		printf(" ");
 }
