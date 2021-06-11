@@ -70,7 +70,7 @@ void clreol() {
 	printf("%c[1F%c[2K", ESC, ESC);
 }
 
-void gotoxy(uint8_t x, uint8_t y) {
+void gotoxy(uint16_t x, uint16_t y) {
 	printf("%c[%d;%dH", ESC, y, x); // line = y, column = x
 }
 

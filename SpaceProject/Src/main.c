@@ -4,8 +4,11 @@
 #include "GameController.h"
 
 
-int main(void)
-{
+int main(void) {
+
+	uart_init(921600);
+
+	mainMenu();
 
 	while(1){}
 }
