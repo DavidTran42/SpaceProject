@@ -66,6 +66,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
 	int gameloop = 1, hearts = 3, score = 0;
+	uint8_t r = rand() % borderHeight;
+	uint8_t type = rand() % 3;
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
 			sizeof(ship) / sizeof(ship[0]);
 	int asteroidListSize = sizeof(asteroid) / sizeof(asteroid);
@@ -76,16 +78,16 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
-	background();
+	// background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
 
 	// Draw the intial ships
 	if (gameMode == 2) {
-		print_ship2(ship[2]);
+		// print_ship2(ship[2]);
 	}
-	print_ship1(ship[0]);
+	// print_ship1(ship[0]);
 
 	// Add controls to ship
 	controls = addJoystick();
@@ -114,14 +116,17 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			print_ship1(ship[0]);
-			// printf("shipx: %d, shipy: %d",ship->x, ship->y);
+			// print_ship1(ship[0]);
+
+			printf("shipx: %d, shipy: %d",ship->x, ship->y);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		if (timer.min++ && timer.min % 30 == 0) {
-			makeAsteroid(&asteroid[0], borderWidth, borderHeight, asteroidListSize);
+		if (timer.sec++ && timer.sec % 30 == 0) {
+			makeAsteroid(&asteroid[0], borderWidth, borderHeight, asteroidListSize, type, r);
+			r = rand() % borderHeight;
+			type = rand() % 3;
 		}
 
 		// Update bullets and astroids
@@ -140,8 +145,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		}
 		for (int i = 0; i < asteroidListSize; i++) {
 			if (asteroid[i].pos.x != 0) {
-				gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
-				printf("O");
+				// gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
+				printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 				asteroid[i].pos.x -= 1;
 			}
 			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
@@ -255,9 +260,7 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
 
 // Given the size of the asteroid, make a random asteroid
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
-		uint16_t borderHeight, uint8_t aListSize) {
-	uint8_t r = rand() % borderHeight;
-	uint8_t type = rand() % 3;
+		uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r) {
 
 	if (type == 2) {
 		asteroidptr->size = 8;
