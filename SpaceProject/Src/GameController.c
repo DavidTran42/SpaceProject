@@ -207,9 +207,6 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship, int b
 	}
 }
 
-
-
-
 // Given the size of the asteroid, make a random asteroid
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight) {
 	uint8_t r = rand() % borderHeight;
