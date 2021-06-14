@@ -77,9 +77,9 @@ void print_ship2(vector_t *position) {
 	resetbgcolor();
 }
 
-void updateShipPos(vector_t *pos) {
+/*void updateShipPos(vector_t *pos) {
 
-}
+}*/
 
 void test() {
 	clrscr();
