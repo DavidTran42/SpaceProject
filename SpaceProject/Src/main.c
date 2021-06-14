@@ -10,7 +10,6 @@
 #define HELP 3;
 
 
-
 int main(void) {
 	uart_init(921600);
 	clrscr();
@@ -21,6 +20,11 @@ int main(void) {
 	//background();
 	//shiptest();
 	//bosskey();
+
+	uint16_t borderWidth = 270, borderHeight = 75;
+	initGame(borderWidth, borderHeight, 1);
+
+
 	//mainMenu();
 	while(1){}
 }
