@@ -77,14 +77,7 @@ void print_ship2(vector_t *position) {
 	resetbgcolor();
 }
 
-<<<<<<< HEAD
-=======
 /*void updateShipPos(vector_t *pos) {
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
-
-<<<<<<< HEAD
-=======
-}*/
 >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 
 void shiptest() {
