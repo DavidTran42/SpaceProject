@@ -143,7 +143,7 @@ void gameTitle() {
 
 	// main menu text
 
-	fgcolor(1);
+	fgcolor(13);
 	gotoxy(90, 21);
 	printf(" __       __            __");
 	gotoxy(90, 22);
