@@ -16,56 +16,56 @@
 
 
 
-void print_ship1(vector_t *position) {
+void print_ship1(struct vector position) {
 	printf("%c[?25l", ESC); //Hiding curser
-	gotoxy(position->x, position->y - 2);
+	gotoxy(position.x, position.y - 2);
 	color(1, 6);
 	printf(" ");
-	gotoxy(position->x, position->y - 1);
+	gotoxy(position.x, position.y - 1);
 	printf("   ");
-	gotoxy(position->x, position->y);
+	gotoxy(position.x, position.y);
 	printf("     ");
-	gotoxy(position->x, position->y + 1);
+	gotoxy(position.x, position.y + 1);
 	printf("   ");
-	gotoxy(position->x, position->y + 2);
+	gotoxy(position.x, position.y + 2);
 	printf(" ");
-	gotoxy(position->x - 1, position->y - 1);
+	gotoxy(position.x - 1, position.y - 1);
 	bgcolor(1);
 	printf(" ");
-	gotoxy(position->x - 1, position->y + 1);
+	gotoxy(position.x - 1, position.y + 1);
 	printf(" ");
-	gotoxy(position->x - 2, position->y + 1);
+	gotoxy(position.x - 2, position.y + 1);
 	color(1, 3);
 	printf("=");
-	gotoxy(position->x - 2, position->y - 1);
+	gotoxy(position.x - 2, position.y - 1);
 	printf("=");
 
 
 	resetbgcolor();
 }
 
-void print_ship2(vector_t *position) {
+void print_ship2(struct vector position) {
 	printf("%c[?25l", ESC); //Hiding curser
-	gotoxy(position->x, position->y - 2);
+	gotoxy(position.x, position.y - 2);
 	color(1, 2);
 	printf(" ");
-	gotoxy(position->x, position->y - 1);
+	gotoxy(position.x, position.y - 1);
 	printf("   ");
-	gotoxy(position->x, position->y);
+	gotoxy(position.x, position.y);
 	printf("     ");
-	gotoxy(position->x, position->y + 1);
+	gotoxy(position.x, position.y + 1);
 	printf("   ");
-	gotoxy(position->x, position->y + 2);
+	gotoxy(position.x, position.y + 2);
 	printf(" ");
-	gotoxy(position->x - 1, position->y - 1);
+	gotoxy(position.x - 1, position.y - 1);
 	bgcolor(1);
 	printf(" ");
-	gotoxy(position->x - 1, position->y + 1);
+	gotoxy(position.x - 1, position.y + 1);
 	printf(" ");
-	gotoxy(position->x - 2, position->y + 1);
+	gotoxy(position.x - 2, position.y + 1);
 	color(1, 3);
 	printf("=");
-	gotoxy(position->x - 2, position->y - 1);
+	gotoxy(position.x - 2, position.y - 1);
 	printf("=");
 
 

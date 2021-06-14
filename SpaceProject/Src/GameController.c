@@ -82,9 +82,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Draw the intial ships
 	if (gameMode == 2) {
-		print_ship2(&ship[2]);
+		print_ship2(ship[2]);
 	}
-	print_ship1(&ship[0]);
+	print_ship1(ship[0]);
 
 	// Add controls to ship
 	controls = addJoystick();
@@ -112,7 +112,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			print_ship1(&ship[0]);
+			print_ship1(ship[0]);
+			// printf("shipx: %d, shipy: %d",ship->x, ship->y);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
@@ -122,9 +123,11 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		}
 		for (int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
-				printf("i: %d", i);
+				/*printf("i: %d", i);
 				printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x,
-						bullet1[i].y);
+						bullet1[i].y);*/
+				gotoxy(bullet1[i].x,bullet1[i].y);
+				printf("o");
 				bullet1[i].x += 1;
 				if (bullet1[i].x == borderWidth) {
 					bullet1[i].x = 0, bullet1[i].y = 0;
@@ -335,36 +338,6 @@ void bosskey(char input) {
 
 	 NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
 	 NVIC_EnableIRQ(TIM2_IRQn);*/
-
-	char char1[] =
-			"//This following code is very important for this company, it will make us very rich and powerful!      ";
-
-	uint8_t j = 0;
-	uint8_t c = 0;
-	uint32_t t = 0;
-	uint8_t stop = 0;
-	while (1) {
-		if (!timer.sec++) {
-			t++;
-			if (t == 100) {
-				gotoxy(j + 6, 5 + c);
-				printf("%c", char1[j]);
-				j++;
-
-				if (j > 96) {
-					c++;
-					j = 0;
-					stop++;
-				}
-				t = 0;
-			}
-
-		}
-		if (stop == 60) {
-			break;
-		}
-	}
-
 }
 /*
  void life_score(uint8_t buffer[512]) {

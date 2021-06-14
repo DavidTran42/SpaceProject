@@ -9,12 +9,9 @@
 #define GAMECONTROLLER_H_
 
 #include <stdint.h>
+#include "spaceship.h"
 
 #endif /* GAMECONTROLLER_H_ */
-
-typedef struct vector {
-	uint16_t x, y;
-};
 
 typedef struct joystick {
 	uint16_t left, right, up, down, center;
