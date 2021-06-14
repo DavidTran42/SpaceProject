@@ -17,15 +17,18 @@ int main(void) {
 
 	//lcd_init();
 	//test();
-	//background();
+
 	//shiptest();
 	//bosskey();
 
-	uint16_t borderWidth = 270, borderHeight = 75;
+
+	//uint16_t borderWidth = 270, borderHeight = 75;
 	//initGame(borderWidth, borderHeight, 1);
 
+	uint16_t borderWidth = 270, borderHeight = 75;
+	initGame(borderWidth, borderHeight, 1);
 
-	mainMenu();
+	// mainMenu();
 	while(1){}
 
 

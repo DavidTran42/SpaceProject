@@ -5,19 +5,14 @@
 #include "charset.h"
 #include "30010_io.h"
 #include "ansi.h"
+#include "spaceship.h"
 /*
  * spacehip.c
  *
  *  Created on: 11. jun. 2021
  *      Author: Marius Mainz
  */
-typedef struct vector_t {
-	int32_t x, y;
-} vector_t;
 
-typedef struct ship {
-	vector_t position;
-} ship;
 
 
 
@@ -77,7 +72,11 @@ void print_ship2(vector_t *position) {
 	resetbgcolor();
 }
 
-/*void updateShipPos(vector_t *pos) {
+
+/*
+
+void updateShipPos(vector_t *pos) {
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 
 void shiptest() {
@@ -89,3 +88,4 @@ void shiptest() {
 	print_ship2(&ship2.position);
 
 }
+*/
