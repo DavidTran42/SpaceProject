@@ -4,7 +4,7 @@
 #include "30010_io.h"
 #include "ansi.h"
 #define ESC 0x1B
-
+#include "spaceship.h"
 
 
 //////////////////////// CLOCK & TIMER //////////////////////////
@@ -69,6 +69,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	clrscr(); // clear screen
 
+	background();
+
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
@@ -96,6 +98,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			input = uart_get_char();
 			uart_clear(); // Might need to put it outside the if statement
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
+
+			// print ship
+			// print_ship1(&ship[0]);
+
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
@@ -133,8 +139,6 @@ void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
 	if ((input == 's' || controls.down) &&  shipptr->y < borderHeight) {
 		(shipptr->y)++;
 	}
-	// testing ship position
-	printf("shipx: %d, shipy: %d\n",shipptr->x,shipptr->y);
 }
 
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight) {
@@ -208,7 +212,6 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship, int b
 		}
 	}
 }
-
 
 // Given the size of the asteroid, make a random asteroid
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight) {
