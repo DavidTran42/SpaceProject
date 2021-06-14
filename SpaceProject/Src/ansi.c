@@ -47,6 +47,8 @@ void bgcolor(uint8_t background) {
 	printf("%c[%dm", ESC, background + 40);
 }
 
+
+
 void color(uint8_t foreground, uint8_t background) {
 // combination of fgcolor() and bgcolor() - uses less bandwidth
 	uint8_t type = 22;             // normal text
@@ -97,3 +99,17 @@ void inverse(uint8_t on) {
 		printf("%c[7m", ESC);
 	}
 }
+void lcd_write_string(uint8_t buffer[512], char *slice, uint8_t line) {
+
+	uint8_t location = 0;
+
+	for (int i = 0; i < strlen(slice); i++) {
+		for (int j = 0; j < 5; j++) {
+			buffer[location + j + (line - 1) * 128] = character_data[slice[i] - 32][j];
+		}
+		location += 5;
+	}
+	lcd_push_buffer(buffer);
+}
+
+
