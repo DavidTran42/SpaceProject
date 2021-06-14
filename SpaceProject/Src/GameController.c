@@ -248,14 +248,14 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t b
 void bosskey() {
 	clrscr();
 
-	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	/*RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	enableTimer();
 	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
 	setPrescaler(0); // prescale value
 	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
 	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
-	NVIC_EnableIRQ(TIM2_IRQn);
+	NVIC_EnableIRQ(TIM2_IRQn);*/
 
 	for (int i = 1; i < 65; i++) {
 		gotoxy(2, i);
