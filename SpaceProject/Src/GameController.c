@@ -59,7 +59,7 @@ void setUpTimer() {
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	struct vector ship[4] = {0}; // More ships due to power ups
-	struct asteroid asteroid[16] = {0};
+	struct asteroid asteroid[10] = {0};
 	struct vector bullet1[20] = {0}; struct vector bullet2[20] = {0}; // More ships due to power ups
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
@@ -69,14 +69,19 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	clrscr(); // clear screen
 
-	// background();
-
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
+	background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
+
+	// Draw the intial ships
+	if (gameMode == 2) {
+		print_ship2(&ship[2]);
+	}
+	print_ship1(&ship[0]);
 
 	// Add controls to ship
 	controls = addJoystick();
@@ -104,8 +109,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			// print_ship1(&ship[0]);
-			printf("shipx: %d, shipy: %d \n",ship->x, ship->y);
+			print_ship1(&ship[0]);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
@@ -154,21 +158,16 @@ void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
 	}
 }
 
+// 6 wide and 5 height
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight) {
 	// Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
-		shipptr->x = 0, shipptr->y = borderHeight/3;
+		shipptr->x = 6, shipptr->y = (borderHeight+5)/3;
 		shipptr += 2;
-		shipptr->x = 0, shipptr->y = (borderHeight/3)*2;
-
-
-		// Draw the ship in the game window
-		// print_ship1(shipptr);
-		// print_ship2(shipptr);
+		shipptr->x = 6, shipptr->y = ((borderHeight+5)/3)*2;
 	} else { // Singleplayer
-		shipptr->x = 0, shipptr->y = borderHeight/2;
+		shipptr->x = 6, shipptr->y = (borderHeight+5)/2;
 		// Draw the ships in the game window
-		// print_ship1(shipptr);
 	}
 }
 
