@@ -57,10 +57,12 @@ void setUpTimer() {
 //////////////////////////////////////////////////////////////////
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
+
 	struct vector ship[4] = { 0 }; // More ships due to power ups
-	struct asteroid asteroid[16] = { 0 };
+	struct asteroid asteroid[10] = { 0 };
 	struct vector bullet1[20] = { 0 };
 	struct vector bullet2[20] = { 0 }; // More ships due to power ups
+
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
 	int gameloop = 1, hearts = 3, score = 0;
@@ -70,14 +72,19 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	clrscr(); // clear screen
 
-	background();
-
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
+	background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
+
+	// Draw the intial ships
+	if (gameMode == 2) {
+		print_ship2(&ship[2]);
+	}
+	print_ship1(&ship[0]);
 
 	// Add controls to ship
 	controls = addJoystick();
@@ -98,10 +105,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				|| controls.down || controls.up || controls.center) {
 			input = uart_get_char();
 			uart_clear(); // Might need to put it outside the if statement
+
+			// Check if boss key has been pressed
+			bosskey(input);
+
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			// print_ship1(&ship[0]);
+			print_ship1(&ship[0]);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
@@ -123,8 +134,16 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	}
 }
 
-void checkCollisionWithAsteroid() {
+int checkCollisionWithAsteroid(struct vector ship, struct asteroid *asteroid) {
+	if (asteroid->size == 2) {
 
+	} else if (asteroid->size == 1) {
+
+	} else if (asteroid->size == 0) {
+
+	} else {
+		return 0;
+	}
 }
 
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
@@ -144,20 +163,24 @@ void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
 	}
 }
 
+// 6 wide and 5 height
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
 	// Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
-		shipptr->x = 0, shipptr->y = borderHeight / 3;
+
+		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 3;
+
 		shipptr += 2;
-		shipptr->x = 0, shipptr->y = (borderHeight / 3) * 2;
 
 		// Draw the ship in the game window
 
+		shipptr->x = 6, shipptr->y = ((borderHeight + 5) / 3) * 2;
 	} else { // Singleplayer
-		shipptr->x = 0, shipptr->y = borderHeight / 2;
-		// Draw the ships in the game window
 
+		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 2;
+
+		// Draw the ships in the game window
 	}
 }
 
@@ -228,49 +251,90 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 		} else if (r > borderHeight - 3) {
 			r = borderHeight - 3;
 		}
-		asteroidptr->x = borderWidth + 3;
-		asteroidptr->y = borderHeight - 3;
+		asteroidptr->pos.x = borderWidth + 3;
+		asteroidptr->pos.y = borderHeight - 3;
 	} else if (size == 1) {
 		if (r < 2) { // Ensures that the asteroid will be spawned correctly
 			r = 2;
 		} else if (r > borderHeight - 2) {
 			r = borderHeight - 2;
 		}
-		asteroidptr->x = borderWidth + 2;
-		asteroidptr->y = borderHeight - 2;
+		asteroidptr->pos.x = borderWidth + 2;
+		asteroidptr->pos.y = borderHeight - 2;
 	} else {
 		if (r < 1) { // Ensures that the asteroid will be spawned correctly
 			r = 1;
 		} else if (r > borderHeight - 1) {
 			r = borderHeight - 1;
 		}
-		asteroidptr->x = borderWidth + 1;
-		asteroidptr->y = borderHeight - 1;
+		asteroidptr->pos.x = borderWidth + 1;
+		asteroidptr->pos.y = borderHeight - 1;
 	}
 }
 
-void bosskey() {
-	clrscr();
-
-	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
-	enableTimer();
-	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	setPrescaler(0); // prescale value
-	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
-
-	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
-	NVIC_EnableIRQ(TIM2_IRQn);
-
-	for (int i = 1; i < 65; i++) {
-		gotoxy(2, i);
-		printf("%02d ", i);
+void bosskey(char input) {
+	int pause = 0;
+	if (input == 'b') {
+		pause = 1;
 	}
-	gotoxy(6, 1);
-	printf("#include <stdio.h>");
-	gotoxy(6, 2);
-	printf("#include <stdlib.h>");
-	gotoxy(6, 3);
-	printf("#include \"not_a_bosskey.h\"");
+	if (pause) {
+		clrscr();
+		for (int i = 1; i < 65; i++) {
+			gotoxy(2, i);
+			printf("%02d ", i);
+		}
+		gotoxy(6, 1);
+		printf("#include <stdio.h>");
+		gotoxy(6, 2);
+		printf("#include <stdlib.h>");
+		gotoxy(6, 3);
+		printf("#include \"not_a_bosskey.h\"");
+
+		char char1[] =
+				"//This following code is very important for this company, it will make us very rich and powerful!      ";
+
+		uint8_t j = 0;
+		uint8_t c = 0;
+		uint32_t t = 0;
+		uint8_t stop = 0;
+		while (pause) {
+			if (!timer.sec++) {
+				t++;
+				if (t == 100) {
+					gotoxy(j + 6, 5 + c);
+					printf("%c", char1[j]);
+					j++;
+					if (j > 96) {
+						c++;
+						j = 0;
+						stop++;
+					}
+					t = 0;
+				}
+			}
+
+			if (stop == 60) {
+				break;
+			}
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				if (input == 'b') {
+					pause = 0;
+					clrscr();
+					break;
+				}
+			}
+		}
+	}
+
+	/*RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	 enableTimer();
+	 TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	 setPrescaler(0); // prescale value
+	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
+
+	 NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
+	 NVIC_EnableIRQ(TIM2_IRQn);*/
 
 	char char1[] =
 			"//This following code is very important for this company, it will make us very rich and powerful!      ";
@@ -300,60 +364,59 @@ void bosskey() {
 			break;
 		}
 	}
+
 }
 /*
-void life_score(uint8_t buffer[512]) {
-	uint32_t score = 0;
-	uint8_t life = 3;
-	char s_score[20] = "SCORE = ";
+ void life_score(uint8_t buffer[512]) {
+ uint32_t score = 0;
+ uint8_t life = 3;
+ char s_score[20] = "SCORE = ";
 
-	//life remaining
-	if (single_player) {
-		lcd_write_string(buffer, "SCORE: ", 3);
+ //life remaining
+ if (single_player) {
+ lcd_write_string(buffer, "SCORE: ", 3);
 
-		lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
+ lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
 
-		if (hit && life == 3) {
-			life--;
-			lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
-		} else if (hit && life == 2) {
-			life--;
-			lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
-		} else if (hit && life == 1) {
-			life--;
-			lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
-			lcd_update(buffer, 1);
-			blink(1);
+ if (hit && life == 3) {
+ life--;
+ lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
+ } else if (hit && life == 2) {
+ life--;
+ lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
+ } else if (hit && life == 1) {
+ life--;
+ lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
+ lcd_update(buffer, 1);
+ blink(1);
 
-			itoa(score, s_score, 10);
-			lcd_write_string(buffer, s_score, 3);
-		}
+ itoa(score, s_score, 10);
+ lcd_write_string(buffer, s_score, 3);
+ }
 
-		if (collision_asteroid_1) {
-			score += 100;
-			itoa(score, s_score, 10);
-			lcd_write_string(buffer, s_score, 4);
+ if (collision_asteroid_1) {
+ score += 100;
+ itoa(score, s_score, 10);
+ lcd_write_string(buffer, s_score, 4);
 
-		} else if (collision_asteroid_2) {
-			score += 500;
-			itoa(score, s_score, 10);
-			lcd_write_string(buffer, s_score, 4);
-		} else if (collision_asteroid_3) {
-			score += 1000;
-			itoa(score, s_score[8], 10);
-			lcd_write_string(buffer, s_score, 4);
-		}
-	}
+ } else if (collision_asteroid_2) {
+ score += 500;
+ itoa(score, s_score, 10);
+ lcd_write_string(buffer, s_score, 4);
+ } else if (collision_asteroid_3) {
+ score += 1000;
+ itoa(score, s_score[8], 10);
+ lcd_write_string(buffer, s_score, 4);
+ }
+ }
 
-	if (multiplayer){
+ if (multiplayer){
 
-	}
+ }
 
 
-
-	//score
-}
-*/
+ }
+ */
 
 void lcd_update(uint8_t buffer[512], uint8_t line) {
 
@@ -383,3 +446,4 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 		}
 	}
 }
+
