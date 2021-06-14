@@ -26,7 +26,7 @@ typedef struct clockTimer {
 
 typedef struct asteroid {
 	struct vector pos;
-	uint8_t x,y;
+	uint8_t size;
 };
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
@@ -37,3 +37,4 @@ void setUpTimer();
 void enableTimer();
 void disableTimer();
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight);
+void bosskey(char input);

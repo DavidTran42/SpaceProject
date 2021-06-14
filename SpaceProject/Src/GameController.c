@@ -69,7 +69,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	clrscr(); // clear screen
 
-	background();
+	// background();
 
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
@@ -97,10 +97,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				|| controls.up || controls.center) {
 			input = uart_get_char();
 			uart_clear(); // Might need to put it outside the if statement
+
+			// Check if boss key has been pressed
+			bosskey(input);
+
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
 			// print_ship1(&ship[0]);
+			printf("shipx: %d, shipy: %d \n",ship->x, ship->y);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
@@ -121,8 +126,16 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	}
 }
 
-void checkCollisionWithAsteroid() {
+int checkCollisionWithAsteroid(struct vector ship, struct asteroid *asteroid) {
+	if (asteroid->size == 2) {
 
+	} else if (asteroid->size == 1) {
+
+	} else if (asteroid->size == 0) {
+
+	} else {
+		return 0;
+	}
 }
 
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight) {
@@ -150,11 +163,12 @@ void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
 
 
 		// Draw the ship in the game window
-
+		// print_ship1(shipptr);
+		// print_ship2(shipptr);
 	} else { // Singleplayer
 		shipptr->x = 0, shipptr->y = borderHeight/2;
 		// Draw the ships in the game window
-
+		// print_ship1(shipptr);
 	}
 }
 
@@ -224,29 +238,82 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t b
 		} else if (r > borderHeight - 3) {
 			r = borderHeight - 3;
 		}
-		asteroidptr->x = borderWidth + 3;
-		asteroidptr->y = borderHeight - 3;
+		asteroidptr->pos.x = borderWidth + 3;
+		asteroidptr->pos.y = borderHeight - 3;
 	} else if (size == 1) {
 		if(r < 2) { // Ensures that the asteroid will be spawned correctly
 			r = 2;
 		} else if (r > borderHeight - 2) {
 			r = borderHeight - 2;
 		}
-		asteroidptr->x = borderWidth + 2;
-		asteroidptr->y = borderHeight - 2;
+		asteroidptr->pos.x = borderWidth + 2;
+		asteroidptr->pos.y = borderHeight - 2;
 	} else {
 		if(r < 1) { // Ensures that the asteroid will be spawned correctly
 			r = 1;
 		} else if (r > borderHeight - 1) {
 			r = borderHeight - 1;
 		}
-		asteroidptr->x = borderWidth + 1;
-		asteroidptr->y = borderHeight - 1;
+		asteroidptr->pos.x = borderWidth + 1;
+		asteroidptr->pos.y = borderHeight - 1;
 	}
 }
 
-void bosskey() {
-	clrscr();
+void bosskey(char input) {
+	int pause = 0;
+	if (input == 'b') {
+		pause = 1;
+	}
+	if (pause) {
+		clrscr();
+		for (int i = 1; i < 65; i++) {
+			gotoxy(2, i);
+			printf("%02d ", i);
+		}
+		gotoxy(6, 1);
+		printf("#include <stdio.h>");
+	    gotoxy(6, 2);
+		printf("#include <stdlib.h>");
+		gotoxy(6, 3);
+		printf("#include \"not_a_bosskey.h\"");
+
+		char char1[] =
+			"//This following code is very important for this company, it will make us very rich and powerful!      ";
+
+		uint8_t j = 0;
+		uint8_t c = 0;
+		uint32_t t = 0;
+		uint8_t stop = 0;
+		while (pause) {
+			if (!timer.sec++) {
+				t++;
+				if (t == 100) {
+					gotoxy(j + 6, 5 + c);
+					printf("%c", char1[j]);
+					j++;
+					if (j > 96) {
+						c++;
+						j = 0;
+						stop++;
+					}
+					t = 0;
+				}
+			}
+
+			if (stop == 60) {
+				break;
+			}
+			if(uart_get_count() > 0) {
+				input = uart_get_char();
+				if (input == 'b') {
+					pause = 0;
+					clrscr();
+				    break;
+			    }
+			}
+		}
+	}
+
 
 	/*RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	enableTimer();
@@ -257,46 +324,7 @@ void bosskey() {
 	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
 	NVIC_EnableIRQ(TIM2_IRQn);*/
 
-	for (int i = 1; i < 65; i++) {
-		gotoxy(2, i);
-		printf("%02d ", i);
-	}
-	gotoxy(6, 1);
-	printf("#include <stdio.h>");
-	gotoxy(6, 2);
-	printf("#include <stdlib.h>");
-	gotoxy(6, 3);
-	printf("#include \"not_a_bosskey.h\"");
 
-	int8_t count = 0;
-	char char1[] =
-			"//This following code is very important for this company, it will make us very rich and powerful!      ";
-
-	uint8_t j = 0;
-	uint8_t c = 0;
-	uint32_t t = 0;
-	uint8_t stop = 0;
-	while (1) {
-		if (!timer.sec++) {
-			t++;
-			if (t == 800) {
-				gotoxy(j + 6, 5 + c);
-				printf("%c", char1[j]);
-				j++;
-
-				if (j > 96) {
-					c++;
-					j = 0;
-					stop++;
-				}
-				t = 0;
-			}
-
-		}
-		if (stop == 60) {
-			break;
-		}
-	}
 }
 /*
 void life_score(uint8_t buffer[512]){
