@@ -78,16 +78,16 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
-	// background();
+	background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
 
 	// Draw the intial ships
 	if (gameMode == 2) {
-		// print_ship2(ship[2]);
+		print_ship2(ship[2]);
 	}
-	// print_ship1(ship[0]);
+	print_ship1(ship[0]);
 
 	// Add controls to ship
 	controls = addJoystick();
@@ -116,14 +116,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			// print_ship1(ship[0]);
+			print_ship1(ship[0]);
 
-			printf("shipx: %d, shipy: %d",ship->x, ship->y);
+			// printf("shipx: %d, shipy: %d",ship->x, ship->y);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		if (timer.sec++ && timer.sec % 30 == 0) {
+		if (timer.sec++) {
+			// printf("%d",timer.sec);
 			makeAsteroid(&asteroid[0], borderWidth, borderHeight, asteroidListSize, type, r);
 			r = rand() % borderHeight;
 			type = rand() % 3;
@@ -144,14 +145,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 		}
 		for (int i = 0; i < asteroidListSize; i++) {
-			if (asteroid[i].pos.x != 0) {
-				// gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
-				printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+			if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
+				gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
+				printf("o");
 				asteroid[i].pos.x -= 1;
 			}
 			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
 				asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
 			}
+			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 		}
 	}
 }
@@ -254,6 +256,7 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
 				bulletptr->y = ship->y;
 				break;
 			}
+			bulletptr++;
 		}
 	}
 }
@@ -290,6 +293,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 			asteroidptr->pos.y = r;
 			break;
 		}
+		asteroidptr++;
 	}
 }
 

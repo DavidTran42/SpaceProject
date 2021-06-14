@@ -16,7 +16,7 @@
 
 
 int main(void) {
-	uart_init(921600);
+	uart_init(96000);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
