@@ -24,6 +24,11 @@ typedef struct clockTimer {
 	volatile int8_t hour, min, sec, sec100;
 };
 
+typedef struct asteroid {
+	struct vector pos;
+	uint8_t x,y;
+};
+
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight);
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
@@ -31,4 +36,4 @@ struct joystick addJoystick();
 void setUpTimer();
 void enableTimer();
 void disableTimer();
-void makeAsteroid(uint8_t size, uint16_t borderWidth, uint16_t borderHeight);
+void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight);

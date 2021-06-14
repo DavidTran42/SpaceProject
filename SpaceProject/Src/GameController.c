@@ -58,7 +58,7 @@ void setUpTimer() {
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	struct vector ship[4] = {0}; // More ships due to power ups
-	struct vector asteroid[16] = {0};
+	struct asteroid asteroid[16] = {0};
 	struct vector bullet1[20] = {0}; struct vector bullet2[20] = {0}; // More ships due to power ups
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
@@ -99,7 +99,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		}
 
 		if (timer.sec++ && timer.sec % 30 == 0) {
-			makeAsteroid;
+			makeAsteroid(&asteroid[0], borderWidth, borderHeight);
 		}
 		for(int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
@@ -211,14 +211,33 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship, int b
 
 
 // Given the size of the asteroid, make a random asteroid
-void makeAsteroid(uint8_t size, uint16_t borderWidth, uint16_t borderHeight) {
+void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight) {
 	uint8_t r = rand() % borderHeight;
+	uint8_t size = rand() % 3;
 
-	if (size == 3) {
-
-	} else if (size == 2) {
-
+	if (size == 2) {
+		if(r < 3) { // Ensures that the asteroid will be spawned correctly
+			r = 3;
+		} else if (r > borderHeight - 3) {
+			r = borderHeight - 3;
+		}
+		asteroidptr->x = borderWidth + 3;
+		asteroidptr->y = borderHeight - 3;
+	} else if (size == 1) {
+		if(r < 2) { // Ensures that the asteroid will be spawned correctly
+			r = 2;
+		} else if (r > borderHeight - 2) {
+			r = borderHeight - 2;
+		}
+		asteroidptr->x = borderWidth + 2;
+		asteroidptr->y = borderHeight - 2;
 	} else {
-
+		if(r < 1) { // Ensures that the asteroid will be spawned correctly
+			r = 1;
+		} else if (r > borderHeight - 1) {
+			r = borderHeight - 1;
+		}
+		asteroidptr->x = borderWidth + 1;
+		asteroidptr->y = borderHeight - 1;
 	}
 }
