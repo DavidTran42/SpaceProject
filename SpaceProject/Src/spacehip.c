@@ -77,16 +77,13 @@ void print_ship2(vector_t *position) {
 	resetbgcolor();
 }
 
-void updateShipPos(vector_t *pos) {
 
-}
 
-void test() {
-	clrscr();
+void shiptest() {
 	struct ship ship1;
 	struct ship ship2;
-	ship1.position.x = 5, ship1.position.y = 5;
-	ship2.position.x = 8, ship2.position.y = 12;
+	ship1.position.x = 5, ship1.position.y = 20;
+	ship2.position.x = 5, ship2.position.y = 35;
 	print_ship1(&ship1.position);
 	print_ship2(&ship2.position);
 
