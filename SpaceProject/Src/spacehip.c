@@ -78,6 +78,12 @@ void print_ship2(vector_t *position) {
 }
 
 
+/*
+
+void updateShipPos(vector_t *pos) {
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+
 void shiptest() {
 	struct ship ship1;
 	struct ship ship2;
@@ -87,3 +93,4 @@ void shiptest() {
 	print_ship2(&ship2.position);
 
 }
+*/
