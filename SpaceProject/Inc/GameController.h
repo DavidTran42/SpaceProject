@@ -33,5 +33,5 @@ struct joystick addJoystick();
 void setUpTimer();
 void enableTimer();
 void disableTimer();
-void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight);
+void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize);
 void bosskey(char input);

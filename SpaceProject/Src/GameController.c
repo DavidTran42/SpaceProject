@@ -68,6 +68,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	int gameloop = 1, hearts = 3, score = 0;
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
 			sizeof(ship) / sizeof(ship[0]);
+	int asteroidListSize = sizeof(asteroid) / sizeof(asteroid);
 	char input;
 
 	clrscr(); // clear screen
@@ -109,6 +110,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			// Check if boss key has been pressed
 			bosskey(input);
 
+			// Update ships from key press or joystick input
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
@@ -118,20 +120,32 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		if (timer.sec++ && timer.sec % 30 == 0) {
-			makeAsteroid(&asteroid[0], borderWidth, borderHeight);
+		if (timer.min++ && timer.min % 30 == 0) {
+			makeAsteroid(&asteroid[0], borderWidth, borderHeight, asteroidListSize);
 		}
+
+		// Update bullets and astroids
 		for (int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
 				/*printf("i: %d", i);
 				printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x,
 						bullet1[i].y);*/
 				gotoxy(bullet1[i].x,bullet1[i].y);
-				printf("o");
+				printf("-");
 				bullet1[i].x += 1;
 				if (bullet1[i].x == borderWidth) {
 					bullet1[i].x = 0, bullet1[i].y = 0;
 				}
+			}
+		}
+		for (int i = 0; i < asteroidListSize; i++) {
+			if (asteroid[i].pos.x != 0) {
+				gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
+				printf("O");
+				asteroid[i].pos.x -= 1;
+			}
+			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
+				asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
 			}
 		}
 	}
@@ -176,14 +190,11 @@ void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
 
 		shipptr += 2;
 
-		// Draw the ship in the game window
-
 		shipptr->x = 6, shipptr->y = ((borderHeight + 5) / 3) * 2;
 	} else { // Singleplayer
 
 		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 2;
 
-		// Draw the ships in the game window
 	}
 }
 
@@ -234,7 +245,7 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
 		// Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++) {
 			if (bulletptr->x == 0 && bulletptr->y == 0) {
-				bulletptr->x = ship->x + 1;
+				bulletptr->x = ship->x + 5;
 				bulletptr->y = ship->y;
 				break;
 			}
@@ -244,34 +255,38 @@ void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
 
 // Given the size of the asteroid, make a random asteroid
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
-		uint16_t borderHeight) {
+		uint16_t borderHeight, uint8_t aListSize) {
 	uint8_t r = rand() % borderHeight;
-	uint8_t size = rand() % 3;
+	uint8_t type = rand() % 3;
 
-	if (size == 2) {
+	if (type == 2) {
+		asteroidptr->size = 8;
+		if (r < 11) { // Ensures that the asteroid will be spawned correctly in y-axis
+			r = 11;
+		} else if (r > borderHeight - 11) {
+			r = borderHeight - 11;
+		}
+	} else if (type == 1) {
+		asteroidptr->size = 4;
+		if (r < 7) { // Ensures that the asteroid will be spawned correctly
+			r = 7;
+		} else if (r > borderHeight - 7) {
+			r = borderHeight - 7;
+		}
+	} else {
+		asteroidptr->size = 2;
 		if (r < 3) { // Ensures that the asteroid will be spawned correctly
 			r = 3;
 		} else if (r > borderHeight - 3) {
 			r = borderHeight - 3;
 		}
-		asteroidptr->pos.x = borderWidth + 3;
-		asteroidptr->pos.y = borderHeight - 3;
-	} else if (size == 1) {
-		if (r < 2) { // Ensures that the asteroid will be spawned correctly
-			r = 2;
-		} else if (r > borderHeight - 2) {
-			r = borderHeight - 2;
+	}
+	for (int i = 0; i < aListSize; i++) {
+		if (asteroidptr->pos.x == 0 && asteroidptr->pos.y == 0) {
+			asteroidptr->pos.x = borderWidth + asteroidptr->size;
+			asteroidptr->pos.y = r;
+			break;
 		}
-		asteroidptr->pos.x = borderWidth + 2;
-		asteroidptr->pos.y = borderHeight - 2;
-	} else {
-		if (r < 1) { // Ensures that the asteroid will be spawned correctly
-			r = 1;
-		} else if (r > borderHeight - 1) {
-			r = borderHeight - 1;
-		}
-		asteroidptr->pos.x = borderWidth + 1;
-		asteroidptr->pos.y = borderHeight - 1;
 	}
 }
 
