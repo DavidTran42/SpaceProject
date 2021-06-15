@@ -17,6 +17,9 @@
 void newbgcolor(uint8_t background) {
 	printf("\033[48;5;%dm", background);
 }
+void newfgcolor(uint8_t forground) {
+	printf("\033[38;5;%dm", forground);
+}
 
 void background() {
 
@@ -415,148 +418,706 @@ void background() {
 	resetbgcolor();
 }
 void small_asteroid(struct asteroid *asteroid1) {
-	newbgcolor(252);
+	newfgcolor(252);
 	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y - 1);
-	printf("   ");
+	printf("%c%c%c", 219, 219, 219);
 	gotoxy(asteroid1->pos.x - 2, asteroid1->pos.y);
-	printf("     ");
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y + 1);
-	printf("   ");
+	printf("%c%c%c", 219, 219, 219);
 
-	newbgcolor(240);
+	newfgcolor(240);
 	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid1->pos.x, asteroid1->pos.y - 1);
-	printf(" ");
+	printf("%c", 219);
 
-	newbgcolor(247);
+	newfgcolor(247);
 	gotoxy(asteroid1->pos.x + 1, asteroid1->pos.y - 1);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid1->pos.x - 2, asteroid1->pos.y);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid1->pos.x, asteroid1->pos.y + 1);
-	printf(" ");
+	printf("%c", 219);
+
+}
+void clear_small_asteroid(struct asteroid *asteroid1) {
+	newfgcolor(0);
+	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y - 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(asteroid1->pos.x - 2, asteroid1->pos.y);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y + 1);
+	printf("%c%c%c", 219, 219, 219);
 
 	resetbgcolor();
 }
 
 void medium_asteroid(struct asteroid *asteroid2) {
-	newbgcolor(240);
+	newfgcolor(240);
 	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y - 3);
-	printf("     ");
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 
-	newbgcolor(247);
+	newfgcolor(247);
 	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y - 2);
-	printf("       ");
-	newbgcolor(252);
+	printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	newfgcolor(252);
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y - 1);
-	printf("         ");
+	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y);
-	printf("         ");
+	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y + 1);
-	printf("         ");
+	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
 
 	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y + 2);
-	printf("       ");
-	newbgcolor(247);
+	printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	newfgcolor(247);
 	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 3);
-	printf("     ");
-	newbgcolor(240);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	newfgcolor(240);
 	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y - 2);
-	printf("  ");
-	newbgcolor(247);
+	printf("%c%c", 219, 219);
+	newfgcolor(247);
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y - 1);
-	printf(" ");
+	printf("%c", 219);
 
-	newbgcolor(8);
+	newfgcolor(8);
 	gotoxy(asteroid2->pos.x + 1, asteroid2->pos.y);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid2->pos.x + 2, asteroid2->pos.y + 1);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 2);
-	printf("  ");
+	printf("%c%c", 219, 219);
 
-	newbgcolor(240);
+	newfgcolor(240);
 	gotoxy(asteroid2->pos.x + 1, asteroid2->pos.y);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid2->pos.x + 2, asteroid2->pos.y + 1);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 2);
-	printf("  ");
+	printf("%c%c", 219, 219);
 
-	newbgcolor(247);
+	newfgcolor(247);
 	gotoxy(asteroid2->pos.x + 3, asteroid2->pos.y - 2);
-	printf(" ");
-	newbgcolor(250);
+	printf("%c", 219);
+	newfgcolor(250);
 	gotoxy(asteroid2->pos.x + 3, asteroid2->pos.y - 1);
-	printf("  ");
+	printf("%c%c", 219, 219);
 
-	resetbgcolor();
+}
+void clear_medium_asteroid(struct asteroid *asteroid2) {
+	newfgcolor(0);
+	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y - 3);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y - 2);
+	printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y - 1);
+	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y);
+	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y + 1);
+	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y + 2);
+	printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 3);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 }
 
 void large_asteroid(struct asteroid *asteroid3) {
-	newbgcolor(240);
+	newfgcolor(240);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 5);
-	printf("     ");
-	newbgcolor(247);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	newfgcolor(247);
 	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y - 4);
-	printf("           ");
-	newbgcolor(252);
+	printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219);
+	newfgcolor(252);
 	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y - 3);
-	printf("             ");
-	newbgcolor(250);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219);
+	newfgcolor(250);
 	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y - 2);
-	printf("               ");
-	newbgcolor(252);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219);
+	newfgcolor(252);
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y - 1);
-	printf("                 ");
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y);
-	printf("                 ");
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y + 1);
-	printf("                 ");
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
 	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y + 2);
-	printf("               ");
-	newbgcolor(250);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219);
+	newfgcolor(250);
 	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y + 3);
-	printf("             ");
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219);
 	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y + 4);
-	printf("           ");
-	newbgcolor(247);
+	printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219);
+	newfgcolor(247);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y + 5);
-	printf("     ");
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 
-	newbgcolor(8);
+	newfgcolor(8);
 	gotoxy(asteroid3->pos.x - 4, asteroid3->pos.y + 1);
-	printf("  ");
+	printf("%c%c", 219, 219);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y + 2);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid3->pos.x, asteroid3->pos.y + 4);
-	printf("  ");
+	printf("%c%c", 219, 219);
 	gotoxy(asteroid3->pos.x + 2, asteroid3->pos.y + 4);
-	printf(" ");
+	printf("%c", 219);
 
-	newbgcolor(248);
+	newfgcolor(248);
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y - 1);
-	printf("   ");
+	printf("%c%c%c", 219, 219, 219);
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y + 1);
-	printf(" ");
+	printf("%c", 219);
 
 	gotoxy(asteroid3->pos.x - 1, asteroid3->pos.y - 1);
-	printf("  ");
+	printf("%c%c", 219, 219);
 	gotoxy(asteroid3->pos.x + 1, asteroid3->pos.y);
-	printf(" ");
+	printf("%c", 219);
 	gotoxy(asteroid3->pos.x + 1, asteroid3->pos.y + 1);
-	printf(" ");
+	printf("%c", 219);
 
-	newbgcolor(250);
+	newfgcolor(250);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 3);
-	printf("  ");
+	printf("%c%c", 219, 219);
 	gotoxy(asteroid3->pos.x + 1, asteroid3->pos.y - 4);
-	printf("   ");
-
-	resetbgcolor();
+	printf("%c%c%c", 219, 219, 219);
 
 }
 
+void clear_large_asteroid(struct asteroid *asteroid3) {
+	newfgcolor(0);
+	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 5);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+
+	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y - 4);
+	printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219);
+	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y - 3);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219);
+	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y - 2);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y - 1);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y + 1);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y + 2);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219, 219, 219, 219);
+
+	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y + 3);
+	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219, 219, 219);
+	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y + 4);
+	printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
+			219, 219, 219);
+	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y + 5);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+}
+
+void game_background() {
+//atmosphere
+	gotoxy(0, 68);
+	newbgcolor(17);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	gotoxy(0, 69);
+	newbgcolor(18);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	gotoxy(0, 70);
+	newbgcolor(19);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	gotoxy(0, 71);
+	newbgcolor(20);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	gotoxy(0, 72);
+	newbgcolor(21);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+
+//Planet
+	gotoxy(0, 73);
+	newbgcolor(15);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	gotoxy(0, 74);
+	newbgcolor(195);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	gotoxy(0, 75);
+	newbgcolor(159);
+	for (int i = 0; i < 269; i++) {
+		printf(" ");
+	}
+	resetbgcolor();
+}
+
+void stars_only() {
+	fgcolor(15);
+	for (int i = 1; i < 5; i++) {
+		gotoxy(54 * i, 2);
+		printf("*");
+	}
+	for (int i = 1; i < 8; i++) {
+		gotoxy(33 * i, 10);
+		printf("*");
+	}
+	for (int i = 1; i < 4; i++) {
+		gotoxy(67 * i, 15);
+		printf("*");
+	}
+	for (int i = 1; i < 9; i++) {
+		gotoxy(30 * i, 21);
+		printf("*");
+	}
+	for (int i = 1; i < 6; i++) {
+		gotoxy(45 * i, 29);
+		printf("*");
+	}
+	for (int i = 1; i < 12; i++) {
+		gotoxy(22 * i, 37);
+		printf("*");
+	}
+	for (int i = 1; i < 5; i++) {
+		gotoxy(54 * i, 44);
+		printf("*");
+	}
+	for (int i = 1; i < 7; i++) {
+		gotoxy(38 * i, 52);
+		printf("*");
+	}
+	for (int i = 1; i < 8; i++) {
+		gotoxy(33 * i, 60);
+		printf("*");
+	}
+
+}
+
+void update_pixels(struct vector *p) {
+	if (p->y == 65) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(17);
+		printf(" ");
+
+	} else if (p->y == 66) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(18);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+
+	} else if (p->y == 67) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(19);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(17);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+
+	} else if (p->y == 68) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(20);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(18);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(17);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+
+	} else if (p->y == 69) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(21);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(19);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(18);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+
+	} else if (p->y == 70) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(15);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(20);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(19);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+		newbgcolor(17);
+		gotoxy(p->x - 6, p->y - 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y - 2);
+		printf("  ");
+
+	} else if (p->y == 71) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(195);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(21);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(20);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+		newbgcolor(18);
+		gotoxy(p->x - 6, p->y - 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y - 2);
+		printf("  ");
+		newbgcolor(17);
+		gotoxy(p->x - 4, p->y - 3);
+		printf(" ");
+
+	} else if (p->y == 72) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(159);
+		printf(" ");
+		newbgcolor(195);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(15);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(21);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+		newbgcolor(19);
+		gotoxy(p->x - 6, p->y - 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y - 2);
+		printf("  ");
+		newbgcolor(18);
+		gotoxy(p->x - 4, p->y - 3);
+		printf(" ");
+
+	} else if (p->y == 73) {
+		gotoxy(p->x - 4, p->y + 3);
+		newbgcolor(159);
+		gotoxy(p->x - 6, p->y + 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(195);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(15);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+		newbgcolor(20);
+		gotoxy(p->x - 6, p->y - 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y - 2);
+		printf("  ");
+		newbgcolor(19);
+		gotoxy(p->x - 4, p->y - 3);
+		printf(" ");
+
+	} else if (p->y == 74) {
+
+		gotoxy(p->x - 3, p->y + 2);
+		printf("  ");
+		newbgcolor(159);
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(195);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+		newbgcolor(21);
+		gotoxy(p->x - 6, p->y - 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y - 2);
+		printf("  ");
+		newbgcolor(20);
+		gotoxy(p->x - 4, p->y - 3);
+		printf(" ");
+	} else if (p->y == 75) {
+
+		gotoxy(p->x - 7, p->y + 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y + 1);
+		printf("  ");
+		newbgcolor(159);
+		gotoxy(p->x - 6, p->y);
+		printf("  ");
+		gotoxy(p->x + 1, p->y);
+		printf(" ");
+		newbgcolor(195);
+		gotoxy(p->x - 7, p->y - 1);
+		printf(" ");
+		gotoxy(p->x - 1, p->y - 1);
+		printf("  ");
+		newbgcolor(15);
+		gotoxy(p->x - 6, p->y - 2);
+		printf("  ");
+		gotoxy(p->x - 3, p->y - 2);
+		printf("  ");
+		newbgcolor(21);
+		gotoxy(p->x - 4, p->y - 3);
+		printf(" ");
+	}
+
+	resetbgcolor();
+}
+
+void update_bullet(struct vector bullet) {
+	if (bullet.y == 68) {
+		newbgcolor(17);
+	} else if (bullet.y == 69) {
+		newbgcolor(18);
+	} else if (bullet.y == 70) {
+		newbgcolor(19);
+	} else if (bullet.y == 71) {
+		newbgcolor(20);
+	} else if (bullet.y == 72) {
+		newbgcolor(21);
+	} else if (bullet.y == 73) {
+		newbgcolor(15);
+	} else if (bullet.y == 74) {
+		newbgcolor(195);
+	} else if (bullet.y == 75) {
+		newbgcolor(159);
+	} else {
+		newbgcolor(0);
+	}
+}
+
+/*
+ void update_pix(struct pixel data[7], struct vector *p) {
+
+ gotoxy(p->x - 7, p->y);
+ newbgcolor(data[p->x - 7][p->y].bg);
+ printf(" ");
+
+ gotoxy(p->x - 6, p->y);
+ newbgcolor(data[p->x - 6][p->y].bg);
+ printf(" ");
+ gotoxy(p->x - 5, p->y);
+ newbgcolor(data[p->x - 5][p->y].bg);
+ printf(" ");
+ gotoxy(p->x + 1, p->y);
+ newbgcolor(data[p->x + 1][p->y].bg);
+ printf(" ");
+ gotoxy(p->x - 7, p->y - 1);
+ newbgcolor(data[p->x - 7][p->y - 1].bg);
+ printf(" ");
+ gotoxy(p->x - 1, p->y - 1);
+ newbgcolor(data[p->x - 1][p->y - 1].bg);
+ printf(" ");
+ gotoxy(p->x, p->y - 1);
+ newbgcolor(data[p->x][p->y - 1].bg);
+ printf(" ");
+ gotoxy(p->x - 6, p->y - 2);
+ newbgcolor(data[p->x - 6][p->y - 2].bg);
+ printf(" ");
+ gotoxy(p->x - 5, p->y - 2);
+ newbgcolor(data[p->x - 5][p->y - 2].bg);
+ printf(" ");
+ gotoxy(p->x - 3, p->y - 2);
+ newbgcolor(data[p->x - 3][p->y - 2].bg);
+ printf(" ");
+ gotoxy(p->x - 2, p->y - 2);
+ newbgcolor(data[p->x - 2][p->y - 2].bg);
+ printf(" ");
+ gotoxy(p->x - 4, p->y - 3);
+ newbgcolor(data[p->x - 4][p->y - 3].bg);
+ printf(" ");
+
+ gotoxy(p->x - 7, p->y + 1);
+ newbgcolor(data[p->x - 7][p->y + 1].bg);
+ printf(" ");
+ gotoxy(p->x - 1, p->y + 1);
+ newbgcolor(data[p->x - 1][p->y + 1].bg);
+ printf(" ");
+ gotoxy(p->x, p->y + 1);
+ newbgcolor(data[p->x][p->y + 1].bg);
+ printf(" ");
+ gotoxy(p->x - 6, p->y + 2);
+ newbgcolor(data[p->x - 6][p->y + 2].bg);
+ printf(" ");
+ gotoxy(p->x - 5, p->y + 2);
+ newbgcolor(data[p->x - 5][p->y + 2].bg);
+ printf(" ");
+ gotoxy(p->x - 3, p->y + 2);
+ newbgcolor(data[p->x - 3][p->y + 2].bg);
+ printf(" ");
+ gotoxy(p->x - 2, p->y + 2);
+ newbgcolor(data[p->x - 2][p->y + 2].bg);
+ printf(" ");
+ gotoxy(p->x - 4, p->y + 3);
+ newbgcolor(data[p->x - 4][p->y + 3].bg);
+ printf(" ");
+
+ }
+
+ /*
+ void check_background(struct vector *p){
+ //atmosphere
+ if (p->y == 66){
+ gotoxy(p->x-4,p->y+2);
+ newbgcolor(17);
+ printf(" ");
+ }
+ else if (p->y == 67){
+
+ }
+ gotoxy(0, 69);
+ newbgcolor(18);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+ gotoxy(0, 70);
+ newbgcolor(19);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+ gotoxy(0, 71);
+ newbgcolor(20);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+ gotoxy(0, 72);
+ newbgcolor(21);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+
+ //Planet
+ gotoxy(0, 73);
+ newbgcolor(15);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+ gotoxy(0, 74);
+ newbgcolor(195);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+ gotoxy(0, 75);
+ newbgcolor(159);
+ for (int i = 0; i < 269; i++) {
+ printf(" ");
+ }
+ }
+ }
+ */
