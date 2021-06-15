@@ -17,7 +17,7 @@
 
 
 int main(void) {
-	uart_init(921600);
+	uart_init(960000);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
@@ -30,14 +30,14 @@ int main(void) {
 	//uint16_t borderWidth = 270, borderHeight = 75;
 	//initGame(borderWidth, borderHeight, 1);
 
-	//uint16_t borderWidth = 270, borderHeight = 75;
-	//initGame(borderWidth, borderHeight, 1);
+	uint16_t borderWidth = 270, borderHeight = 75;
+	initGame(borderWidth, borderHeight, 1);
 
 
 	//mainMenu();
 
 
-background();
+/*background();
 	struct asteroid asteroid1;			//Test asteroids
 	asteroid1.pos.x = 20;
 	asteroid1.pos.y = 20;
@@ -53,7 +53,7 @@ background();
 	small_asteroid(&asteroid1);
 	medium_asteroid(&asteroid2);
 	large_asteroid(&asteroid3);
-
+*/
 
 
 	//lcd_update(buffer, 1);

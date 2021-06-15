@@ -125,20 +125,21 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		if (timer.sec++) {
-			// printf("%d",timer.sec);
+		if (timer.min % 2 == 0) {
+			printf("%d\n",timer.hour);
 			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
 					asteroidListSize, type, r);
 			r = rand() % borderHeight;
 			type = rand() % 3;
+			// printf("%d", type);
 		}
 
 		// Update bullets and astroids
 		for (int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
-				printf("i: %d", i);
-				printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x,
-						bullet1[i].y);
+				// printf("i: %d", i);
+				/* printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x,
+						bullet1[i].y); */
 				gotoxy(bullet1[i].x, bullet1[i].y);
 				printf("-");
 				bullet1[i].x += 1;
@@ -152,13 +153,27 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			if (asteroid[i].pos.y != 0
 					&& asteroid[i].pos.x > 0 - asteroid[i].size) {
 				gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
-				printf("o");
 
+				// printf("%d",asteroid[i].size);
+				// Draw asteroid
+				if (asteroid[i].size == 2) {
+					// small_asteroid(asteroid[i]);
+					printf("%d",asteroid[i].size);
+				} else if (asteroid[i].size == 4) {
+					// medium_asteroid(asteroid[i]);
+					printf("%d",asteroid[i].size);
+				} else {
+					// large_asteroid(asteroid[i]);
+					printf("%d",asteroid[i].size);
+				}
+
+				// Go left by 1
 				asteroid[i].pos.x -= 1;
 			}
 			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
 				asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
 			}
+
 			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 		}
 	}
@@ -168,11 +183,26 @@ int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 	// 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
 	if (ship.x >= asteroid.pos.x - 11 && ship.y >= asteroid.pos.y - 8
 			&& ship.x <= asteroid.pos.x + 11 && ship.y <= asteroid.pos.y + 8) {
-		if (asteroid.size == 2) {
+		if (asteroid.size == 8) {
 			// Split the asteroid up to three squares
-
-			return 3;
-		} else if (asteroid.size == 1) {
+			if ((ship.x >= asteroid.pos.x-8 && ship.x <= asteroid.pos.x + 8
+					&& ship.y >= asteroid.pos.y-1 && ship.y <= asteroid.pos.y + 1)
+					|| (ship.x >= asteroid.pos.x-5 && ship.x <= asteroid.pos.x + 5
+					&& ship.y >= asteroid.pos.y-4 && ship.y <= asteroid.pos.y + 4)
+					|| (ship.x >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2
+					&& ship.y >= asteroid.pos.y-5 && ship.y <= asteroid.pos.y + 5)
+					// Now check the points
+					|| (ship.x == asteroid.pos.x + 7 && ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x + 7 && ship.y == asteroid.pos.y - 2)
+					|| (ship.x == asteroid.pos.x - 7 && ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x - 7 && ship.y == asteroid.pos.y - 2)
+					|| (ship.x == asteroid.pos.x + 6 && ship.y == asteroid.pos.y + 3)
+					|| (ship.x == asteroid.pos.x + 6 && ship.y == asteroid.pos.y - 3)
+					|| (ship.x == asteroid.pos.x - 6 && ship.y == asteroid.pos.y + 3)
+					|| (ship.x == asteroid.pos.x - 6 && ship.y == asteroid.pos.y - 3)) {
+				return 3;
+			}
+		} else if (asteroid.size == 4) {
 			// Split the asteroid up to two squares and four points
 			if ((ship.x >= asteroid.pos.x-4 && ship.x <= asteroid.pos.x + 4
 					&& ship.y >= asteroid.pos.y-1 && ship.y <= asteroid.pos.y + 1)
@@ -185,7 +215,7 @@ int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 					|| (ship.x == asteroid.pos.x - 3 && ship.y == asteroid.pos.y - 2)) {
 				return 2;
 			}
-		} else if (asteroid.size == 0){
+		} else if (asteroid.size == 2){
 			// Split the asteroid up to two squares
 			if ((ship.x >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2 && ship.y == asteroid.pos.y)
 					|| (ship.x >= asteroid.pos.x-1 && ship.x <= asteroid.pos.x + 1
