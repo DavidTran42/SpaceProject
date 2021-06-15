@@ -71,14 +71,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
 			sizeof(ship) / sizeof(ship[0]);
 	int asteroidListSize = sizeof(asteroid) / sizeof(asteroid);
-	char input;
+	char input, input2;
 
 	clrscr(); // clear screen
 
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
-	background();
+	//background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
@@ -106,8 +106,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 		if (uart_get_count() > 0 || controls.right || controls.left
 				|| controls.down || controls.up || controls.center) {
-			input = uart_get_char();
-			uart_clear(); // Might need to put it outside the if statement
+			input = uart_get_char(); // Might need to put it outside the if statement
+			uart_clear();
 
 			// Check if boss key has been pressed
 			bosskey(input);
@@ -116,21 +116,28 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
+			clrscr();
 			print_ship1(ship[0]);
+			if (gameMode == 2){
+				updateShip2Pos(input2, &ship[2], controls, borderWidth, borderHeight);
+				print_ship2(ship[2]);
+			}
+
 
 			// printf("shipx: %d, shipy: %d",ship->x, ship->y);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		if (timer.sec++) {
-			// printf("%d",timer.sec);
-			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
-					asteroidListSize, type, r);
-			r = rand() % borderHeight;
-			type = rand() % 3;
-		}
-
+		/*
+		 if (timer.sec++) {
+		 // printf("%d",timer.sec);
+		 makeAsteroid(&asteroid[0], borderWidth, borderHeight,
+		 asteroidListSize, type, r);
+		 r = rand() % borderHeight;
+		 type = rand() % 3;
+		 }
+		 */
 		// Update bullets and astroids
 		for (int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
@@ -144,19 +151,19 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[i].x = 0, bullet1[i].y = 0;
 				}
 			}
-		}
-		for (int i = 0; i < asteroidListSize; i++) {
-			if (asteroid[i].pos.y != 0
-					&& asteroid[i].pos.x > 0 - asteroid[i].size) {
-				gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
-				printf("o");
-				asteroid[i].pos.x -= 1;
-			}
-			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
-				asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
-			}
-			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
-		}
+		}/*
+		 for (int i = 0; i < asteroidListSize; i++) {
+		 if (asteroid[i].pos.y != 0
+		 && asteroid[i].pos.x > 0 - asteroid[i].size) {
+		 gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+		 printf("o");
+		 asteroid[i].pos.x -= 1;
+		 }
+		 if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
+		 asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+		 }
+		 // printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+		 }*/
 	}
 }
 
@@ -175,16 +182,33 @@ int checkCollisionWithAsteroid(struct vector ship, struct asteroid *asteroid) {
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight) {
 	// Player 1 controls
-	if ((input == 'a' || controls.left) && shipptr->x > 1) {
+	if ((input == 'a') && shipptr->x > 1) {
 		(shipptr->x)--;
 	}
-	if ((input == 'w' || controls.up) && shipptr->y > 1) {
+	if ((input == 'w') && shipptr->y > 1) {
 		(shipptr->y)--;
 	}
-	if ((input == 'd' || controls.right) && shipptr->x < borderWidth) {
+	if ((input == 'd') && shipptr->x < borderWidth) {
 		(shipptr->x)++;
 	}
-	if ((input == 's' || controls.down) && shipptr->y < borderHeight) {
+	if ((input == 's') && shipptr->y < borderHeight) {
+		(shipptr->y)++;
+	}
+}
+
+void updateShip2Pos(char input2, struct vector *shipptr,
+		struct joystick controls, uint16_t borderWidth, uint16_t borderHeight) {
+	// Player 1 controls
+	if ((controls.left) && shipptr->x > 1) {
+		(shipptr->x)--;
+	}
+	if ((controls.up) && shipptr->y > 1) {
+		(shipptr->y)--;
+	}
+	if ((controls.right) && shipptr->x < borderWidth) {
+		(shipptr->x)++;
+	}
+	if ((controls.down) && shipptr->y < borderHeight) {
 		(shipptr->y)++;
 	}
 }

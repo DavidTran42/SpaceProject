@@ -37,3 +37,5 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t b
 void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
 		int bListSize, struct joystick controls);
 void bosskey(char input);
+void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls,
+		uint16_t borderWidth, uint16_t borderHeight);
