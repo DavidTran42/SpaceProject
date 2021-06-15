@@ -22,6 +22,8 @@ void test();
 #include <string.h>
 #include "charset.h"
 #include "30010_io.h"
+#include "GameController.h"
+
 
 #endif /* MAIN_H_ */
 
@@ -29,6 +31,7 @@ void mainFrame(int16_t x1,int16_t y1,int16_t x2,int16_t y2);
 void mainOptions();
 void gameTitle();
 void mainMenu();
+void newbgcolor(uint8_t background);
 
 
 

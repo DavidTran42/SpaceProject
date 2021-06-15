@@ -78,7 +78,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
-	// background();
+	 background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
@@ -115,10 +115,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			// Update ships from key press or joystick input
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
-			// print ship
-			// print_ship1(ship[0]);
+			 //print ship
+			print_ship1(ship[0]);
 
-			printf("shipx: %d, shipy: %d",ship->x, ship->y);
+			//printf("shipx: %d, shipy: %d",ship->x, ship->y);
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
@@ -146,7 +146,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		for (int i = 0; i < asteroidListSize; i++) {
 			if (asteroid[i].pos.x != 0) {
 				// gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
-				printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+				//printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 				asteroid[i].pos.x -= 1;
 			}
 			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
@@ -358,56 +358,102 @@ void bosskey(char input) {
 	 NVIC_EnableIRQ(TIM2_IRQn);*/
 }
 /*
- void life_score(uint8_t buffer[512]) {
- uint32_t score = 0;
- uint8_t life = 3;
- char s_score[20] = "SCORE = ";
+void life_score(uint8_t buffer[512]) {
+	uint32_t score1 = 0;
+	uint32_t score2 = 0;
+	uint8_t lives1 = 3;
+	uint8_t lives2 = 3;
+	char s_score[20] = "SCORE = ";
 
- //life remaining
- if (single_player) {
- lcd_write_string(buffer, "SCORE: ", 3);
+	//life remaining
+	if (single_player) {
+		lcd_write_string(buffer, "SCORE: ", 3);
 
- lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
+		lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
 
- if (hit && life == 3) {
- life--;
- lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
- } else if (hit && life == 2) {
- life--;
- lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
- } else if (hit && life == 1) {
- life--;
- lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
- lcd_update(buffer, 1);
- blink(1);
+		if (p1_hit && life == 3) {
+			lives1--;
+			lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
+		} else if (p1_hit && life == 2) {
+			lives1--;
+			lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
+		} else if (p1_hit && life == 1) {
+			lives1--;
+			lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
+			lcd_update(buffer, 1);
 
- itoa(score, s_score, 10);
- lcd_write_string(buffer, s_score, 3);
- }
+		}
+	}
 
- if (collision_asteroid_1) {
- score += 100;
- itoa(score, s_score, 10);
- lcd_write_string(buffer, s_score, 4);
+	if (multiplayer) {
+		lcd_write_string(buffer, "P1 SCORE: ", 3);
+		lcd_write_string2(buffer, "P2 SCORE: ", 3);
 
- } else if (collision_asteroid_2) {
- score += 500;
- itoa(score, s_score, 10);
- lcd_write_string(buffer, s_score, 4);
- } else if (collision_asteroid_3) {
- score += 1000;
- itoa(score, s_score[8], 10);
- lcd_write_string(buffer, s_score, 4);
- }
- }
+		lcd_write_string(buffer, "P1: ***", 1);
+		lcd_write_string2(buffer, "P2: ***", 1);
 
- if (multiplayer){
+		//Player one
+		if (p1_hit && lives1 == 3) {
+			life--;
+			lcd_write_string(buffer, "P1: ** ", 1);
+		} else if (p1_hit && lives1 == 2) {
+			lives1--;
+			lcd_write_string(buffer, "P1: *", 1);
+		} else if (p1_hit && lives1 == 1) {
+			lives1--;
+			lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
+			lcd_update(buffer, 1);
 
- }
+		}
 
+		//player two
+		if (p2_hit && lives2 == 3) {
+			life--;
+			lcd_write_string2(buffer, "P2: ** ", 1);
+		} else if (p1_hit && lives2 == 2) {
+			lives2--;
+			lcd_write_string2(buffer, "P2: *", 1);
+		} else if (p1_hit && lives2 == 1) {
+			lives2--;
+			lcd_write_string2(buffer, "GAME OVER!   GAME OVER!  ", 1);
+			lcd_update(buffer, 1);
+		}
 
- }
- */
+	}
+	//score player one
+	if (p1_collision_asteroid_1) {
+		score1 += 100;
+		itoa(score1, s_score, 10);
+		lcd_write_string(buffer, s_score, 4);
+
+	} else if (collision_asteroid_2) {
+		score1 += 200;
+		itoa(score1, s_score, 10);
+		lcd_write_string(buffer, s_score, 4);
+	} else if (collision_asteroid_3) {
+		score1 += 500;
+		itoa(score1, s_score, 10);
+		lcd_write_string(buffer, s_score, 4);
+	}
+
+	//Score player two
+	if (p2_collision_asteroid_1) {
+		score2 += 100;
+		itoa(score2, s_score, 10);
+		lcd_write_string2(buffer, s_score, 4);
+
+	} else if (collision_asteroid_2) {
+		score2 += 200;
+		itoa(score2, s_score, 10);
+		lcd_write_string2(buffer, s_score, 4);
+	} else if (collision_asteroid_3) {
+		score2 += 500;
+		itoa(score2, s_score, 10);
+		lcd_write_string2(buffer, s_score, 4);
+	}
+}
+
+*/
 
 void lcd_update(uint8_t buffer[512], uint8_t line) {
 
@@ -437,4 +483,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 		}
 	}
 }
+
+
+
 
