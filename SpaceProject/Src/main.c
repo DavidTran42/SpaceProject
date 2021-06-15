@@ -31,7 +31,7 @@ int main(void) {
 
 	// mainMenu();
 
-	/*
+
 	struct asteroid asteroid1;			//Test asteroids
 	asteroid1.pos.x = 20;
 	asteroid1.pos.y = 20;
@@ -47,7 +47,7 @@ int main(void) {
 	small_asteroid(&asteroid1);
 	medium_asteroid(&asteroid2);
 	large_asteroid(&asteroid3);
-	 */
+
 
 
 	//lcd_update(buffer, 1);
