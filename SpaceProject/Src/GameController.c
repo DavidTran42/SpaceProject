@@ -168,24 +168,24 @@ int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 	// 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
 	if (ship.x >= asteroid.pos.x - 11 && ship.y >= asteroid.pos.y - 8
 			&& ship.x <= asteroid.pos.x + 11 && ship.y <= asteroid.pos.y + 8) {
-		if (asteroid->size == 2) {
+		if (asteroid.size == 2) {
 			// Split the asteroid up to three squares
 
 			return 3;
-		} else if (asteroid->size == 1) {
+		} else if (asteroid.size == 1) {
 			// Split the asteroid up to two squares and four points
 			if ((ship.x >= asteroid.pos.x-4 && ship.x <= asteroid.pos.x + 4
 					&& ship.y >= asteroid.pos.y-1 && ship.y <= asteroid.pos.y + 1)
 					|| (ship.x >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2
 					&& ship.y >= asteroid.pos.y-3 && ship.y <= asteroid.pos.y + 3)
 					// Now check the points
-					|| (ship.x == asteroid.x + 3 && ship.y == asteroid.y + 2)
-					|| (ship.x == asteroid.x + 3 && ship.y == asteroid.y - 2)
-					|| (ship.x == asteroid.x - 3 && ship.y == asteroid.y + 2)
-					|| (ship.x == asteroid.x - 3 && ship.y == asteroid.y - 2)) {
+					|| (ship.x == asteroid.pos.x + 3 && ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x + 3 && ship.y == asteroid.pos.y - 2)
+					|| (ship.x == asteroid.pos.x - 3 && ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x - 3 && ship.y == asteroid.pos.y - 2)) {
 				return 2;
 			}
-		} else if (asteroid->size == 0){
+		} else if (asteroid.size == 0){
 			// Split the asteroid up to two squares
 			if ((ship.x >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2 && ship.y == asteroid.pos.y)
 					|| (ship.x >= asteroid.pos.x-1 && ship.x <= asteroid.pos.x + 1
