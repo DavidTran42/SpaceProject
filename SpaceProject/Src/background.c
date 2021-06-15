@@ -677,10 +677,14 @@ void game_background() {
 	for (int i = 0; i < 269; i++) {
 		printf(" ");
 	}
+
 	resetbgcolor();
+	stars_only();
+
 }
 
 void stars_only() {
+	resetbgcolor();
 	fgcolor(15);
 	for (int i = 1; i < 5; i++) {
 		gotoxy(54 * i, 2);

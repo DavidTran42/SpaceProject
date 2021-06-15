@@ -21,7 +21,7 @@ int main(void) {
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
-	//lcd_init();
+	lcd_init();
 	//test();
 
 	//shiptest();
@@ -32,7 +32,7 @@ int main(void) {
 
 
 
-	mainMenu();
+	//mainMenu();
 
 
 	/*background();

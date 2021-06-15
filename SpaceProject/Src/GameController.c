@@ -119,7 +119,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			// print ship
 
-			stars_only(); //
+			stars_only(); //updating stars
 			print_ship1(ship[0]);
 			update_pixels(&ship[0]);
 			if (gameMode == 2) {
@@ -160,34 +160,23 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				}
 			}
 
-		}/*
-		 for (int i = 0; i < asteroidListSize; i++) {
-		 if (asteroid[i].pos.y != 0
-		 && asteroid[i].pos.x > 0 - asteroid[i].size) {
-		 gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
-		 printf("o");
-		 asteroid[i].pos.x -= 1;
-		 }
-		 if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
-		 asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
-		 }
-		 // printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
-		 }*/
-
-	}
-	for (int i = 0; i < asteroidListSize; i++) {
-
-		if (asteroid[i].pos.y != 0
-				&& asteroid[i].pos.x > 0 - asteroid[i].size) {
-			gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
-			printf("o");
-
-			asteroid[i].pos.x -= 1;
 		}
-		if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
-			asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+
+		for (int i = 0; i < asteroidListSize; i++) {
+
+			if (asteroid[i].pos.y != 0
+					&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+				gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+				printf("o");
+
+				asteroid[i].pos.x -= 1;
+			}
+			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
+				asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+			}
+
+			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 		}
-		// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 	}
 }
 
@@ -455,7 +444,7 @@ void bosskey(char input) {
  char s_score[20] = "SCORE = ";
 
  //life remaining
- if (single_player) {
+ if (gameMode == 1) {
  lcd_write_string(buffer, "SCORE: ", 3);
 
  lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
@@ -474,7 +463,7 @@ void bosskey(char input) {
  }
  }
 
- if (multiplayer) {
+ if (gameMode == 2) {
  lcd_write_string(buffer, "P1 SCORE: ", 3);
  lcd_write_string2(buffer, "P2 SCORE: ", 3);
 
@@ -573,3 +562,41 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 	}
 }
 
+void level_led(uint8_t gameLevel) {
+	setUpTimer();
+	if (gameLevel == 1) {
+		turnOff(GPIOA, 9);
+		turnOff(GPIOB, 4);
+
+		while (1) {
+			if (timer.sec100 == 1) {
+				turnOn(GPIOC, 7);
+			} else if (timer.sec100 == 50) {
+				turnOff(GPIOC, 7);
+			}
+		}
+	} else if (gameLevel == 2) {
+		turnOff(GPIOA, 9);
+		while (1) {
+			if (timer.sec100 == 1 || timer.sec100 == 50) {
+				turnOn(GPIOB, 4);
+				turnOn(GPIOC, 7);
+			} else if (timer.sec100 == 25 || timer.sec100 == 75) {
+				turnOff(GPIOB, 4);
+				turnOff(GPIOC, 7);
+			}
+		}
+	} else if (gameLevel == 3) {
+		turnOff(GPIOA, 9);
+		turnOff(GPIOC, 7);
+		while (1) {
+			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+					|| timer.sec100 == 75) {
+				turnOn(GPIOB, 4);
+			} else if (timer.sec100 == 12 || timer.sec100 == 37
+					|| timer.sec100 == 62 || timer.sec100 == 87) {
+				turnOff(GPIOB, 4);
+			}
+		}
+	}
+}
