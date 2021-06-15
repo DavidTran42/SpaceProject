@@ -12,6 +12,7 @@
 #include "charset.h"
 #include "30010_io.h"
 #include "ansi.h"
+#include "GameController.h"
 
 void newbgcolor(uint8_t background) {
 	printf("\033[48;5;%dm", background);
@@ -413,3 +414,149 @@ void background() {
 
 	resetbgcolor();
 }
+void small_asteroid(struct asteroid *asteroid1) {
+	newbgcolor(252);
+	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y - 1);
+	printf("   ");
+	gotoxy(asteroid1->pos.x - 2, asteroid1->pos.y);
+	printf("     ");
+	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y + 1);
+	printf("   ");
+
+	newbgcolor(240);
+	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y);
+	printf(" ");
+	gotoxy(asteroid1->pos.x, asteroid1->pos.y - 1);
+	printf(" ");
+
+	newbgcolor(247);
+	gotoxy(asteroid1->pos.x + 1, asteroid1->pos.y - 1);
+	printf(" ");
+	gotoxy(asteroid1->pos.x - 2, asteroid1->pos.y);
+	printf(" ");
+	gotoxy(asteroid1->pos.x, asteroid1->pos.y + 1);
+	printf(" ");
+
+	resetbgcolor();
+}
+
+void medium_asteroid(struct asteroid *asteroid2) {
+	newbgcolor(240);
+	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y - 3);
+	printf("     ");
+
+	newbgcolor(247);
+	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y - 2);
+	printf("       ");
+	newbgcolor(252);
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y - 1);
+	printf("         ");
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y);
+	printf("         ");
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y + 1);
+	printf("         ");
+
+	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y + 2);
+	printf("       ");
+	newbgcolor(247);
+	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 3);
+	printf("     ");
+	newbgcolor(240);
+	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y - 2);
+	printf("  ");
+	newbgcolor(247);
+	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y - 1);
+	printf(" ");
+
+	newbgcolor(8);
+	gotoxy(asteroid2->pos.x + 1, asteroid2->pos.y);
+	printf(" ");
+	gotoxy(asteroid2->pos.x + 2, asteroid2->pos.y + 1);
+	printf(" ");
+	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 2);
+	printf("  ");
+
+	newbgcolor(240);
+	gotoxy(asteroid2->pos.x + 1, asteroid2->pos.y);
+	printf(" ");
+	gotoxy(asteroid2->pos.x + 2, asteroid2->pos.y + 1);
+	printf(" ");
+	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 2);
+	printf("  ");
+
+	newbgcolor(247);
+	gotoxy(asteroid2->pos.x + 3, asteroid2->pos.y - 2);
+	printf(" ");
+	newbgcolor(250);
+	gotoxy(asteroid2->pos.x + 3, asteroid2->pos.y - 1);
+	printf("  ");
+
+	resetbgcolor();
+}
+
+void large_asteroid(struct asteroid *asteroid3) {
+	newbgcolor(240);
+	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 5);
+	printf("     ");
+	newbgcolor(247);
+	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y - 4);
+	printf("           ");
+	newbgcolor(252);
+	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y - 3);
+	printf("             ");
+	newbgcolor(250);
+	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y - 2);
+	printf("               ");
+	newbgcolor(252);
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y - 1);
+	printf("                 ");
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y);
+	printf("                 ");
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y + 1);
+	printf("                 ");
+	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y + 2);
+	printf("               ");
+	newbgcolor(250);
+	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y + 3);
+	printf("             ");
+	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y + 4);
+	printf("           ");
+	newbgcolor(247);
+	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y + 5);
+	printf("     ");
+
+	newbgcolor(8);
+	gotoxy(asteroid3->pos.x - 4, asteroid3->pos.y + 1);
+	printf("  ");
+	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y + 2);
+	printf(" ");
+	gotoxy(asteroid3->pos.x, asteroid3->pos.y + 4);
+	printf("  ");
+	gotoxy(asteroid3->pos.x + 2, asteroid3->pos.y + 4);
+	printf(" ");
+
+	newbgcolor(248);
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y - 1);
+	printf("   ");
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y);
+	printf(" ");
+	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y + 1);
+	printf(" ");
+
+	gotoxy(asteroid3->pos.x - 1, asteroid3->pos.y - 1);
+	printf("  ");
+	gotoxy(asteroid3->pos.x + 1, asteroid3->pos.y);
+	printf(" ");
+	gotoxy(asteroid3->pos.x + 1, asteroid3->pos.y + 1);
+	printf(" ");
+
+	newbgcolor(250);
+	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 3);
+	printf("  ");
+	gotoxy(asteroid3->pos.x + 1, asteroid3->pos.y - 4);
+	printf("   ");
+
+	resetbgcolor();
+
+}
+

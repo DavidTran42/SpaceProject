@@ -14,6 +14,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+
 #endif /* ANSI_H_ */
 
 typedef struct vector_t v;
@@ -29,3 +30,4 @@ void underline(uint8_t on);
 void blink(uint8_t on);
 void inverse(uint8_t on);
 void repeat(int c, int count);
+
