@@ -26,6 +26,10 @@ typedef struct asteroid {
 	uint8_t size;
 };
 
+typedef struct bullet {
+	struct vector pos, vel;
+};
+
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight);
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
@@ -34,6 +38,8 @@ void setUpTimer();
 void enableTimer();
 void disableTimer();
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r);
-void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
+void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 		int bListSize, struct joystick controls);
 void bosskey(char input);
+void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls,
+		uint16_t borderWidth, uint16_t borderHeight);

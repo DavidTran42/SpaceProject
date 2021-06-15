@@ -34,10 +34,11 @@ int main(void) {
 	initGame(borderWidth, borderHeight, 1);
 
 
-	//mainMenu();
+	mainMenu();
 
 
-/*background();
+
+	/*background();
 	struct asteroid asteroid1;			//Test asteroids
 	asteroid1.pos.x = 20;
 	asteroid1.pos.y = 20;

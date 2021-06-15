@@ -272,6 +272,7 @@ void optionsSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
+					disableTimer();
 					clrscr();
 					initGame(borderWidth, borderHeight, 1);
 
@@ -313,6 +314,7 @@ void optionsSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
+					disableTimer();
 					clrscr();
 					initGame(borderWidth, borderHeight, 2);
 
@@ -355,6 +357,7 @@ void optionsSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
+					disableTimer();
 					clrscr();
 
 				}
@@ -398,6 +401,7 @@ void optionsSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
+					disableTimer();
 					clrscr();
 
 				}
