@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "GameController.h"
 
 #define ESC 0x1B
 
@@ -12,12 +13,15 @@
 #define MULTIPLEAYER 2;
 #define HELP 3;
 
+
+
+
 int main(void) {
 	uart_init(921600);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
-	lcd_init();
+	//lcd_init();
 	//test();
 
 	//shiptest();
@@ -29,9 +33,11 @@ int main(void) {
 	//uint16_t borderWidth = 270, borderHeight = 75;
 	//initGame(borderWidth, borderHeight, 1);
 
-	// mainMenu();
+
+	//mainMenu();
 
 
+background();
 	struct asteroid asteroid1;			//Test asteroids
 	asteroid1.pos.x = 20;
 	asteroid1.pos.y = 20;

@@ -12,6 +12,7 @@
 #include "charset.h"
 #include "30010_io.h"
 #include "ansi.h"
+#include "GameController.h"
 
 void newbgcolor(uint8_t background) {
 	printf("\033[48;5;%dm", background);

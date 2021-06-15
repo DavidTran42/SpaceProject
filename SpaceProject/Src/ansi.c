@@ -4,6 +4,7 @@
 #include "charset.h"
 #include "30010_io.h"
 
+
 void fgcolor(uint8_t foreground) {
 	/*  Value      foreground     Value     foreground
 	 ------------------------------------------------

@@ -78,7 +78,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
-
+	background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
@@ -127,7 +127,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 		if (timer.sec++) {
 			// printf("%d",timer.sec);
-			makeAsteroid(&asteroid[0], borderWidth, borderHeight, asteroidListSize, type, r);
+			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
+					asteroidListSize, type, r);
 			r = rand() % borderHeight;
 			type = rand() % 3;
 		}
@@ -135,10 +136,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		// Update bullets and astroids
 		for (int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
-				/*printf("i: %d", i);
+				printf("i: %d", i);
 				printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x,
-						bullet1[i].y);*/
-				gotoxy(bullet1[i].x,bullet1[i].y);
+						bullet1[i].y);
+				gotoxy(bullet1[i].x, bullet1[i].y);
 				printf("-");
 				bullet1[i].x += 1;
 				if (bullet1[i].x == borderWidth) {
@@ -148,8 +149,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		}
 		for (int i = 0; i < asteroidListSize; i++) {
 
-			if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
-				gotoxy(asteroid[i].pos.x,asteroid[i].pos.y);
+			if (asteroid[i].pos.y != 0
+					&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+				gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 				printf("o");
 
 				asteroid[i].pos.x -= 1;
@@ -253,7 +255,7 @@ struct joystick addJoystick() {
 void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
 		int bListSize, struct joystick controls) {
 	if (input == ' ' || controls.center) {
-		// Function to shoot a bullet
+// Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++) {
 			if (bulletptr->x == 0 && bulletptr->y == 0) {
 				bulletptr->x = ship->x + 5;
