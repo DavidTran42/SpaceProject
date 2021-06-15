@@ -3,6 +3,11 @@
 #include "ansi.h"
 #include "GameController.h"
 #include "main.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+
 #define ESC 0x1B
 
 #define SINGLEPLAYER 1;
@@ -16,19 +21,24 @@
 int main(void) {
 	uart_init(2000000);
 	clrscr();
-	uint16_t buffer[512] = { 0 };
+	//uint16_t buffer[512] = { 0 };
 
 	//lcd_init();
 	//test();
-	//background();
+
 	//shiptest();
 	//bosskey();
+
 
 	//uint16_t borderWidth = 270, borderHeight = 75;
 	//initGame(borderWidth, borderHeight, 1);
 
-
 	mainMenu();
+
+	//lcd_update(buffer, 1);
+
+
+
 	while(1){}
 
 

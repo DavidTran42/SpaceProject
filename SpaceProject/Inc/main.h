@@ -30,7 +30,10 @@ void mainOptions();
 void gameTitle();
 void mainMenu();
 void optionsSelect();
-
+void guitGameMenu();
+void singleplayerMenu();
+void multiplayerMenu();
+void helpMenu();
 
 
 

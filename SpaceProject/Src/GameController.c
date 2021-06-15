@@ -4,87 +4,7 @@
 #include "30010_io.h"
 #include "ansi.h"
 #define ESC 0x1B
-
-
-void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
-	struct vector ship[gameMode * 2]; // More ships due to power ups
-	uint8_t gameLevel = 1; // Starting level
-	struct joystick controls; // For joystick support
-	int gameloop = 1;
-	char input;
-	int var = 0;
-
-	clrscr(); // clear screen
-
-	srand(time(NULL)); // Initialization for randomizer. Only done once
-
-	// Make game window
-
-	// Initialize the ships positions
-	initializeShips(gameMode, ship, borderWidth, borderHeight);
-
-	// Add controls to ship
-	controls = addJoystick();
-
-	// Start timer
-	setUpTimer();
-
-	// Game loop
-	while (gameloop) {
-		controls.right = GPIOC->IDR & (0x0001 << 0);
-		// printf("%d", controls.right);
-		controls.up = GPIOA->IDR & (0x0001 << 4);
-		controls.center = GPIOB->IDR & (0x0001 << 5);
-		controls.left = GPIOC->IDR & (0x0001 << 1);
-		controls.down = GPIOB->IDR & (0x0001 << 0);
-
-		if (uart_get_count() > 0 || controls.right || controls.left
-				|| controls.down || controls.up || controls.center) {
-			input = uart_get_char();
-			uart_clear();
-			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
-		}
-	}
-
-}
-
-void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
-		uint16_t borderWidth, uint16_t borderHeight) {
-	// Player 1 controls
-	if ((input == 'a' || controls.left) && shipptr->x > 1) {
-		(shipptr->x)--;
-	}
-	if ((input == 'w' || controls.up) && shipptr->y > 1) {
-		(shipptr->y)--;
-	}
-	if ((input == 'd' || controls.right) && shipptr->x < borderWidth) {
-		(shipptr->x)++;
-	}
-	if ((input == 's' || controls.down) && shipptr->y < borderHeight) {
-		(shipptr->y)++;
-	}
-	if (input == ' ' || controls.center) {
-		// Function to shoot a bullet
-	}
-	printf("shipx: %d, shipy: %d\n", shipptr->x, shipptr->y);
-}
-
-void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
-		uint16_t borderHeight) {
-	// Initialize the ships positions
-	if (gameMode == 2) { // Multiplayer
-		shipptr->x = 0, shipptr->y = borderHeight / 3;
-		shipptr += 2;
-		shipptr->x = 0, shipptr->y = (borderHeight / 3) * 2;
-
-		// Draw the ship in the game window
-
-	} else { // Singleplayer
-		shipptr->x = 0, shipptr->y = borderHeight / 2;
-		// Draw the ships in the game window
-
-	}
-}
+#include "spaceship.h"
 
 //////////////////////// CLOCK & TIMER //////////////////////////
 
@@ -135,15 +55,22 @@ void setUpTimer() {
 	NVIC_EnableIRQ(TIM2_IRQn);
 }
 //////////////////////////////////////////////////////////////////
-/*
+
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
-	struct vector ship[4] = {0}; // More ships due to power ups
-	struct asteroid asteroid[16] = {0};
-	struct vector bullet1[20] = {0}; struct vector bullet2[20] = {0}; // More ships due to power ups
+
+	struct vector ship[4] = { 0 }; // More ships due to power ups
+	struct asteroid asteroid[10] = { 0 };
+	struct vector bullet1[20] = { 0 };
+	struct vector bullet2[20] = { 0 }; // More ships due to power ups
+
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
 	int gameloop = 1, hearts = 3, score = 0;
-	int bulletListSize = sizeof(bullet1)/sizeof(bullet1[0]), shipListSize = sizeof(ship)/sizeof(ship[0]);
+	uint8_t r = rand() % borderHeight;
+	uint8_t type = rand() % 3;
+	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
+			sizeof(ship) / sizeof(ship[0]);
+	int asteroidListSize = sizeof(asteroid) / sizeof(asteroid);
 	char input;
 
 	clrscr(); // clear screen
@@ -151,9 +78,16 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
+	background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
+
+	// Draw the intial ships
+	if (gameMode == 2) {
+		print_ship2(ship[2]);
+	}
+	print_ship1(ship[0]);
 
 	// Add controls to ship
 	controls = addJoystick();
@@ -162,7 +96,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	setUpTimer();
 
 	// Game loop
-	while(gameloop) {
+	while (gameloop) {
 		controls.right = GPIOC->IDR & (0x0001 << 0);
 		// printf("%d", controls.right);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
@@ -170,35 +104,76 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		controls.left = GPIOC->IDR & (0x0001 << 1);
 		controls.down = GPIOB->IDR & (0x0001 << 0);
 
-		if (uart_get_count() > 0 || controls.right || controls.left || controls.down
-				|| controls.up || controls.center) {
+		if (uart_get_count() > 0 || controls.right || controls.left
+				|| controls.down || controls.up || controls.center) {
 			input = uart_get_char();
 			uart_clear(); // Might need to put it outside the if statement
+
+			// Check if boss key has been pressed
+			bosskey(input);
+
+			// Update ships from key press or joystick input
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
+
+			// print ship
+			print_ship1(ship[0]);
+
+			// printf("shipx: %d, shipy: %d",ship->x, ship->y);
+
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		if (timer.sec++ && timer.sec % 30 == 0) {
-			makeAsteroid(&asteroid[0], borderWidth, borderHeight);
+		if (timer.sec++) {
+			// printf("%d",timer.sec);
+			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
+					asteroidListSize, type, r);
+			r = rand() % borderHeight;
+			type = rand() % 3;
 		}
-		for(int i = 0; i < bulletListSize; i++) {
+
+		// Update bullets and astroids
+		for (int i = 0; i < bulletListSize; i++) {
 			if (bullet1[i].x != 0) {
-				printf("i: %d",i);
-				printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x, bullet1[i].y);
+				printf("i: %d", i);
+				printf("bullet_x: %d, bullet_y: %d\n", bullet1[i].x,
+						bullet1[i].y);
+				gotoxy(bullet1[i].x, bullet1[i].y);
+				printf("-");
 				bullet1[i].x += 1;
-				if(bullet1[i].x == borderWidth) {
+				if (bullet1[i].x == borderWidth) {
 					bullet1[i].x = 0, bullet1[i].y = 0;
 				}
 			}
 		}
+		for (int i = 0; i < asteroidListSize; i++) {
+			if (asteroid[i].pos.y != 0
+					&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+				gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+				printf("o");
+				asteroid[i].pos.x -= 1;
+			}
+			if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
+				asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+			}
+			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+		}
 	}
 }
 
-void checkCollisionWithAsteroid() {
+int checkCollisionWithAsteroid(struct vector ship, struct asteroid *asteroid) {
+	if (asteroid->size == 2) {
 
+	} else if (asteroid->size == 1) {
+
+	} else if (asteroid->size == 0) {
+
+	} else {
+		return 0;
+	}
 }
 
-void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight) {
+void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
+		uint16_t borderWidth, uint16_t borderHeight) {
 	// Player 1 controls
 	if ((input == 'a' || controls.left) && shipptr->x > 1) {
 		(shipptr->x)--;
@@ -209,26 +184,25 @@ void updateShipPos(char input, struct vector *shipptr, struct joystick controls,
 	if ((input == 'd' || controls.right) && shipptr->x < borderWidth) {
 		(shipptr->x)++;
 	}
-	if ((input == 's' || controls.down) &&  shipptr->y < borderHeight) {
+	if ((input == 's' || controls.down) && shipptr->y < borderHeight) {
 		(shipptr->y)++;
 	}
-	// testing ship position
-	printf("shipx: %d, shipy: %d\n",shipptr->x,shipptr->y);
 }
 
-void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight) {
+// 6 wide and 5 height
+void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
+		uint16_t borderHeight) {
 	// Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
-		shipptr->x = 0, shipptr->y = borderHeight/3;
+
+		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 3;
+
 		shipptr += 2;
-		shipptr->x = 0, shipptr->y = (borderHeight/3)*2;
 
-
-		// Draw the ship in the game window
-
+		shipptr->x = 6, shipptr->y = ((borderHeight + 5) / 3) * 2;
 	} else { // Singleplayer
-		shipptr->x = 0, shipptr->y = borderHeight/2;
-		// Draw the ships in the game window
+
+		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 2;
 
 	}
 }
@@ -274,147 +248,172 @@ struct joystick addJoystick() {
 	return controls;
 }
 
-
-void makeBullet(char input, struct vector *bulletptr, struct vector *ship, int bListSize, struct joystick controls) {
+void makeBullet(char input, struct vector *bulletptr, struct vector *ship,
+		int bListSize, struct joystick controls) {
 	if (input == ' ' || controls.center) {
-		// Function to shoot a bullet
-		for(int i = 0; i < bListSize; i++) {
+// Function to shoot a bullet
+		for (int i = 0; i < bListSize; i++) {
 			if (bulletptr->x == 0 && bulletptr->y == 0) {
-				bulletptr->x = ship->x + 1;
+				bulletptr->x = ship->x + 5;
 				bulletptr->y = ship->y;
 				break;
 			}
+			bulletptr++;
 		}
 	}
 }
 
-
 // Given the size of the asteroid, make a random asteroid
-void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight) {
-	uint8_t r = rand() % borderHeight;
-	uint8_t size = rand() % 3;
+void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
+		uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r) {
 
-	if (size == 2) {
-		if(r < 3) { // Ensures that the asteroid will be spawned correctly
+	if (type == 2) {
+		asteroidptr->size = 8;
+		if (r < 11) { // Ensures that the asteroid will be spawned correctly in y-axis
+			r = 11;
+		} else if (r > borderHeight - 11) {
+			r = borderHeight - 11;
+		}
+	} else if (type == 1) {
+		asteroidptr->size = 4;
+		if (r < 7) { // Ensures that the asteroid will be spawned correctly
+			r = 7;
+		} else if (r > borderHeight - 7) {
+			r = borderHeight - 7;
+		}
+	} else {
+		asteroidptr->size = 2;
+		if (r < 3) { // Ensures that the asteroid will be spawned correctly
 			r = 3;
 		} else if (r > borderHeight - 3) {
 			r = borderHeight - 3;
 		}
-		asteroidptr->x = borderWidth + 3;
-		asteroidptr->y = borderHeight - 3;
-	} else if (size == 1) {
-		if(r < 2) { // Ensures that the asteroid will be spawned correctly
-			r = 2;
-		} else if (r > borderHeight - 2) {
-			r = borderHeight - 2;
-		}
-		asteroidptr->x = borderWidth + 2;
-		asteroidptr->y = borderHeight - 2;
-	} else {
-		if(r < 1) { // Ensures that the asteroid will be spawned correctly
-			r = 1;
-		} else if (r > borderHeight - 1) {
-			r = borderHeight - 1;
-		}
-		asteroidptr->x = borderWidth + 1;
-		asteroidptr->y = borderHeight - 1;
 	}
-}
-
-void bosskey() {
-	clrscr();
-
-	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
-	enableTimer();
-	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	setPrescaler(0); // prescale value
-	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
-
-	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
-	NVIC_EnableIRQ(TIM2_IRQn);
-
-	for (int i = 1; i < 65; i++) {
-		gotoxy(2, i);
-		printf("%02d ", i);
-	}
-	gotoxy(6, 1);
-	printf("#include <stdio.h>");
-	gotoxy(6, 2);
-	printf("#include <stdlib.h>");
-	gotoxy(6, 3);
-	printf("#include \"not_a_bosskey.h\"");
-
-	int8_t count = 0;
-	char char1[] =
-			"//This following code is very important for this company, it will make us very rich and powerful!      ";
-
-	uint8_t j = 0;
-	uint8_t c = 0;
-	uint32_t t = 0;
-	uint8_t stop = 0;
-	while (1) {
-		if (!timer.sec++) {
-			t++;
-			if (t == 800) {
-				gotoxy(j + 6, 5 + c);
-				printf("%c", char1[j]);
-				j++;
-
-				if (j > 96) {
-					c++;
-					j = 0;
-					stop++;
-				}
-				t = 0;
-			}
-
-		}
-		if (stop == 60) {
+	for (int i = 0; i < aListSize; i++) {
+		if (asteroidptr->pos.x == 0 && asteroidptr->pos.y == 0) {
+			asteroidptr->pos.x = borderWidth + asteroidptr->size;
+			asteroidptr->pos.y = r;
 			break;
 		}
+		asteroidptr++;
 	}
+}
+
+void bosskey(char input) {
+	int pause = 0;
+	if (input == 'b') {
+		pause = 1;
+	}
+	if (pause) {
+		clrscr();
+		for (int i = 1; i < 65; i++) {
+			gotoxy(2, i);
+			printf("%02d ", i);
+		}
+		gotoxy(6, 1);
+		printf("#include <stdio.h>");
+		gotoxy(6, 2);
+		printf("#include <stdlib.h>");
+		gotoxy(6, 3);
+		printf("#include \"not_a_bosskey.h\"");
+
+		char char1[] =
+				"//This following code is very important for this company, it will make us very rich and powerful!      ";
+
+		uint8_t j = 0;
+		uint8_t c = 0;
+		uint32_t t = 0;
+		uint8_t stop = 0;
+		while (pause) {
+			if (!timer.sec++) {
+				t++;
+				if (t == 100) {
+					gotoxy(j + 6, 5 + c);
+					printf("%c", char1[j]);
+					j++;
+					if (j > 96) {
+						c++;
+						j = 0;
+						stop++;
+					}
+					t = 0;
+				}
+			}
+
+			if (stop == 60) {
+				break;
+			}
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				if (input == 'b') {
+					pause = 0;
+					clrscr();
+					break;
+				}
+			}
+		}
+	}
+
+	/*RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	 enableTimer();
+	 TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	 setPrescaler(0); // prescale value
+	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
+
+	 NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
+	 NVIC_EnableIRQ(TIM2_IRQn);*/
 }
 /*
-void life_score(uint8_t buffer[512]){
-	uint32_t score = 0;
-	uint8_t life = 3;
+ void life_score(uint8_t buffer[512]) {
+ uint32_t score = 0;
+ uint8_t life = 3;
+ char s_score[20] = "SCORE = ";
 
-	//life remaining
-	if (single_player){
-	lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
+ //life remaining
+ if (single_player) {
+ lcd_write_string(buffer, "SCORE: ", 3);
 
-		if (hit && life == 3){
-		life--;
-		lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
-		}
-		else if (hit && life == 2){
-		life--;
-		lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
-		}
-		else if (hit && life == 1){
-			life--;
-			lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
-			lcd_update(buffer, 1);
-			blink(1);
-			lcd_write_string(buffer, "SCORE: " + score, 3);
-		}
+ lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
 
-		if (collision_asteroid_1){
-			score += 100;
-		}
-		else if (collision_asteroid_2){
-			score += 500;
-		}
-		else if (collision_asteroid_3){
-			score += 1000;
-		}
-	}
+ if (hit && life == 3) {
+ life--;
+ lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
+ } else if (hit && life == 2) {
+ life--;
+ lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
+ } else if (hit && life == 1) {
+ life--;
+ lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
+ lcd_update(buffer, 1);
+ blink(1);
+
+ itoa(score, s_score, 10);
+ lcd_write_string(buffer, s_score, 3);
+ }
+
+ if (collision_asteroid_1) {
+ score += 100;
+ itoa(score, s_score, 10);
+ lcd_write_string(buffer, s_score, 4);
+
+ } else if (collision_asteroid_2) {
+ score += 500;
+ itoa(score, s_score, 10);
+ lcd_write_string(buffer, s_score, 4);
+ } else if (collision_asteroid_3) {
+ score += 1000;
+ itoa(score, s_score[8], 10);
+ lcd_write_string(buffer, s_score, 4);
+ }
+ }
+
+ if (multiplayer){
+
+ }
 
 
-	//score
-}
-*/
-
+ }
+ */
 
 void lcd_update(uint8_t buffer[512], uint8_t line) {
 
@@ -444,3 +443,4 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 		}
 	}
 }
+

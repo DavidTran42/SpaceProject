@@ -19,8 +19,9 @@ void newbgcolor(uint8_t background) {
 
 void background() {
 
-	//stars
+	//printing stars
 
+	printf("\033[38;5;15m"); //fg color white
 	for (int i = 1; i < 10; i++) {
 		gotoxy(i * 24, 2);
 		printf("*         *");
@@ -183,31 +184,31 @@ void background() {
 	}
 
 	//Karlsvognen
-	gotoxy(80, 20);
+	gotoxy(40, 30);
 	printf("                                                       *");
-	gotoxy(80, 21);
+	gotoxy(40, 31);
 	printf("                                         *            ***");
-	gotoxy(80, 22);
+	gotoxy(40, 32);
 	printf(
 			"                                        ***            *           *");
-	gotoxy(80, 23);
+	gotoxy(40, 33);
 	printf(
 			"                                         *                        ***");
-	gotoxy(80, 24);
+	gotoxy(40, 34);
 	printf(
 			"                                                                   *");
-	gotoxy(80, 25);
+	gotoxy(40, 35);
 	printf("    *                         *");
-	gotoxy(80, 26);
+	gotoxy(40, 36);
 	printf("   ***                       ***");
-	gotoxy(80, 27);
+	gotoxy(40, 37);
 	printf("    *                         *");
-	gotoxy(80, 32);
+	gotoxy(40, 42);
 	printf("        *                *");
-	gotoxy(80, 33);
+	gotoxy(40, 43);
 	printf("       ***              ***");
 
-	gotoxy(80, 34);
+	gotoxy(40, 44);
 	printf("        *                *");
 
 	//atmosphere
