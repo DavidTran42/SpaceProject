@@ -135,7 +135,7 @@ void setUpTimer() {
 	NVIC_EnableIRQ(TIM2_IRQn);
 }
 //////////////////////////////////////////////////////////////////
-
+/*
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	struct vector ship[4] = {0}; // More ships due to power ups
 	struct asteroid asteroid[16] = {0};

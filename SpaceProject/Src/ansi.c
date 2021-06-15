@@ -4,6 +4,7 @@
 #include "charset.h"
 #include "30010_io.h"
 
+
 void fgcolor(uint8_t foreground) {
 	/*  Value      foreground     Value     foreground
 	 ------------------------------------------------
@@ -111,5 +112,4 @@ void lcd_write_string(uint8_t buffer[512], char *slice, uint8_t line) {
 	}
 	lcd_push_buffer(buffer);
 }
-
 

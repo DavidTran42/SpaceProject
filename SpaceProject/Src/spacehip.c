@@ -77,8 +77,8 @@ void print_ship2(vector_t *position) {
 	resetbgcolor();
 }
 
-/*void updateShipPos(vector_t *pos) {
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+/*
+void updateShipPos(vector_t *pos) {
 
 void shiptest() {
 	struct ship ship1;
@@ -89,3 +89,4 @@ void shiptest() {
 	print_ship2(&ship2.position);
 
 }
+*/

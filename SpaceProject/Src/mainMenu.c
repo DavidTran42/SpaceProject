@@ -6,11 +6,19 @@
  */
 #define ESC 0x1B
 #include "main.h"
+#include "ansi.h"
+#include "30010_io.h"
 
 void repeat(int c, int count) {
 	for (int i = 0; i < count; i++)
 		printf("%c", c);
 }
+
+typedef struct time {
+	volatile int8_t hour, min, sec, sec100;
+} time;
+
+struct time timer; // Global timer
 
 void mainFrame(int16_t x1, int16_t y1, int16_t x2, int16_t y2) {
 	color(6, 0);
@@ -143,25 +151,32 @@ void gameTitle() {
 
 	// main menu text
 
-	fgcolor(1);
+	fgcolor(13);
 	gotoxy(90, 21);
 	printf(" __       __            __");
 	gotoxy(90, 22);
 	printf("|  \\     /  \\          |  \\");
 	gotoxy(90, 23);
-	printf("| $$\\   /  $$  ______   \\$$ _______         ______ ____    ______   _______   __    __");
+	printf(
+			"| $$\\   /  $$  ______   \\$$ _______         ______ ____    ______   _______   __    __");
 	gotoxy(90, 24);
-	printf("| $$$\\ /  $$$ |      \\ |  \\|       \\       |      \\    \\  /      \\ |       \\ |  \\  |  \\");
+	printf(
+			"| $$$\\ /  $$$ |      \\ |  \\|       \\       |      \\    \\  /      \\ |       \\ |  \\  |  \\");
 	gotoxy(90, 25);
-	printf("| $$$$\\  $$$$  \\$$$$$$\\| $$| $$$$$$$\\      | $$$$$$\\$$$$\\|  $$$$$$\\| $$$$$$$\\| $$  | $$");
+	printf(
+			"| $$$$\\  $$$$  \\$$$$$$\\| $$| $$$$$$$\\      | $$$$$$\\$$$$\\|  $$$$$$\\| $$$$$$$\\| $$  | $$");
 	gotoxy(90, 26);
-	printf("| $$\\$$ $$ $$ /      $$| $$| $$  | $$      | $$ | $$ | $$| $$    $$| $$  | $$| $$  | $$");
+	printf(
+			"| $$\\$$ $$ $$ /      $$| $$| $$  | $$      | $$ | $$ | $$| $$    $$| $$  | $$| $$  | $$");
 	gotoxy(90, 27);
-	printf("| $$ \\$$$| $$|  $$$$$$$| $$| $$  | $$      | $$ | $$ | $$| $$$$$$$$| $$  | $$| $$__/ $$");
+	printf(
+			"| $$ \\$$$| $$|  $$$$$$$| $$| $$  | $$      | $$ | $$ | $$| $$$$$$$$| $$  | $$| $$__/ $$");
 	gotoxy(90, 28);
-	printf("| $$  \\$ | $$ \\$$    $$| $$| $$  | $$      | $$ | $$ | $$ \\$$     \\| $$  | $$ \\$$    $$");
+	printf(
+			"| $$  \\$ | $$ \\$$    $$| $$| $$  | $$      | $$ | $$ | $$ \\$$     \\| $$  | $$ \\$$    $$");
 	gotoxy(90, 29);
-	printf(" \\$$      \\$$  \\$$$$$$$ \\$$ \\$$   \\$$       \\$$  \\$$  \\$$  \\$$$$$$$ \\$$   \\$$  \\$$$$$$");
+	printf(
+			" \\$$      \\$$  \\$$$$$$$ \\$$ \\$$   \\$$       \\$$  \\$$  \\$$  \\$$$$$$$ \\$$   \\$$  \\$$$$$$");
 	resetbgcolor();
 }
 
@@ -265,11 +280,371 @@ void mainOptions() {
 
 }
 
+void optionsSelect() {
+	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	enableTimer();
+	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	setPrescaler(0); // prescale value
+	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
+
+	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
+	NVIC_EnableIRQ(TIM2_IRQn);
+
+	uint8_t i = 0;
+	uint8_t t = 0;
+	color(6, 0);
+	char input;
+
+	while (1) {
+
+		while (i == 0) { // blinker singleplayer menu
+
+			if (!timer.sec++) {
+				t++;
+
+				if (t < 400 && t > 210) {
+					inverse(1);
+					gotoxy(110, 32);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 32 + 1; i < 37 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 36);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 33);
+					printf(
+							" .-. .-. . . .-. .   .-. .-. .   .-. . . .-. .-.  ");
+					gotoxy(111, 34);
+					printf(
+							" `-.  |  |\\| |.. |   |-  |-' |   |-|  |  |-  |(   ");
+					gotoxy(111, 35);
+					printf(
+							" `-' `-' ' ` `-' `-' `-' '   `-' ` '  `  `-' ' '  ");
+
+				} else {
+					inverse(0);
+					gotoxy(110, 32);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 32 + 1; i < 37 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 36);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 33);
+					printf(
+							" .-. .-. . . .-. .   .-. .-. .   .-. . . .-. .-.  ");
+					gotoxy(111, 34);
+					printf(
+							" `-.  |  |\\| |.. |   |-  |-' |   |-|  |  |-  |(   ");
+					gotoxy(111, 35);
+					printf(
+							" `-' `-' ' ` `-' `-' `-' '   `-' ` '  `  `-' ' '  ");
+				}
+
+				if (t == 400) {
+					t = 0;
+				}
+			}
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					i--;
+				} else if (input == 's') {
+					i++;
+				} else if (input == ' ') {
+					clrscr();
+				} else if (i > 3) {
+					i = 0;
+				} else if (i < 0) {
+					i = 3;
+
+				}
+			}
+		}
+		while (i == 1) { // blinker multiplayermenu
+			if (!timer.sec++) {
+				t++;
+
+				if (t < 400 && t > 210) {
+					inverse(1);
+					gotoxy(110, 39);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 39 + 1; i < 44 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 43);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 40);
+					printf(
+							"   .  . . . .   .-. .-. .-. .   .-. . . .-. .-.   ");
+					gotoxy(111, 41);
+					printf(
+							"   |\\/| | | |    |   |  |-' |   |-|  |  |-  |(    ");
+					gotoxy(111, 42);
+					printf(
+							"   '  ` `-' `-'  '  `-' '   `-' ` '  `  `-' ' '   ");
+
+				} else {
+					inverse(0);
+					gotoxy(110, 39);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 39 + 1; i < 44 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 43);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 40);
+					printf(
+							"   .  . . . .   .-. .-. .-. .   .-. . . .-. .-.   ");
+					gotoxy(111, 41);
+					printf(
+							"   |\\/| | | |    |   |  |-' |   |-|  |  |-  |(    ");
+					gotoxy(111, 42);
+					printf(
+							"   '  ` `-' `-'  '  `-' '   `-' ` '  `  `-' ' '   ");
+				}
+
+				if (t == 400) {
+					t = 0;
+				}
+			}
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					i--;
+				} else if (input == 's') {
+					i++;
+				} else if (input == ' ') {
+					clrscr();
+				} else if (i > 3) {
+					i = 0;
+				} else if (i < 0) {
+					i = 3;
+
+				}
+			}
+
+		}
+		while (i == 2) { // blinker Help
+			if (!timer.sec++) {
+				t++;
+
+				if (t < 400 && t > 210) {
+					inverse(1);
+					gotoxy(110, 46);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 46 + 1; i < 51 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 50);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 47);
+					printf(
+							"                   . . .-. .   .-.                ");
+					gotoxy(111, 48);
+					printf(
+							"                   |-| |-  |   |-'                ");
+					gotoxy(111, 49);
+					printf(
+							"                   ' ` `-' `-' '                  ");
+
+				} else {
+					inverse(0);
+					gotoxy(110, 46);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 46 + 1; i < 51 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 50);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 47);
+					printf(
+							"                   . . .-. .   .-.                ");
+					gotoxy(111, 48);
+					printf(
+							"                   |-| |-  |   |-'                ");
+					gotoxy(111, 49);
+					printf(
+							"                   ' ` `-' `-' '                  ");
+				}
+
+				if (t == 400) {
+					t = 0;
+				}
+			}
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					i--;
+				} else if (input == 's') {
+					i++;
+				} else if (input == ' ') {
+					clrscr();
+				} else if (i > 3) {
+					i = 0;
+				} else if (i < 0) {
+					i = 3;
+
+				}
+			}
+
+		}
+		while (i == 3) { // blinker Quit game
+			if (!timer.sec++) {
+				t++;
+
+				if (t < 400 && t > 210) {
+					inverse(1);
+					gotoxy(110, 53);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 53 + 1; i < 58 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 57);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 54);
+					printf(
+							"         .-. . . .-. .-.   .-. .-. .  . .-.       ");
+					gotoxy(111, 55);
+					printf(
+							"         |.| | |  |   |    |.. |-| |\\/| |-        ");
+					gotoxy(111, 56);
+					printf(
+							"         `-`.`-' `-'  '    `-' ` ' '  ` `-'       ");
+
+				} else {
+					inverse(0);
+					gotoxy(110, 53);
+					printf("%c", 201);
+					repeat(205, 50);
+					printf("%c", 187);
+					for (int i = 53 + 1; i < 58 - 1; i++) {
+						gotoxy(110, i);
+						printf("%c", 186);
+						gotoxy(161, i);
+						printf("%c\n", 186);
+					}
+					gotoxy(110, 57);
+					printf("%c", 200);
+					repeat(205, 50);
+					printf("%c", 188);
+
+					// text
+					gotoxy(111, 54);
+					printf(
+							"         .-. . . .-. .-.   .-. .-. .  . .-.       ");
+					gotoxy(111, 55);
+					printf(
+							"         |.| | |  |   |    |.. |-| |\\/| |-        ");
+					gotoxy(111, 56);
+					printf(
+							"         `-`.`-' `-'  '    `-' ` ' '  ` `-'       ");
+				}
+
+				if (t == 400) {
+					t = 0;
+				}
+			}
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					i--;
+				} else if (input == 's') {
+					i++;
+				} else if (input == ' ') {
+					clrscr();
+				}
+				if (i > 3) {
+					i = 0;
+				}
+				if (i < 0) {
+					i = 3;
+
+				}
+			}
+
+		}
+	}
+
+}
+
 void mainMenu() {
+	printf("%c[?25l", ESC); //hiding curser
+
 	clrscr();
+	resetbgcolor();
 	int16_t box_h = 75, box_w = 270;
 	background();
 	mainFrame(1, 1, box_w, box_h);
 	gameTitle();
 	mainOptions();
+	optionsSelect();
 }
+
