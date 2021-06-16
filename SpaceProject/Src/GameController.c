@@ -65,7 +65,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
 	int gameloop = 1, hearts = 3, score = 0;
-	uint32_t t, s, l;
+	uint32_t t, s, l, g;
 	uint8_t r = rand() % borderHeight;
 	uint8_t type = rand() % 3;
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
@@ -98,6 +98,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	while (gameloop) {
 		t++; // For every interupt, increment
 		l++;
+		g++;
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
@@ -135,24 +136,24 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 		// Pause button for testing purposes
 		/* if (input == 'p') {
-			disableTimer();
-			int p = 1;
-			while (p) {
-				input = uart_get_char();
-				if (input == 'p') {
-					enableTimer();
-					p = 0;
-					break;
-				}
-			}
-		}*/
+		 disableTimer();
+		 int p = 1;
+		 while (p) {
+		 input = uart_get_char();
+		 if (input == 'p') {
+		 enableTimer();
+		 p = 0;
+		 break;
+		 }
+		 }
+		 }*/
 
 		if (l > 10000) {
 			l = 0;
 			r = rand() % borderHeight;
 			type = rand() % 3;
 			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
-					asteroidListSize, type , r);
+					asteroidListSize, type, r);
 		}
 
 		/*
@@ -165,9 +166,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 }
 		 */
 
-
 		// Update bullets and astroids
-		if (t > 4000) {
+		if (t > 2000) {
 			t = 0;
 			for (int i = 0; i < bulletListSize; i++) {
 				if (bullet1[i].pos.x != 0) {
@@ -181,43 +181,44 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 				}
 			}
+			if (g > 5000) {
+				g = 0;
+				for (int i = 0; i < asteroidListSize; i++) {
+					if (asteroid[i].pos.y != 0
+							&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+						gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 
-			for (int i = 0; i < asteroidListSize; i++) {
-				if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
-					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+						if (asteroid[i].size == 2) {
+							clear_small_asteroid(&asteroid[i]);
+						} else if (asteroid[i].size == 4) {
+							clear_medium_asteroid(&asteroid[i]);
+						} else {
+							clear_large_asteroid(&asteroid[i]);
+						}
 
-					if (asteroid[i].size == 2) {
-						clear_small_asteroid(&asteroid[i]);
-					} else if(asteroid[i].size == 4) {
-						clear_medium_asteroid(&asteroid[i]);
-					} else {
-						clear_large_asteroid(&asteroid[i]);
-					}
+						resetbgcolor();
+						asteroid[i].pos.x -= 1;
 
+						if (asteroid[i].size == 2) {
+							small_asteroid(&asteroid[i]);
+						} else if (asteroid[i].size == 4) {
+							medium_asteroid(&asteroid[i]);
+						} else {
+							large_asteroid(&asteroid[i]);
+						}
 
-					resetbgcolor();
-					asteroid[i].pos.x -= 1;
-
-					if (asteroid[i].size == 2) {
-						small_asteroid(&asteroid[i]);
-					} else if(asteroid[i].size == 4) {
-						medium_asteroid(&asteroid[i]);
-					} else {
-						large_asteroid(&asteroid[i]);
-					}
-
-
-					// Reset asteroid, so it can be used to make a new one
-					if (asteroid[i].pos.x <= (0 - asteroid[i].size)) {
-						asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+						// Reset asteroid, so it can be used to make a new one
+						if (asteroid[i].pos.x <= (0 - asteroid[i].size)) {
+							asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+						}
 					}
 				}
 
 				/*if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
-					printf("i");
-				}*/
+				 printf("i");
+				 }*/
 			}
-		 // printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 
 		}
 	}
@@ -265,100 +266,166 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 void gravity2(struct bullet *bulletptr, struct asteroid *asteroidptr) {
 	uint32_t fx = 0, fy = 0;
-	if (asteroidptr->size == 2){
-		fx = (100/((bulletptr->pos.x*bulletptr->pos.x)+(asteroidptr->pos.x*asteroidptr->pos.x)));
-		fy = (100/((bulletptr->pos.y*bulletptr->pos.y)+(asteroidptr->pos.y*asteroidptr->pos.y)));
+	if (asteroidptr->size == 2) {
+		fx = (100
+				/ ((bulletptr->pos.x * bulletptr->pos.x)
+						+ (asteroidptr->pos.x * asteroidptr->pos.x)));
+		fy = (100
+				/ ((bulletptr->pos.y * bulletptr->pos.y)
+						+ (asteroidptr->pos.y * asteroidptr->pos.y)));
 	}
-
 
 }
 
 int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 	// 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
 	int wide = 6, height = 2, wing = 4;
-	if (ship.x - wide >= asteroid.pos.x - 11 && ship.y - height >= asteroid.pos.y - 8
-			&& ship.x <= asteroid.pos.x + 11 && ship.y + height <= asteroid.pos.y + 8) {
+	if (ship.x - wide >= asteroid.pos.x - 11
+			&& ship.y - height >= asteroid.pos.y - 8
+			&& ship.x <= asteroid.pos.x + 11
+			&& ship.y + height <= asteroid.pos.y + 8) {
 		if (asteroid.size == 8) {
 			// Split the asteroid up to three squares
-			if ((ship.x - wide >= asteroid.pos.x-8 && ship.x <= asteroid.pos.x + 8
-					&& ship.y - height >= asteroid.pos.y-1 && ship.y + height <= asteroid.pos.y + 1)
-					|| (ship.x - wide >= asteroid.pos.x-5 && ship.x <= asteroid.pos.x + 5
-					&& ship.y - height >= asteroid.pos.y-4 && ship.y + height <= asteroid.pos.y + 4)
-					|| (ship.x - wide >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2
-					&& ship.y - height >= asteroid.pos.y-5 && ship.y + height <= asteroid.pos.y + 5)
+			if ((ship.x - wide >= asteroid.pos.x - 8
+					&& ship.x <= asteroid.pos.x + 8
+					&& ship.y - height >= asteroid.pos.y - 1
+					&& ship.y + height <= asteroid.pos.y + 1)
+					|| (ship.x - wide >= asteroid.pos.x - 5
+							&& ship.x <= asteroid.pos.x + 5
+							&& ship.y - height >= asteroid.pos.y - 4
+							&& ship.y + height <= asteroid.pos.y + 4)
+					|| (ship.x - wide >= asteroid.pos.x - 2
+							&& ship.x <= asteroid.pos.x + 2
+							&& ship.y - height >= asteroid.pos.y - 5
+							&& ship.y + height <= asteroid.pos.y + 5)
 
 					// Now check the contact points points
-					|| (ship.x == asteroid.pos.x + 7 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x == asteroid.pos.x + 7 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x == asteroid.pos.x - 7 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x == asteroid.pos.x - 7 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x == asteroid.pos.x + 6 && ship.y == asteroid.pos.y + 3)
-					|| (ship.x == asteroid.pos.x + 6 && ship.y == asteroid.pos.y - 3)
-					|| (ship.x == asteroid.pos.x - 6 && ship.y == asteroid.pos.y + 3)
-					|| (ship.x == asteroid.pos.x - 6 && ship.y == asteroid.pos.y - 3)
-					|| (ship.x - wide == asteroid.pos.x + 7 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x - wide == asteroid.pos.x + 7 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x - wide == asteroid.pos.x - 7 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x - wide == asteroid.pos.x - 7 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x - wide == asteroid.pos.x + 6 && ship.y == asteroid.pos.y + 3)
-					|| (ship.x - wide == asteroid.pos.x + 6 && ship.y == asteroid.pos.y - 3)
-					|| (ship.x - wide == asteroid.pos.x - 6 && ship.y == asteroid.pos.y + 3)
-					|| (ship.x - wide == asteroid.pos.x - 6 && ship.y == asteroid.pos.y - 3)
-					|| (ship.x - wing == asteroid.pos.x + 7 && ship.y + height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x + 7 && ship.y + height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x - 7 && ship.y + height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x - 7 && ship.y + height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x + 6 && ship.y + height == asteroid.pos.y + 3)
-					|| (ship.x - wing == asteroid.pos.x + 6 && ship.y + height == asteroid.pos.y - 3)
-					|| (ship.x - wing == asteroid.pos.x - 6 && ship.y + height == asteroid.pos.y + 3)
-					|| (ship.x - wing == asteroid.pos.x - 6 && ship.y + height == asteroid.pos.y - 3)
-					|| (ship.x - wing == asteroid.pos.x + 7 && ship.y - height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x + 7 && ship.y - height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x - 7 && ship.y - height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x - 7 && ship.y - height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x + 6 && ship.y - height == asteroid.pos.y + 3)
-					|| (ship.x - wing == asteroid.pos.x + 6 && ship.y - height == asteroid.pos.y - 3)
-					|| (ship.x - wing == asteroid.pos.x - 6 && ship.y - height == asteroid.pos.y + 3)
-					|| (ship.x - wing == asteroid.pos.x - 6 && ship.y - height == asteroid.pos.y - 3)) {
+					|| (ship.x == asteroid.pos.x + 7
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x + 7
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x == asteroid.pos.x - 7
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x - 7
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x == asteroid.pos.x + 6
+							&& ship.y == asteroid.pos.y + 3)
+					|| (ship.x == asteroid.pos.x + 6
+							&& ship.y == asteroid.pos.y - 3)
+					|| (ship.x == asteroid.pos.x - 6
+							&& ship.y == asteroid.pos.y + 3)
+					|| (ship.x == asteroid.pos.x - 6
+							&& ship.y == asteroid.pos.y - 3)
+					|| (ship.x - wide == asteroid.pos.x + 7
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x - wide == asteroid.pos.x + 7
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x - wide == asteroid.pos.x - 7
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x - wide == asteroid.pos.x - 7
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x - wide == asteroid.pos.x + 6
+							&& ship.y == asteroid.pos.y + 3)
+					|| (ship.x - wide == asteroid.pos.x + 6
+							&& ship.y == asteroid.pos.y - 3)
+					|| (ship.x - wide == asteroid.pos.x - 6
+							&& ship.y == asteroid.pos.y + 3)
+					|| (ship.x - wide == asteroid.pos.x - 6
+							&& ship.y == asteroid.pos.y - 3)
+					|| (ship.x - wing == asteroid.pos.x + 7
+							&& ship.y + height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x + 7
+							&& ship.y + height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x - 7
+							&& ship.y + height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x - 7
+							&& ship.y + height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x + 6
+							&& ship.y + height == asteroid.pos.y + 3)
+					|| (ship.x - wing == asteroid.pos.x + 6
+							&& ship.y + height == asteroid.pos.y - 3)
+					|| (ship.x - wing == asteroid.pos.x - 6
+							&& ship.y + height == asteroid.pos.y + 3)
+					|| (ship.x - wing == asteroid.pos.x - 6
+							&& ship.y + height == asteroid.pos.y - 3)
+					|| (ship.x - wing == asteroid.pos.x + 7
+							&& ship.y - height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x + 7
+							&& ship.y - height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x - 7
+							&& ship.y - height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x - 7
+							&& ship.y - height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x + 6
+							&& ship.y - height == asteroid.pos.y + 3)
+					|| (ship.x - wing == asteroid.pos.x + 6
+							&& ship.y - height == asteroid.pos.y - 3)
+					|| (ship.x - wing == asteroid.pos.x - 6
+							&& ship.y - height == asteroid.pos.y + 3)
+					|| (ship.x - wing == asteroid.pos.x - 6
+							&& ship.y - height == asteroid.pos.y - 3)) {
 				return 3;
 			}
 		} else if (asteroid.size == 4) {
 			// Split the asteroid up to two squares and four points
-			if ((ship.x - wide >= asteroid.pos.x-4 && ship.x <= asteroid.pos.x + 4
-					&& ship.y - height >= asteroid.pos.y-1 && ship.y + height <= asteroid.pos.y + 1)
-					|| (ship.x - wide >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2
-					&& ship.y - height >= asteroid.pos.y-3 && ship.y + height <= asteroid.pos.y + 3)
+			if ((ship.x - wide >= asteroid.pos.x - 4
+					&& ship.x <= asteroid.pos.x + 4
+					&& ship.y - height >= asteroid.pos.y - 1
+					&& ship.y + height <= asteroid.pos.y + 1)
+					|| (ship.x - wide >= asteroid.pos.x - 2
+							&& ship.x <= asteroid.pos.x + 2
+							&& ship.y - height >= asteroid.pos.y - 3
+							&& ship.y + height <= asteroid.pos.y + 3)
 					// Now check the contact points
-					|| (ship.x == asteroid.pos.x + 3 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x == asteroid.pos.x + 3 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x == asteroid.pos.x - 3 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x == asteroid.pos.x - 3 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x - wide == asteroid.pos.x + 3 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x - wide == asteroid.pos.x + 3 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x - wide == asteroid.pos.x - 3 && ship.y == asteroid.pos.y + 2)
-					|| (ship.x - wide == asteroid.pos.x - 3 && ship.y == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x + 3 && ship.y - height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x + 3 && ship.y - height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x - 3 && ship.y - height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x - 3 && ship.y - height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x + 3 && ship.y + height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x + 3 && ship.y + height == asteroid.pos.y - 2)
-					|| (ship.x - wing == asteroid.pos.x - 3 && ship.y + height == asteroid.pos.y + 2)
-					|| (ship.x - wing == asteroid.pos.x - 3 && ship.y + height == asteroid.pos.y - 2)) {
+					|| (ship.x == asteroid.pos.x + 3
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x + 3
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x == asteroid.pos.x - 3
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x == asteroid.pos.x - 3
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x - wide == asteroid.pos.x + 3
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x - wide == asteroid.pos.x + 3
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x - wide == asteroid.pos.x - 3
+							&& ship.y == asteroid.pos.y + 2)
+					|| (ship.x - wide == asteroid.pos.x - 3
+							&& ship.y == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x + 3
+							&& ship.y - height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x + 3
+							&& ship.y - height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x - 3
+							&& ship.y - height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x - 3
+							&& ship.y - height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x + 3
+							&& ship.y + height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x + 3
+							&& ship.y + height == asteroid.pos.y - 2)
+					|| (ship.x - wing == asteroid.pos.x - 3
+							&& ship.y + height == asteroid.pos.y + 2)
+					|| (ship.x - wing == asteroid.pos.x - 3
+							&& ship.y + height == asteroid.pos.y - 2)) {
 				return 2;
 			}
-		} else if (asteroid.size == 2){
-			if ((ship.x - wide >= asteroid.pos.x-2 && ship.x <= asteroid.pos.x + 2
-					&& ship.y - height >= asteroid.pos.y && ship.y + height <= asteroid.pos.y)
-					|| (ship.x - wide >= asteroid.pos.x-1 && ship.x <= asteroid.pos.x + 1
-					&& ship.y - height >= asteroid.pos.y-1 && ship.y + height <= asteroid.pos.y + 1)) {
+		} else if (asteroid.size == 2) {
+			if ((ship.x - wide >= asteroid.pos.x - 2
+					&& ship.x <= asteroid.pos.x + 2
+					&& ship.y - height >= asteroid.pos.y
+					&& ship.y + height <= asteroid.pos.y)
+					|| (ship.x - wide >= asteroid.pos.x - 1
+							&& ship.x <= asteroid.pos.x + 1
+							&& ship.y - height >= asteroid.pos.y - 1
+							&& ship.y + height <= asteroid.pos.y + 1)) {
 				return 1;
 			}
 		}
 	}
 	return 0;
 }
-
 
 int checkHit(struct vector bullet, struct asteroid asteroid) {
 
@@ -503,7 +570,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				}
 			}
 
-			asteroidptr->pos.x = borderWidth -asteroidptr->size;
+			asteroidptr->pos.x = borderWidth - asteroidptr->size;
 			asteroidptr->pos.y = r;
 
 			break;
@@ -704,7 +771,6 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 	}
 }
 
-
 void level_led(uint8_t gameLevel) {
 	setUpTimer();
 	if (gameLevel == 1) {
@@ -733,9 +799,11 @@ void level_led(uint8_t gameLevel) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		while (1) {
-			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50 || timer.sec100 == 75) {
+			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+					|| timer.sec100 == 75) {
 				turnOn(GPIOB, 4);
-			} else if (timer.sec100 == 13 || timer.sec100 == 37 || timer.sec100 == 62 || timer.sec100 == 88) {
+			} else if (timer.sec100 == 13 || timer.sec100 == 37
+					|| timer.sec100 == 62 || timer.sec100 == 88) {
 				turnOff(GPIOB, 4);
 			}
 		}
