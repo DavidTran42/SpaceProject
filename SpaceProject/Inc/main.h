@@ -4,27 +4,17 @@
  *  Created on: 11. jun. 2021
  *      Author: Marius Mainz
  */
-#include <stdio.h>
-#include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
 
 
 #ifndef MAIN_H_
 #define MAIN_H_
 void test();
 
-
-
-
-
-
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
 #include <string.h>
-#include "charset.h"
 #include "30010_io.h"
 
 

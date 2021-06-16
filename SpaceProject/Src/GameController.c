@@ -221,11 +221,11 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						asteroid[i].alive = 0;
 
 					}
-				}
 
-				/*if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
-				 printf("i");
-				 }*/
+					if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
+						printf("%d",t);
+					}
+				}
 			}
 			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 

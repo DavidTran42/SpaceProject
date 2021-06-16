@@ -8,6 +8,7 @@
 #ifndef SPACESHIP_H_
 #define SPACESHIP_H_
 
+
 typedef struct vector{
 	int16_t x,y;
 };

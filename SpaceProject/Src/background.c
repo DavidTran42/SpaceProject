@@ -10,8 +10,6 @@
 #define ESC 0x1B
 #include "Excellutex.h"
 #include "charset.h"
-#include "30010_io.h"
-#include "ansi.h"
 #include "GameController.h"
 
 void newbgcolor(uint8_t background) {

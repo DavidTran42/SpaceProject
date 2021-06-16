@@ -3,7 +3,6 @@
 #include "Excellutex.h"
 #include "charset.h"
 #include "30010_io.h"
-#include "spaceship.h"
 
 
 void fgcolor(uint8_t foreground) {
@@ -161,12 +160,12 @@ void printFix(int32_t i) {
 
 
 
-void rotateVector(struct vector *v, int32_t degree) {
+/*void rotateVector(struct vector *v, int32_t degree) {
 	int32_t tempX;
 	tempX = v->x * calcCos(degree) - v->y * calcSin(degree);
 	v->y = v->x * calcSin(degree) + v->y * calcCos(degree);
 	v->x = tempX;
-}
+}*/
 
 void turnOn(GPIO_TypeDef *pin, uint32_t pinnum) {
 	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
