@@ -16,7 +16,7 @@
 
 
 int main(void) {
- 	uart_init(2000000);
+ 	uart_init(921600);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
@@ -30,7 +30,7 @@ int main(void) {
 	//initGame(borderWidth, borderHeight, 1);
 
 	mainMenu();
-
+level_led(3);
 
 	/*background();
 =======
