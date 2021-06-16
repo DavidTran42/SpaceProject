@@ -17,7 +17,7 @@
 
 
 int main(void) {
-	uart_init(921600);
+	uart_init(2000000);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
@@ -32,26 +32,26 @@ int main(void) {
 
 
 
-	//mainMenu();
+	mainMenu();
 
 
-	/*background();
+/*
 	struct asteroid asteroid1;			//Test asteroids
-	asteroid1.pos.x = 20;
-	asteroid1.pos.y = 20;
+	asteroid1.pos.x = 100;
+	asteroid1.pos.y = 40;
 
 	struct asteroid asteroid2;
-	asteroid2.pos.x = 40;
-	asteroid2.pos.y = 20;
+	asteroid2.pos.x = 120;
+	asteroid2.pos.y = 40;
 
 	struct asteroid asteroid3;
-	asteroid3.pos.x = 60;
-	asteroid3.pos.y = 20;
+	asteroid3.pos.x = 140;
+	asteroid3.pos.y = 40;
 
 	small_asteroid(&asteroid1);
 	medium_asteroid(&asteroid2);
 	large_asteroid(&asteroid3);
-	*/
+*/
 
 
 	//lcd_update(buffer, 1);
