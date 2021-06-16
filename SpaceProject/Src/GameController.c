@@ -224,7 +224,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
  }
  }*/
 
-void gravity2() {
+void gravity2(struct bullet *bulletptr, struct asteroid *asteroidptr) {
+	uint32_t fx = 0, fy = 0;
+
 
 }
 
