@@ -60,7 +60,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	struct vector ship[4] = { 0 }; // More ships due to power ups
 	struct asteroid asteroid[10] = { 0 };
 	struct bullet bullet1[20] = { 0 };
-	struct bullet bullet2[20] = { 0 }; // More ships due to power ups
+	struct bullet bullet2[20] = { 0 };
 
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
@@ -82,7 +82,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
-	gotoxy(1,1);
 	// Draw the intial ships
 	if (gameMode == 2) {
 		print_ship2(ship[2]);
@@ -98,6 +97,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	// Game loop
 	while (gameloop) {
 		t++; // For every interupt, increment
+		l++;
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
@@ -133,8 +133,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
 
-		makeAsteroid(&asteroid[0], borderWidth, borderHeight, asteroidListSize,
-				0, 40);
+		if (l > 10000) {
+			l = 0;
+			r = rand() % borderHeight;
+			type = rand() % 3;
+			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
+					asteroidListSize, type, r);
+		}
 
 		/*
 		 if (timer.sec++) {
@@ -146,14 +151,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 }
 		 */
 
-<<<<<<< HEAD
 		t++;
-		if (t > 5000) {
-=======
-
 		// Update bullets and astroids
-		if (t > 4000) {
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+		if (t > 5000) {
 			t = 0;
 
 			for (int i = 0; i < bulletListSize; i++) {
@@ -168,29 +168,25 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 				}
 			}
-<<<<<<< HEAD
 		}
-		gravity(&bullet1[0], &asteroid[0]);
-=======
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 
-<<<<<<< HEAD
 		if (l > 5000) {
 			l = 0;
-=======
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 			for (int i = 0; i < asteroidListSize; i++) {
-				if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
+				if (asteroid[i].pos.y != 0
+						&& asteroid[i].pos.x > 0 - asteroid[i].size) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 					resetbgcolor();
-
 					printf("o ");
+					printf("%d ", i);
 					asteroid[i].pos.x -= 1;
+
+					// Reset asteroid, so it can be used to make a new one
+					if (asteroid[i].pos.x <= (0 - asteroid[i].size)) {
+						asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+					}
 				}
-				if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
-					asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
-				}
-<<<<<<< HEAD
+
 				/*
 				 if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
 				 printf("i");
@@ -201,48 +197,61 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				 }
 				 }*/
 				// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
-=======
-
 				/*if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
-					printf("i");
-				}*/
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+				 printf("i");
+				 }*/
 			}
 		}
+
 	}
 }
 
-void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr) {
+void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
+		int bListSize, int aListSize) {
 	uint64_t fx = 0, fy = 0;
+	int k, e, i, j;
+
+	for (int k = 0; k < bulletListSize; k++) {
+		for (int e = 0; e < asteroidListSize; e++) {
+
+
+
+		}
+	}
+
+
+
 	if (asteroidptr->size == 2) {
 		fx = (10
-				/ ((bulletptr->pos.x - asteroidptr->pos.x)
-						* (bulletptr->pos.x - asteroidptr->pos.x)));
+				/ ((bulletptr[k].pos.x - asteroidptr[e].pos.x)
+						* (bulletptr[k].pos.x - asteroidptr[e].pos.x)));
 		fy = (10
-				/ ((bulletptr->pos.y - asteroidptr->pos.y)
-						* (bulletptr->pos.y - asteroidptr->pos.y)));
+				/ ((bulletptr[k].pos.y - asteroidptr[e].pos.y)
+						* (bulletptr[k].pos.y - asteroidptr[e].pos.y)));
 
-		bulletptr->pos.x *= fx;
-		bulletptr->pos.y *= fy;
+		bulletptr[k].vel.x *= fx;
+		bulletptr[k].vel.y *= fy;
 
 	} else if (asteroidptr->size == 4) {
 		fx = (10
-				/ ((bulletptr->pos.x - asteroidptr->pos.x)
-						* (bulletptr->pos.x - asteroidptr->pos.x)));
+				/ ((bulletptr[k].pos.x - asteroidptr[e].pos.x)
+						* (bulletptr[k].pos.x - asteroidptr[e].pos.x)));
 		fy = (10
-				/ ((bulletptr->pos.y - asteroidptr->pos.y)
-						* (bulletptr->pos.y - asteroidptr->pos.y)));
-		bulletptr->pos.x *= fx;
-		bulletptr->pos.y *= fy;
+				/ ((bulletptr[k].pos.y - asteroidptr[e].pos.y)
+						* (bulletptr[k].pos.y - asteroidptr[e].pos.y)));
+
+		bulletptr[k].vel.x *= fx;
+		bulletptr[k].vel.y *= fy;
 	} else if (asteroidptr->size == 8) {
 		fx = (10
-				/ ((bulletptr->pos.x - asteroidptr->pos.x)
-						* (bulletptr->pos.x - asteroidptr->pos.x)));
+				/ ((bulletptr[k].pos.x - asteroidptr[e].pos.x)
+						* (bulletptr[k].pos.x - asteroidptr[e].pos.x)));
 		fy = (10
-				/ ((bulletptr->pos.y - asteroidptr->pos.y)
-						* (bulletptr->pos.y - asteroidptr->pos.y)));
-		bulletptr->pos.x *= fx;
-		bulletptr->pos.y *= fy;
+				/ ((bulletptr[k].pos.y - asteroidptr[e].pos.y)
+						* (bulletptr[k].pos.y - asteroidptr[e].pos.y)));
+
+		bulletptr[k].vel.x *= fx;
+		bulletptr[k].vel.y *= fy;
 	}
 
 }
@@ -595,20 +604,13 @@ void bosskey(char input) {
 				if (input == 'b') {
 					pause = 0;
 					clrscr();
+					game_background();
 					break;
 				}
 			}
 		}
 	}
 
-	/*RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
-	 enableTimer();
-	 TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	 setPrescaler(0); // prescale value
-	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
-
-	 NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
-	 NVIC_EnableIRQ(TIM2_IRQn);*/
 }
 /*
  void life_score(uint8_t buffer[512]) {
@@ -773,9 +775,11 @@ void level_led(uint8_t gameLevel) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		while (1) {
-			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50 || timer.sec100 == 75) {
+			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+					|| timer.sec100 == 75) {
 				turnOn(GPIOB, 4);
-			} else if (timer.sec100 == 13 || timer.sec100 == 37 || timer.sec100 == 62 || timer.sec100 == 88) {
+			} else if (timer.sec100 == 13 || timer.sec100 == 37
+					|| timer.sec100 == 62 || timer.sec100 == 88) {
 				turnOff(GPIOB, 4);
 			}
 		}
