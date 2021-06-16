@@ -65,7 +65,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
 	int gameloop = 1, hearts = 3, score = 0;
-	uint32_t t, s, l;
+	uint32_t t, s,l, g;
 	uint8_t r = rand() % borderHeight;
 	uint8_t type = rand() % 3;
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
@@ -98,6 +98,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	while (gameloop) {
 		t++; // For every interupt, increment
 		l++;
+		g++;
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
@@ -121,7 +122,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			stars_only(); //updating stars
 			print_ship1(ship[0]);
 
-			update_pixels(&ship[0]);
+			update_pixels_ship(&ship[0]);
 			if (gameMode == 2) {
 				updateShip2Pos(input2, &ship[2], controls, borderWidth,
 						borderHeight);
@@ -163,37 +164,23 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 type = rand() % 3;
 		 }
 		 */
-		t++;
+
 		// Update bullets and astroids
 
-		if (t > 4000) {
-			t = 0;
+
+		if (g > 5000) {
+			g = 0;
 
 			for (int i = 0; i < asteroidListSize; i++) {
-				for (int k = 0; k < bulletListSize; k++) {
-					if (bullet1[k].pos.x != 0) {
-						gotoxy(bullet1[k].pos.x, bullet1[k].pos.y);
-						update_bullet(bullet1[k].pos);
-						printf(" o");
-						gravity(&bullet1[k], &asteroid[k], bulletListSize,
-								asteroidListSize, i, k);
-						bullet1[k].pos.x += bullet1[k].vel.x;
-						bullet1[k].pos.y += bullet1[k].vel.y;
-						if (bullet1[k].pos.x == borderWidth) {
-							bullet1[k].pos.x = 0, bullet1[k].pos.y = 0;
-						}
-					}
-				}
-				if (asteroid[i].pos.y != 0
-						&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+				if (asteroid[i].alive) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
-
 					if (asteroid[i].size == 2) {
 						clear_small_asteroid(&asteroid[i]);
 					} else if (asteroid[i].size == 4) {
 						clear_medium_asteroid(&asteroid[i]);
 					} else {
 						clear_large_asteroid(&asteroid[i]);
+
 					}
 
 					resetbgcolor();
@@ -202,24 +189,47 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					if (asteroid[i].size == 2) {
 						small_asteroid(&asteroid[i]);
+
+						update_small_background(&asteroid[i]);
+
 					} else if (asteroid[i].size == 4) {
 						medium_asteroid(&asteroid[i]);
+						update_medium_background(&asteroid[i]);
 					} else {
 						large_asteroid(&asteroid[i]);
+						update_large_background(&asteroid[i]);
 					}
 
 					// Reset asteroid, so it can be used to make a new one
-					if (asteroid[i].pos.x <= (0 - asteroid[i].size)) {
-						asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+					if (asteroid[i].pos.x <= asteroid[i].size + 1) {
+						if (asteroid[i].size == 2) {
+							clear_small_asteroid(&asteroid[i]);
+						} else if (asteroid[i].size == 4) {
+							clear_medium_asteroid(&asteroid[i]);
+						} else {
+							clear_large_asteroid(&asteroid[i]);
+
+						}
+						asteroid[i].alive = 0;
+						if (asteroid[i].pos.y > 63) {
+							game_background();
+						}
+
 					}
+					/*
+					 if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
+					 printf("%d",t);
+					 }*/
 				}
 			}
+
+			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 		}
 	}
 }
 
 void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
-		int bListSize, int aListSize, int i,int k) {
+		int bListSize, int aListSize, int i, int k) {
 	int64_t fx = 0, fy = 0;
 	/*
 	 for (int e = 0; e < aListSize; e++) {
@@ -236,6 +246,7 @@ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
 	 asteroidptr[e].pos.x = 0, asteroidptr[e].pos.y = 0;
 	 }
 
+	 <<<<<<< HEAD
 	 if (bulletptr[k].pos.x == 270) {
 	 bulletptr[k].pos.x = 0, bulletptr[k].pos.y = 0;
 	 }*/
@@ -254,9 +265,8 @@ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
 										* (bulletptr[k].pos.y
 												- asteroidptr[i].pos.y))));
 
-			bulletptr[k].vel.x *= fx;
-			bulletptr[k].vel.y *= fy;
-
+		bulletptr[k].vel.x *= fx;
+		bulletptr[k].vel.y *= fy;
 
 	}
 	if (asteroidptr->size == 4) {
@@ -273,10 +283,8 @@ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
 										* (bulletptr[k].pos.y
 												- asteroidptr[i].pos.y))));
 
-
-			bulletptr[k].vel.x *= fx;
-			bulletptr[k].vel.y *= fy;
-
+		bulletptr[k].vel.x *= fx;
+		bulletptr[k].vel.y *= fy;
 
 	}
 	if (asteroidptr->size == 8) {
@@ -293,10 +301,8 @@ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
 										* (bulletptr[k].pos.y
 												- asteroidptr[i].pos.y))));
 
-
-			bulletptr[k].vel.x *= fx;
-			bulletptr[k].vel.y *= fy;
-
+		bulletptr[k].vel.x *= fx;
+		bulletptr[k].vel.y *= fy;
 
 	}
 	gotoxy(10, 10);
@@ -558,10 +564,12 @@ void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 	if (input == ' ' || controls.center) {
 // Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++) {
-			if (bulletptr->pos.x == 0 && bulletptr->pos.y == 0) {
+			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship->x + 5;
 				bulletptr->pos.y = ship->y;
-				bulletptr->vel.x = 5;
+				bulletptr->vel.x = 1;
+				bulletptr->alive = 1;
+
 				break;
 			}
 			bulletptr++;
@@ -573,7 +581,7 @@ void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r) {
 	for (int i = 0; i < aListSize; i++) {
-		if (asteroidptr->pos.x == 0 && asteroidptr->pos.y == 0) {
+		if (!(asteroidptr->alive)) {
 
 			// Give asteroid it's size and y-spawn
 			if (type == 2) {
@@ -601,6 +609,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 
 			asteroidptr->pos.x = borderWidth - asteroidptr->size;
 			asteroidptr->pos.y = r;
+			asteroidptr->alive = 1;
 
 			break;
 		}
