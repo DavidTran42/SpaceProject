@@ -170,20 +170,20 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		if (t > 4000) {
 			t = 0;
 			for (int i = 0; i < bulletListSize; i++) {
-				if (bullet1[i].pos.x != 0) {
+				if (bullet1[i].alive) {
 					gotoxy(bullet1[i].pos.x, bullet1[i].pos.y);
 					update_bullet(bullet1[i].pos);
 					printf(" o");
 					bullet1[i].pos.x += bullet1[i].vel.x;
 					bullet1[i].pos.y += bullet1[i].vel.y;
 					if (bullet1[i].pos.x == borderWidth) {
-						bullet1[i].pos.x = 0, bullet1[i].pos.y = 0;
+						bullet1[i].alive = 0;
 					}
 				}
 			}
 
 			for (int i = 0; i < asteroidListSize; i++) {
-				if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
+				if (asteroid[i].alive) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 
 					if (asteroid[i].size == 2) {
@@ -208,8 +208,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 
 					// Reset asteroid, so it can be used to make a new one
-					if (asteroid[i].pos.x <= (0 - asteroid[i].size)) {
-						asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+					if (asteroid[i].pos.x <= asteroid[i].size) {
+						asteroid[i].alive = 0;
 					}
 				}
 
@@ -462,10 +462,11 @@ void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 	if (input == ' ' || controls.center) {
 // Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++) {
-			if (bulletptr->pos.x == 0 && bulletptr->pos.y == 0) {
+			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship->x + 5;
 				bulletptr->pos.y = ship->y;
 				bulletptr->vel.x = 1;
+				bulletptr->alive = 1;
 				break;
 			}
 			bulletptr++;
@@ -477,7 +478,7 @@ void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r) {
 	for (int i = 0; i < aListSize; i++) {
-		if (asteroidptr->pos.x == 0 && asteroidptr->pos.y == 0) {
+		if (!(asteroidptr->alive)) {
 
 			// Give asteroid it's size and y-spawn
 			if (type == 2) {
@@ -505,6 +506,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 
 			asteroidptr->pos.x = borderWidth -asteroidptr->size;
 			asteroidptr->pos.y = r;
+			asteroidptr->alive = 1;
 
 			break;
 		}
