@@ -25,7 +25,7 @@ void TIM2_IRQHandler(void) {
 
 	timer.sec100++;
 
-	if (timer.sec100 >= 10000) {
+	if (timer.sec100 >= 100) {
 		timer.sec++;
 		timer.sec100 = 0;
 	}
@@ -82,7 +82,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
-
+	gotoxy(1,1);
 	// Draw the intial ships
 	if (gameMode == 2) {
 		print_ship2(ship[2]);
@@ -97,10 +97,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Game loop
 	while (gameloop) {
-		t++;
+		t++; // For every interupt, increment
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
-		// printf("%d", controls.right);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
 		controls.center = GPIOB->IDR & (0x0001 << 5);
 		controls.left = GPIOC->IDR & (0x0001 << 1);
@@ -119,8 +118,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			// clrscr();
-
 			stars_only(); //updating stars
 			print_ship1(ship[0]);
 
@@ -148,11 +145,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 type = rand() % 3;
 		 }
 		 */
-		// Update bullets and astroids
-		l++;
 
+<<<<<<< HEAD
 		t++;
 		if (t > 5000) {
+=======
+
+		// Update bullets and astroids
+		if (t > 4000) {
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 			t = 0;
 
 			for (int i = 0; i < bulletListSize; i++) {
@@ -167,14 +168,19 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 				}
 			}
+<<<<<<< HEAD
 		}
 		gravity(&bullet1[0], &asteroid[0]);
+=======
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 
+<<<<<<< HEAD
 		if (l > 5000) {
 			l = 0;
+=======
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 			for (int i = 0; i < asteroidListSize; i++) {
-				if (asteroid[i].pos.y != 0
-						&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+				if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 					resetbgcolor();
 
@@ -184,6 +190,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
 					asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
 				}
+<<<<<<< HEAD
 				/*
 				 if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
 				 printf("i");
@@ -194,6 +201,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				 }
 				 }*/
 				// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+=======
+
+				/*if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
+					printf("i");
+				}*/
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 			}
 		}
 	}
@@ -760,11 +773,9 @@ void level_led(uint8_t gameLevel) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		while (1) {
-			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
-					|| timer.sec100 == 75) {
+			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50 || timer.sec100 == 75) {
 				turnOn(GPIOB, 4);
-			} else if (timer.sec100 == 12 || timer.sec100 == 37
-					|| timer.sec100 == 62 || timer.sec100 == 87) {
+			} else if (timer.sec100 == 13 || timer.sec100 == 37 || timer.sec100 == 62 || timer.sec100 == 88) {
 				turnOff(GPIOB, 4);
 			}
 		}

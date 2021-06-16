@@ -9,7 +9,7 @@
 #define SPACESHIP_H_
 
 typedef struct vector{
-	uint8_t x,y;
+	int16_t x,y;
 };
 
 void print_ship1(struct vector position);

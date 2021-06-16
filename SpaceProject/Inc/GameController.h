@@ -18,11 +18,11 @@ typedef struct joystick {
 };
 
 typedef struct clockTimer {
-	volatile int8_t hour, min, sec, sec100;
+	volatile uint8_t hour, min, sec, sec100;
 };
 
 typedef struct asteroid {
-	struct vector pos;
+	struct vector pos; // Due to the fact that u can see the asteroid outside boundaries
 	uint8_t size;
 };
 typedef struct bullet{
