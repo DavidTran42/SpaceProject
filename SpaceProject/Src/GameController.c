@@ -176,13 +176,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[k].pos.x += bullet1[k].vel.x;
 					bullet1[k].pos.y += bullet1[k].vel.y;
 					if (bullet1[k].pos.x == borderWidth) {
-						bullet1[k].pos.x = 0, bullet1[k].pos.y = 0;
+						bullet1[k].alive = 0;
 					}
 				}
 			}
 		}
 
-		if (g > 5000) {
+		if (g > 2000) {
 			g = 0;
 
 			for (int i = 0; i < asteroidListSize; i++) {
