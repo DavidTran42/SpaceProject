@@ -523,7 +523,6 @@ void clear_medium_asteroid(struct asteroid *asteroid2) {
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 }
 
-
 void large_asteroid(struct asteroid *asteroid3) {
 	newfgcolor(240);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 5);
@@ -726,7 +725,7 @@ void stars_only() {
 
 }
 
-void update_pixels(struct vector *p) {
+void update_pixels_ship(struct vector *p) {
 	if (p->y == 65) {
 		gotoxy(p->x - 4, p->y + 3);
 		newbgcolor(17);
@@ -983,6 +982,313 @@ void update_pixels(struct vector *p) {
 	}
 
 	resetbgcolor();
+}
+
+void update_small_background(struct vector *p) {
+	if (p->y == 67) {
+		newbgcolor(17);
+		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
+	} else if (p->y == 68) {
+		newbgcolor(18);
+		gotoxy(p->x + 2, p->y + 1);
+		newbgcolor(17);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+	} else if (p->y == 69) {
+		newbgcolor(19);
+		gotoxy(p->x + 2, p->y + 1);
+		newbgcolor(18);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 2, p->y - 1);
+		printf(" ");
+	} else if (p->y == 70) {
+		newbgcolor(20);
+		gotoxy(p->x + 2, p->y + 1);
+		newbgcolor(19);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 2, p->y - 1);
+		printf(" ");
+	} else if (p->y == 71) {
+		newbgcolor(21);
+		gotoxy(p->x + 2, p->y + 1);
+		newbgcolor(20);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 2, p->y - 1);
+		printf(" ");
+	} else if (p->y == 72) {
+		newbgcolor(15);
+		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 2, p->y - 1);
+		printf(" ");
+	} else if (p->y == 73) {
+		newbgcolor(195);
+		gotoxy(p->x + 2, p->y + 1);
+		newbgcolor(15);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 2, p->y - 1);
+		printf(" ");
+	} else if (p->y == 74) {
+		newbgcolor(159);
+		gotoxy(p->x + 2, p->y + 1);
+		newbgcolor(195);
+		gotoxy(p->x + 3, p->y);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x + 2, p->y - 1);
+		printf(" ");
+	}
+	resetbgcolor();
+}
+
+void update_medium_background(struct vector *p) {
+	if (p->y == 65) {
+		newbgcolor(17);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+	} else if (p->y == 66) {
+		newbgcolor(18);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+	} else if (p->y == 67) {
+		newbgcolor(19);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 5, p->y + 1);
+		printf(" ");
+	} else if (p->y == 68) {
+		newbgcolor(20);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 5, p->y + 1);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 5, p->y);
+		printf(" ");
+	} else if (p->y == 69) {
+		newbgcolor(21);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 5, p->y + 1);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 5, p->y);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 5, p->y - 1);
+		printf(" ");
+	} else if (p->y == 70) {
+		newbgcolor(15);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 5, p->y + 1);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 5, p->y);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 5, p->y - 1);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 4, p->y - 2);
+		printf(" ");
+	} else if (p->y == 71) {
+		newbgcolor(195);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 5, p->y + 1);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 5, p->y);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 5, p->y - 1);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 4, p->y - 2);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 3, p->y - 3);
+		printf(" ");
+	} else if (p->y == 72) {
+		newbgcolor(159);
+		gotoxy(p->x + 3, p->y + 3);
+		printf(" ");
+		newbgcolor(195);
+		gotoxy(p->x + 4, p->y + 2);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x + 5, p->y + 1);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 5, p->y);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 5, p->y - 1);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 4, p->y - 2);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 3, p->y - 3);
+		printf(" ");
+	}
+}
+
+void update_large_background(struct vector *p) {
+	if (p->y == 63) {
+		newbgcolor(17);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+	} else if (p->y == 64) {
+		newbgcolor(18);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+	} else if (p->y == 65) {
+		newbgcolor(19);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 7, p->y + 3);
+		printf(" ");
+	} else if (p->y == 66) {
+		newbgcolor(20);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 7, p->y + 3);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 8, p->y + 2);
+		printf(" ");
+	} else if (p->y == 67) {
+		newbgcolor(21);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 7, p->y + 3);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 8, p->y + 2);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 9, p->y + 1);
+		printf(" ");
+	} else if (p->y == 68) {
+		newbgcolor(15);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 7, p->y + 3);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 8, p->y + 2);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 9, p->y + 1);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 9, p->y);
+		printf(" ");
+	} else if (p->y == 69) {
+		newbgcolor(195);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 7, p->y + 3);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 8, p->y + 2);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 9, p->y + 1);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 9, p->y);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 9, p->y - 1);
+		printf(" ");
+	} else if (p->y == 70) {
+		newbgcolor(159);
+		gotoxy(p->x + 3, p->y + 5);
+		printf(" ");
+		newbgcolor(195);
+		gotoxy(p->x + 6, p->y + 4);
+		printf(" ");
+		newbgcolor(15);
+		gotoxy(p->x + 7, p->y + 3);
+		printf(" ");
+		newbgcolor(21);
+		gotoxy(p->x + 8, p->y + 2);
+		printf(" ");
+		newbgcolor(20);
+		gotoxy(p->x + 9, p->y + 1);
+		printf(" ");
+		newbgcolor(19);
+		gotoxy(p->x + 9, p->y);
+		printf(" ");
+		newbgcolor(18);
+		gotoxy(p->x + 9, p->y - 1);
+		printf(" ");
+		newbgcolor(17);
+		gotoxy(p->x + 8, p->y - 2);
+		printf(" ");
+	}
 }
 
 void update_bullet(struct vector bullet) {

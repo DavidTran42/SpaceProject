@@ -122,7 +122,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			stars_only(); //updating stars
 			print_ship1(ship[0]);
 
-			update_pixels(&ship[0]);
+			update_pixels_ship(&ship[0]);
 			if (gameMode == 2) {
 				updateShip2Pos(input2, &ship[2], controls, borderWidth,
 						borderHeight);
@@ -202,10 +202,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					if (asteroid[i].size == 2) {
 						small_asteroid(&asteroid[i]);
+						update_small_background(&asteroid[i]);
 					} else if (asteroid[i].size == 4) {
 						medium_asteroid(&asteroid[i]);
+						update_medium_background(&asteroid[i]);
 					} else {
 						large_asteroid(&asteroid[i]);
+						update_large_background(&asteroid[i]);
 					}
 
 					// Reset asteroid, so it can be used to make a new one
@@ -219,6 +222,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 						}
 						asteroid[i].alive = 0;
+						if (asteroid[i].pos.y > 63){
+							game_background();
+						}
 
 					}
 				}
