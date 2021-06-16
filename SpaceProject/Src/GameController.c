@@ -159,12 +159,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				if (bullet1[i].pos.x != 0) {
 					gotoxy(bullet1[i].pos.x, bullet1[i].pos.y);
 					update_bullet(bullet1[i].pos);
-					// printf(" o");
+					printf(" o");
 					bullet1[i].pos.x += bullet1[i].vel.x;
 					bullet1[i].pos.y += bullet1[i].vel.y;
-					printf(" %d",bullet1[i].pos.x);
 					if (bullet1[i].pos.x == borderWidth-1) {
-						printf("hi");
 						bullet1[i].pos.x = 0, bullet1[i].pos.y = 0;
 					}
 				}
