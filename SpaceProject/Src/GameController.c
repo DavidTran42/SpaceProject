@@ -149,12 +149,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 }
 		 */
 		// Update bullets and astroids
-		gravity(&bullet1[0], &asteroid[0]);
 		l++;
 
 		t++;
-		if (t > 4000) {
+		if (t > 5000) {
 			t = 0;
+
 			for (int i = 0; i < bulletListSize; i++) {
 				if (bullet1[i].pos.x != 0) {
 					gotoxy(bullet1[i].pos.x, bullet1[i].pos.y);
@@ -168,67 +168,68 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				}
 			}
 		}
+		gravity(&bullet1[0], &asteroid[0]);
 
-		/*
-		 if (l < 1) {
-		 for (int i = 0; i < asteroidListSize; i++) {
-		 if (asteroid[i].pos.y != 0
-		 && asteroid[i].pos.x > 0 - asteroid[i].size) {
-		 gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
-		 resetbgcolor();
-		 printf("o ");
-		 asteroid[i].pos.x -= 1;
-		 }
-		 if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
-		 asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
-		 }
+		if (l > 5000) {
+			l = 0;
+			for (int i = 0; i < asteroidListSize; i++) {
+				if (asteroid[i].pos.y != 0
+						&& asteroid[i].pos.x > 0 - asteroid[i].size) {
+					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+					resetbgcolor();
 
-		 if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
-		 printf("i");
-		 }
-		 if (asteroid[i].pos.x == ship[0].x
-		 && asteroid[i].pos.y == ship[0].y) {
-		 gotoxy(ship[0].x, ship[0].y);
-		 }
-		 }*/
-		// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+					printf("o ");
+					asteroid[i].pos.x -= 1;
+				}
+				if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
+					asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+				}
+				/*
+				 if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
+				 printf("i");
+				 }
+				 if (asteroid[i].pos.x == ship[0].x
+				 && asteroid[i].pos.y == ship[0].y) {
+				 gotoxy(ship[0].x, ship[0].y);
+				 }
+				 }*/
+				// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+			}
+		}
 	}
 }
 
 void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr) {
 	uint64_t fx = 0, fy = 0;
 	if (asteroidptr->size == 2) {
-		fx = (100
+		fx = (10
 				/ ((bulletptr->pos.x - asteroidptr->pos.x)
 						* (bulletptr->pos.x - asteroidptr->pos.x)));
-		fy = (100
+		fy = (10
 				/ ((bulletptr->pos.y - asteroidptr->pos.y)
 						* (bulletptr->pos.y - asteroidptr->pos.y)));
 
 		bulletptr->pos.x *= fx;
 		bulletptr->pos.y *= fy;
-		printf("nummer 1 ");
 
 	} else if (asteroidptr->size == 4) {
-		fx = (100
+		fx = (10
 				/ ((bulletptr->pos.x - asteroidptr->pos.x)
 						* (bulletptr->pos.x - asteroidptr->pos.x)));
-		fy = (100
+		fy = (10
 				/ ((bulletptr->pos.y - asteroidptr->pos.y)
 						* (bulletptr->pos.y - asteroidptr->pos.y)));
 		bulletptr->pos.x *= fx;
 		bulletptr->pos.y *= fy;
-		printf("nummer 2 ");
 	} else if (asteroidptr->size == 8) {
-		fx = (100
+		fx = (10
 				/ ((bulletptr->pos.x - asteroidptr->pos.x)
 						* (bulletptr->pos.x - asteroidptr->pos.x)));
-		fy = (100
+		fy = (10
 				/ ((bulletptr->pos.y - asteroidptr->pos.y)
 						* (bulletptr->pos.y - asteroidptr->pos.y)));
 		bulletptr->pos.x *= fx;
 		bulletptr->pos.y *= fy;
-		printf("nummer 3 ");
 	}
 
 }
