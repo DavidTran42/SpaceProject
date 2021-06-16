@@ -697,11 +697,9 @@ void level_led(uint8_t gameLevel) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		while (1) {
-			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
-					|| timer.sec100 == 75) {
+			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50 || timer.sec100 == 75) {
 				turnOn(GPIOB, 4);
-			} else if (timer.sec100 == 12 || timer.sec100 == 37
-					|| timer.sec100 == 62 || timer.sec100 == 87) {
+			} else if (timer.sec100 == 13 || timer.sec100 == 37 || timer.sec100 == 62 || timer.sec100 == 88) {
 				turnOff(GPIOB, 4);
 			}
 		}

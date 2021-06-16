@@ -124,7 +124,7 @@ void mainOptions() {
 	singleplayerMenu();
 	multiplayerMenu();
 	helpMenu();
-	guitGameMenu();
+	quitGameMenu();
 
 }
 
@@ -201,7 +201,7 @@ void helpMenu() {
 	printf("                   ' ` `-' `-' '                  ");
 }
 
-void guitGameMenu() {
+void quitGameMenu() {
 	gotoxy(110, 53);
 	printf("%c", 201);
 	repeat(205, 50);
@@ -245,20 +245,14 @@ void optionsSelect() {
 
 		while (i == 1) { // blinker singleplayer menu
 
-			if (!timer.sec++) {
-				t++;
-
-				if (t < 200 && t > 100) {
-					inverse(1);
-					singleplayerMenu();
-				} else {
-					inverse(0);
-					singleplayerMenu();
-				}
-				if (t == 200) {
-					t = 0;
-				}
+			if (timer.sec100 == 1) {
+				inverse(1);
+				singleplayerMenu();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				singleplayerMenu();
 			}
+
 			if (uart_get_count() > 0) {
 				input = uart_get_char();
 				uart_clear();
@@ -285,22 +279,16 @@ void optionsSelect() {
 				}
 			}
 		}
+
 		while (i == 2) { // blinker multiplayermenu
-			if (!timer.sec++) {
-				t++;
-
-				if (t < 200 && t > 100) {
-					inverse(1);
-					multiplayerMenu();
-				} else {
-					inverse(0);
-					multiplayerMenu();
-				}
-
-				if (t == 200) {
-					t = 0;
-				}
+			if (timer.sec100 == 1) {
+				inverse(1);
+				multiplayerMenu();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				multiplayerMenu();
 			}
+
 			if (uart_get_count() > 0) {
 				input = uart_get_char();
 				uart_clear();
@@ -326,24 +314,16 @@ void optionsSelect() {
 					i = 4;
 				}
 			}
-
 		}
 		while (i == 3) { // blinker Help
-			if (!timer.sec++) {
-				t++;
-
-				if (t < 200 && t > 100) {
-					inverse(1);
-					helpMenu();
-				} else {
-					inverse(0);
-					helpMenu();
-				}
-
-				if (t == 200) {
-					t = 0;
-				}
+			if (timer.sec100 == 1) {
+				inverse(1);
+				helpMenu();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				helpMenu();
 			}
+
 			if (uart_get_count() > 0) {
 				input = uart_get_char();
 				uart_clear();
@@ -369,35 +349,27 @@ void optionsSelect() {
 				}
 
 			}
-
 		}
+
 		while (i == 4) { // blinker Quit game
-			if (!timer.sec++) {
-				t++;
-
-				if (t < 200 && t > 100) {
-					inverse(1);
-					guitGameMenu();
-
-				} else {
-					inverse(0);
-					guitGameMenu();
-				}
-
-				if (t == 200) {
-					t = 0;
-				}
+			if (timer.sec100 == 1) {
+				inverse(1);
+				quitGameMenu();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				quitGameMenu();
 			}
+
 			if (uart_get_count() > 0) {
 				input = uart_get_char();
 				uart_clear();
 				if (input == 'w') {
 					inverse(0);
-					guitGameMenu();
+					quitGameMenu();
 					i--;
 				} else if (input == 's') {
 					inverse(0);
-					guitGameMenu();
+					quitGameMenu();
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
@@ -415,7 +387,6 @@ void optionsSelect() {
 
 		}
 	}
-
 }
 
 void mainMenu() {
@@ -424,7 +395,7 @@ void mainMenu() {
 
 	clrscr();
 
-	uint16_t box_h = 75, box_w = 270;
+	int16_t box_h = 75, box_w = 270;
 	background();
 	mainFrame(1, 1, box_w, box_h);
 	gameTitle();
