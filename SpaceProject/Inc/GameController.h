@@ -30,6 +30,7 @@ typedef struct bullet{
 	struct vector pos, vel;
 };
 
+
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight);
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
@@ -43,5 +44,10 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t b
 void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 		int bListSize, struct joystick controls);
 void bosskey(char input);
+
 void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
+void init_pixels();
+void update_pixels(struct vector *p);
+void gravity2();
+

@@ -20,7 +20,7 @@ int main(void) {
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
-	//lcd_init();
+	lcd_init();
 	//test();
 
 	//shiptest();
@@ -29,8 +29,6 @@ int main(void) {
 	//uint16_t borderWidth = 270, borderHeight = 75;
 	//initGame(borderWidth, borderHeight, 1);
 
-	//uint16_t borderWidth = 270, borderHeight = 75;
-	//initGame(borderWidth, borderHeight, 1);
 
 
 	mainMenu();

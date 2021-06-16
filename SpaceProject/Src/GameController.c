@@ -78,7 +78,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	srand(time(NULL)); // Initialization for randomizer. Only done once
 
 	// Make game window
-	//background();
+	game_background();
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
@@ -113,12 +113,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			bosskey(input);
 
 			// Update ships from key press or joystick input
+			clear_ship1(ship[0]);
 			updateShipPos(input, &ship[0], controls, borderWidth, borderHeight);
 
 			// print ship
-			clrscr();
 
+			stars_only(); //updating stars
 			print_ship1(ship[0]);
+
+			update_pixels(&ship[0]);
 			if (gameMode == 2) {
 				updateShip2Pos(input2, &ship[2], controls, borderWidth,
 						borderHeight);
@@ -131,18 +134,18 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		}
 		if (timer.sec++) {
 			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
-								asteroidListSize, 0, 40);
+					asteroidListSize, 0, 40);
 		}
 
-/*
-		if (timer.sec++) {
-			// printf("%d",timer.sec);
-			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
-					asteroidListSize, type, r);
-			r = rand() % borderHeight;
-			type = rand() % 3;
-		}
-*/
+		/*
+		 if (timer.sec++) {
+		 // printf("%d",timer.sec);
+		 makeAsteroid(&asteroid[0], borderWidth, borderHeight,
+		 asteroidListSize, type, r);
+		 r = rand() % borderHeight;
+		 type = rand() % 3;
+		 }
+		 */
 		// Update bullets and astroids
 		l++;
 
@@ -160,8 +163,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 				}
 			}
-
 		}
+
 		if (l > 4000) {
 			l = 0;
 			for (int i = 0; i < asteroidListSize; i++) {
@@ -175,53 +178,55 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
 				}
 				// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
+
 			}
 		}
-
 	}
 }
-/*
-void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr) {
-	if ((bulletptr->pos.y > asteroidptr->pos.y) && (asteroidptr->size == 2)
-			&& ((bulletptr->pos.y - asteroidptr->pos.y) < 30)
-			&& ((bulletptr->pos.x - asteroidptr->pos.x) < 30)) {
-		rotateVector(&bulletptr->vel, 10);
-		printf(" nummer 1");
-	}
-	if ((bulletptr->pos.y < asteroidptr->pos.y) && (asteroidptr->size == 2)
-			&& (bulletptr->pos.y - asteroidptr->pos.y <30)
-			&& (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
-		rotateVector(&bulletptr->vel, -10);
-		printf(" nummer 2");
-	}
-	if ((bulletptr->pos.y > asteroidptr->pos.y) && (asteroidptr->size == 4)
-			&& (bulletptr->pos.y - asteroidptr->pos.y < 30)
-			&& (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
-		rotateVector(&bulletptr->vel, 20);
-		printf(" nummer 3");
-	}
-	if ((bulletptr->pos.y < asteroidptr->pos.y) && (asteroidptr->size == 4)
-			&& (bulletptr->pos.y - asteroidptr->pos.y < 30)
-			&& (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
-		rotateVector(&bulletptr->vel, -20);
-		printf(" nummer 4");
-	}
-	if ((bulletptr->pos.y > asteroidptr->pos.y) && (asteroidptr->size == 8)
-			&& (bulletptr->pos.y - asteroidptr->pos.y < 30)
-			&& (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
-		rotateVector(&bulletptr->vel, 30);
-		printf(" nummer 5");
-	}
-	if ((bulletptr->pos.y < asteroidptr->pos.y) && (asteroidptr->size == 8)
-			&& (bulletptr->pos.y - asteroidptr->pos.y < 30)
-			&& (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
-		rotateVector(&bulletptr->vel, -30);
-		printf(" nummer 6");
-	}
-}*/
-void gravity2(){
 
+/*
+ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr) {
+ if ((bulletptr->pos.y > asteroidptr->pos.y) && (asteroidptr->size == 2)
+ && ((bulletptr->pos.y - asteroidptr->pos.y) < 30)
+ && ((bulletptr->pos.x - asteroidptr->pos.x) < 30)) {
+ rotateVector(&bulletptr->vel, 10);
+ printf(" nummer 1");
  }
+ if ((bulletptr->pos.y < asteroidptr->pos.y) && (asteroidptr->size == 2)
+ && (bulletptr->pos.y - asteroidptr->pos.y <30)
+ && (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
+ rotateVector(&bulletptr->vel, -10);
+ printf(" nummer 2");
+ }
+ if ((bulletptr->pos.y > asteroidptr->pos.y) && (asteroidptr->size == 4)
+ && (bulletptr->pos.y - asteroidptr->pos.y < 30)
+ && (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
+ rotateVector(&bulletptr->vel, 20);
+ printf(" nummer 3");
+ }
+ if ((bulletptr->pos.y < asteroidptr->pos.y) && (asteroidptr->size == 4)
+ && (bulletptr->pos.y - asteroidptr->pos.y < 30)
+ && (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
+ rotateVector(&bulletptr->vel, -20);
+ printf(" nummer 4");
+ }
+ if ((bulletptr->pos.y > asteroidptr->pos.y) && (asteroidptr->size == 8)
+ && (bulletptr->pos.y - asteroidptr->pos.y < 30)
+ && (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
+ rotateVector(&bulletptr->vel, 30);
+ printf(" nummer 5");
+ }
+ if ((bulletptr->pos.y < asteroidptr->pos.y) && (asteroidptr->size == 8)
+ && (bulletptr->pos.y - asteroidptr->pos.y < 30)
+ && (bulletptr->pos.x - asteroidptr->pos.x < 30)) {
+ rotateVector(&bulletptr->vel, -30);
+ printf(" nummer 6");
+ }
+ }*/
+
+void gravity2() {
+
+}
 
 int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 	// 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
@@ -310,14 +315,14 @@ void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
 	// Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
 
-		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 3;
+		shipptr->x = 10, shipptr->y = (borderHeight + 5) / 3;
 
 		shipptr += 2;
 
-		shipptr->x = 6, shipptr->y = ((borderHeight + 5) / 3) * 2;
+		shipptr->x = 10, shipptr->y = ((borderHeight + 5) / 3) * 2;
 	} else { // Singleplayer
 
-		shipptr->x = 6, shipptr->y = (borderHeight + 5) / 2;
+		shipptr->x = 10, shipptr->y = (borderHeight + 5) / 2;
 
 	}
 }
@@ -488,7 +493,11 @@ void bosskey(char input) {
  char s_score[20] = "SCORE = ";
 
  //life remaining
+ <<<<<<< HEAD
  if (single_player) {
+ =======
+ if (gameMode == 1) {
+ >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
  lcd_write_string(buffer, "SCORE: ", 3);
 
  lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
@@ -507,7 +516,11 @@ void bosskey(char input) {
  }
  }
 
+ <<<<<<< HEAD
  if (multiplayer) {
+ =======
+ if (gameMode == 2) {
+ >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
  lcd_write_string(buffer, "P1 SCORE: ", 3);
  lcd_write_string2(buffer, "P2 SCORE: ", 3);
 
@@ -606,10 +619,43 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 	}
 }
 
-void rotateVector(struct vector *v, int32_t degree) {
-	int32_t tempX;
-	tempX = v->x * calcCos(degree) - v->y * calcSin(degree);
-	v->y = v->x * calcSin(degree) + v->y * calcCos(degree);
-	v->x = tempX;
+
+void level_led(uint8_t gameLevel) {
+	setUpTimer();
+	if (gameLevel == 1) {
+		turnOff(GPIOA, 9);
+		turnOff(GPIOB, 4);
+
+		while (1) {
+			if (timer.sec100 == 1) {
+				turnOn(GPIOC, 7);
+			} else if (timer.sec100 == 50) {
+				turnOff(GPIOC, 7);
+			}
+		}
+	} else if (gameLevel == 2) {
+		turnOff(GPIOA, 9);
+		while (1) {
+			if (timer.sec100 == 1 || timer.sec100 == 50) {
+				turnOn(GPIOB, 4);
+				turnOn(GPIOC, 7);
+			} else if (timer.sec100 == 25 || timer.sec100 == 75) {
+				turnOff(GPIOB, 4);
+				turnOff(GPIOC, 7);
+			}
+		}
+	} else if (gameLevel == 3) {
+		turnOff(GPIOA, 9);
+		turnOff(GPIOC, 7);
+		while (1) {
+			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+					|| timer.sec100 == 75) {
+				turnOn(GPIOB, 4);
+			} else if (timer.sec100 == 12 || timer.sec100 == 37
+					|| timer.sec100 == 62 || timer.sec100 == 87) {
+				turnOff(GPIOB, 4);
+			}
+		}
+	}
 }
 

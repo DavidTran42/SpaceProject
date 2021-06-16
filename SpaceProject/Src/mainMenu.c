@@ -419,15 +419,17 @@ void optionsSelect() {
 }
 
 void mainMenu() {
+	resetbgcolor();
 	printf("%c[?25l", ESC); //hiding curser
 
 	clrscr();
-	resetbgcolor();
+
 	int16_t box_h = 75, box_w = 270;
 	background();
 	mainFrame(1, 1, box_w, box_h);
 	gameTitle();
 	mainOptions();
 	optionsSelect();
+	resetbgcolor();
 }
 

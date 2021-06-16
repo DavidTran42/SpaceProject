@@ -3,6 +3,7 @@
 #include "Excellutex.h"
 #include "charset.h"
 #include "30010_io.h"
+#include "spaceship.h"
 
 
 void fgcolor(uint8_t foreground) {
@@ -146,5 +147,53 @@ int32_t calcCos(int32_t i) {
 	return calcSin(i);
 }
 
+
+
+void printFix(int32_t i) {
+	// Prints a signed 16.16 fixed point number
+	if ((i & 0x80000000) != 0) { // Handle negative numbers
+		printf("-");
+		i = ~i + 1;
+	}
+	printf("%ld.%04ld", i >> 16, 10000 * (uint32_t) (i & 0xFFFF) >> 16);
+	// Print a maximum of 4 decimal digits to avoid overflow
+}
+
+
+
+void rotateVector(struct vector *v, int32_t degree) {
+	int32_t tempX;
+	tempX = v->x * calcCos(degree) - v->y * calcSin(degree);
+	v->y = v->x * calcSin(degree) + v->y * calcCos(degree);
+	v->x = tempX;
+}
+
+void turnOn(GPIO_TypeDef *pin, uint32_t pinnum) {
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOB; // Enable clock for GPIO Port B
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
+
+	pin->OSPEEDR &= ~(0x00000003 << (pinnum * 2)); // Clear speed register
+	pin->OSPEEDR |= (0x00000002 << (pinnum * 2)); // set speed register (0x01 - 10
+	pin->OTYPER &= ~(0x0001 << (pinnum * 1)); // Clear output type register
+	pin->OTYPER |= (0x0000 << (pinnum)); // Set output type register (0x00 -
+	pin->MODER &= ~(0x00000003 << (pinnum * 2)); // Clear mode register
+	pin->MODER |= (0x00000001 << (pinnum * 2)); // Set mode register (0x00 –
+
+	pin->ODR &= ~(0x0001 << pinnum); //Set pin to low (turned on)
+
+}
+
+void turnOff(GPIO_TypeDef *pin, uint32_t pinnum) {
+
+	pin->OSPEEDR &= ~(0x00000003 << (pinnum * 2)); // Clear speed register
+	pin->OSPEEDR |= (0x00000002 << (pinnum * 2)); // set speed register (0x01 - 10
+	pin->OTYPER &= ~(0x0001 << (pinnum * 1)); // Clear output type register
+	pin->OTYPER |= (0x0000 << (pinnum)); // Set output type register (0x00 -
+	pin->MODER &= ~(0x00000003 << (pinnum * 2)); // Clear mode register
+	pin->MODER |= (0x00000001 << (pinnum * 2)); // Set mode register (0x00 –
+
+	pin->ODR |= (0x0001 << pinnum); //Set pin to high (turned off)
+}
 
 

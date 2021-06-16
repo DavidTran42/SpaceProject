@@ -6,6 +6,7 @@
 #include "30010_io.h"
 #include "ansi.h"
 #include "spaceship.h"
+#include "GameController.h"
 /*
  * spacehip.c
  *
@@ -13,41 +14,61 @@
  *      Author: Marius Mainz
  */
 
-
-
-
 void print_ship1(struct vector position) {
-	printf("%c[?25l", ESC); //Hiding curser
-	gotoxy(position.x, position.y - 2);
-	color(1, 6);
-	printf(" ");
-	gotoxy(position.x, position.y - 1);
-	printf("   ");
-	gotoxy(position.x, position.y);
-	printf("     ");
-	gotoxy(position.x, position.y + 1);
-	printf("   ");
-	gotoxy(position.x, position.y + 2);
-	printf(" ");
-	gotoxy(position.x - 1, position.y - 1);
-	bgcolor(1);
-	printf(" ");
-	gotoxy(position.x - 1, position.y + 1);
-	printf(" ");
-	gotoxy(position.x - 2, position.y + 1);
-	color(1, 3);
-	printf("=");
-	gotoxy(position.x - 2, position.y - 1);
-	printf("=");
+	gotoxy(position.x-4, position.y - 2);
+	fgcolor(6);
+	printf("%c", 219);
+	gotoxy(position.x-4, position.y - 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(position.x-4, position.y);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	gotoxy(position.x-4, position.y + 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(position.x-4, position.y + 2);
+	printf("%c", 219);
+	gotoxy(position.x - 5, position.y - 1);
+	fgcolor(1);
+	printf("%c", 219);
+	gotoxy(position.x - 5, position.y + 1);
+	printf("%c", 219);
+	gotoxy(position.x - 6, position.y + 1);
+	fgcolor(3);
+	printf("%c", 219);
+	gotoxy(position.x - 6, position.y - 1);
+	printf("%c", 219);
 
-
-	resetbgcolor();
 }
+void clear_ship1(struct vector position) {
+	fgcolor(0);
+	gotoxy(position.x-4, position.y - 2);
+	printf("%c", 219);
+	gotoxy(position.x-4, position.y - 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(position.x-4, position.y);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	gotoxy(position.x-4, position.y + 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(position.x-4, position.y + 2);
+	printf("%c", 219);
+	gotoxy(position.x - 5, position.y - 1);
+
+	printf("%c", 219);
+	gotoxy(position.x - 5, position.y + 1);
+	printf("%c", 219);
+	gotoxy(position.x - 6, position.y + 1);
+
+	printf("%c", 219);
+	gotoxy(position.x - 6, position.y - 1);
+	printf("%c", 219);
+
+
+}
+
 
 void print_ship2(struct vector position) {
 	printf("%c[?25l", ESC); //Hiding curser
 	gotoxy(position.x, position.y - 2);
-	color(1, 2);
+	fgcolor(2);
 	printf(" ");
 	gotoxy(position.x, position.y - 1);
 	printf("   ");
@@ -58,34 +79,31 @@ void print_ship2(struct vector position) {
 	gotoxy(position.x, position.y + 2);
 	printf(" ");
 	gotoxy(position.x - 1, position.y - 1);
-	bgcolor(1);
+	fgcolor(1);
 	printf(" ");
 	gotoxy(position.x - 1, position.y + 1);
 	printf(" ");
 	gotoxy(position.x - 2, position.y + 1);
-	color(1, 3);
-	printf("=");
+	fgcolor(3);
+	printf(" ");
 	gotoxy(position.x - 2, position.y - 1);
-	printf("=");
+	printf(" ");
 
-
-	resetbgcolor();
 }
-
 
 /*
 
-void updateShipPos(vector_t *pos) {
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
->>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+ void updateShipPos(vector_t *pos) {
+ >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
+ >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 
-void shiptest() {
-	struct ship ship1;
-	struct ship ship2;
-	ship1.position.x = 5, ship1.position.y = 20;
-	ship2.position.x = 5, ship2.position.y = 35;
-	print_ship1(&ship1.position);
-	print_ship2(&ship2.position);
+ void shiptest() {
+ struct ship ship1;
+ struct ship ship2;
+ ship1.position.x = 5, ship1.position.y = 20;
+ ship2.position.x = 5, ship2.position.y = 35;
+ print_ship1(&ship1.position);
+ print_ship2(&ship2.position);
 
-}
-*/
+ }
+ */
