@@ -126,7 +126,7 @@ void lcd_write_string2(uint8_t buffer[512], char *slice, uint8_t line) {
 	}
 	lcd_push_buffer(buffer);
 }
-int32_t expand(int32_t i) {
+int64_t expand(int64_t i) {
 	// Converts an 18.14 fixed point number to 16.16
 	return i << 2;
 }
@@ -158,6 +158,10 @@ void printFix(int32_t i) {
 	printf("%ld.%04ld", i >> 16, 10000 * (uint32_t) (i & 0xFFFF) >> 16);
 	// Print a maximum of 4 decimal digits to avoid overflow
 }
+int32_t expand2(int32_t i){
+
+}
+
 
 
 

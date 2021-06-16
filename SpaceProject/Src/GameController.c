@@ -165,23 +165,25 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 */
 		t++;
 		// Update bullets and astroids
+
 		if (t > 4000) {
 			t = 0;
 
-			for (int i = 0; i < bulletListSize; i++) {
-				if (bullet1[i].pos.x != 0) {
-					gotoxy(bullet1[i].pos.x, bullet1[i].pos.y);
-					update_bullet(bullet1[i].pos);
-					printf(" o");
-					bullet1[i].pos.x += bullet1[i].vel.x;
-					bullet1[i].pos.y += bullet1[i].vel.y;
-					if (bullet1[i].pos.x == borderWidth) {
-						bullet1[i].pos.x = 0, bullet1[i].pos.y = 0;
+			for (int i = 0; i < asteroidListSize; i++) {
+				for (int k = 0; k < bulletListSize; k++) {
+					if (bullet1[k].pos.x != 0) {
+						gotoxy(bullet1[k].pos.x, bullet1[k].pos.y);
+						update_bullet(bullet1[k].pos);
+						printf(" o");
+						gravity(&bullet1[k], &asteroid[k], bulletListSize,
+								asteroidListSize, i, k);
+						bullet1[k].pos.x += bullet1[k].vel.x;
+						bullet1[k].pos.y += bullet1[k].vel.y;
+						if (bullet1[k].pos.x == borderWidth) {
+							bullet1[k].pos.x = 0, bullet1[k].pos.y = 0;
+						}
 					}
 				}
-			}
-
-			for (int i = 0; i < asteroidListSize; i++) {
 				if (asteroid[i].pos.y != 0
 						&& asteroid[i].pos.x > 0 - asteroid[i].size) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
@@ -216,53 +218,93 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	}
 }
 
-/*
- void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
- int bListSize, int aListSize) {
- uint64_t fx = 0, fy = 0;
- int k, e, i, j;
+void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
+		int bListSize, int aListSize, int i,int k) {
+	int64_t fx = 0, fy = 0;
+	/*
+	 for (int e = 0; e < aListSize; e++) {
+	 for (int k = 0; k < bListSize; k++) {
+	 if (bulletptr[k].pos.x != 0) {
+	 gotoxy(bulletptr[k].pos.x, bulletptr[k].pos.y);
+	 update_bullet(bulletptr[k].pos);
+	 printf(" o");
+	 bulletptr[k].pos.x += bulletptr[k].vel.x;
+	 bulletptr[k].pos.y += bulletptr[k].vel.y;
+	 if (asteroidptr[e].pos.y != 0
+	 && asteroidptr[e].pos.x > 0 - asteroidptr[e].size) {
+	 if (asteroidptr[e].pos.x <= (0 - asteroidptr[e].size)) {
+	 asteroidptr[e].pos.x = 0, asteroidptr[e].pos.y = 0;
+	 }
 
- for (int k = 0; k < bulletListSize; k++) {
- for (int e = 0; e < asteroidListSize; e++) {
+	 if (bulletptr[k].pos.x == 270) {
+	 bulletptr[k].pos.x = 0, bulletptr[k].pos.y = 0;
+	 }*/
 
- }
- }
+	if (asteroidptr->size == 2) {
+		fx =
+				expand(
+						(50000
+								/ ((bulletptr[k].pos.x - asteroidptr[i].pos.x)
+										* (bulletptr[k].pos.x
+												- asteroidptr[i].pos.x))));
+		fy =
+				expand(
+						(50000
+								/ ((bulletptr[k].pos.y - asteroidptr[i].pos.y)
+										* (bulletptr[k].pos.y
+												- asteroidptr[i].pos.y))));
 
- if (asteroidptr->size == 2) {
- fx = (10
- / ((bulletptr[k].pos.x - asteroidptr[e].pos.x)
- * (bulletptr[k].pos.x - asteroidptr[e].pos.x)));
- fy = (10
- / ((bulletptr[k].pos.y - asteroidptr[e].pos.y)
- * (bulletptr[k].pos.y - asteroidptr[e].pos.y)));
+			bulletptr[k].vel.x *= fx;
+			bulletptr[k].vel.y *= fy;
 
- bulletptr[k].vel.x *= fx;
- bulletptr[k].vel.y *= fy;
 
- } else if (asteroidptr->size == 4) {
- fx = (10
- / ((bulletptr[k].pos.x - asteroidptr[e].pos.x)
- * (bulletptr[k].pos.x - asteroidptr[e].pos.x)));
- fy = (10
- / ((bulletptr[k].pos.y - asteroidptr[e].pos.y)
- * (bulletptr[k].pos.y - asteroidptr[e].pos.y)));
+	}
+	if (asteroidptr->size == 4) {
+		fx =
+				expand(
+						(50000
+								/ ((bulletptr[k].pos.x - asteroidptr[i].pos.x)
+										* (bulletptr[k].pos.x
+												- asteroidptr[i].pos.x))));
+		fy =
+				expand(
+						(50000
+								/ ((bulletptr[k].pos.y - asteroidptr[i].pos.y)
+										* (bulletptr[k].pos.y
+												- asteroidptr[i].pos.y))));
 
- bulletptr[k].vel.x *= fx;
- bulletptr[k].vel.y *= fy;
- } else if (asteroidptr->size == 8) {
- fx = (10
- / ((bulletptr[k].pos.x - asteroidptr[e].pos.x)
- * (bulletptr[k].pos.x - asteroidptr[e].pos.x)));
- fy = (10
- / ((bulletptr[k].pos.y - asteroidptr[e].pos.y)
- * (bulletptr[k].pos.y - asteroidptr[e].pos.y)));
 
- bulletptr[k].vel.x *= fx;
- bulletptr[k].vel.y *= fy;
- }
+			bulletptr[k].vel.x *= fx;
+			bulletptr[k].vel.y *= fy;
 
- }
- */
+
+	}
+	if (asteroidptr->size == 8) {
+		fx =
+				expand(
+						(50000
+								/ ((bulletptr[k].pos.x - asteroidptr[i].pos.x)
+										* (bulletptr[k].pos.x
+												- asteroidptr[i].pos.x))));
+		fy =
+				expand(
+						(50000
+								/ ((bulletptr[k].pos.y - asteroidptr[i].pos.y)
+										* (bulletptr[k].pos.y
+												- asteroidptr[i].pos.y))));
+
+
+			bulletptr[k].vel.x *= fx;
+			bulletptr[k].vel.y *= fy;
+
+
+	}
+	gotoxy(10, 10);
+	printf("%04ld,%04ld\n", fx, fy);
+	printFix(fx);
+	printf(" , ");
+	printFix(fy);
+}
 
 int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 // 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
@@ -519,7 +561,7 @@ void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 			if (bulletptr->pos.x == 0 && bulletptr->pos.y == 0) {
 				bulletptr->pos.x = ship->x + 5;
 				bulletptr->pos.y = ship->y;
-				bulletptr->vel.x = 1;
+				bulletptr->vel.x = 5;
 				break;
 			}
 			bulletptr++;
@@ -557,7 +599,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				}
 			}
 
-			asteroidptr->pos.x = borderWidth + asteroidptr->size;
+			asteroidptr->pos.x = borderWidth - asteroidptr->size;
 			asteroidptr->pos.y = r;
 
 			break;
