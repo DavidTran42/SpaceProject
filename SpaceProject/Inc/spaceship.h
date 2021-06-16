@@ -8,10 +8,9 @@
 #ifndef SPACESHIP_H_
 #define SPACESHIP_H_
 
-typedef struct vector {
-	int32_t x, y;
+typedef struct vector{
+	uint8_t x,y;
 };
-
 
 void print_ship1(struct vector position);
 void print_ship2(struct vector position);
