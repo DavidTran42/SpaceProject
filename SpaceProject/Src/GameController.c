@@ -60,7 +60,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	struct vector ship[4] = { 0 }; // More ships due to power ups
 	struct asteroid asteroid[10] = { 0 };
 	struct bullet bullet1[20] = { 0 };
-	struct bullet bullet2[20] = { 0 }; // More ships due to power ups
+	struct bullet bullet2[20] = { 0 };
 
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
@@ -82,7 +82,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
-	gotoxy(1,1);
 	// Draw the intial ships
 	if (gameMode == 2) {
 		print_ship2(ship[2]);
@@ -98,6 +97,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	// Game loop
 	while (gameloop) {
 		t++; // For every interupt, increment
+		l++;
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
@@ -132,9 +132,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			makeBullet(input, &bullet1[0], &ship[0], bulletListSize, controls);
 		}
-		if (timer.sec++) {
+		if (l > 10000) {
+			l = 0;
+			r = rand() % borderHeight;
+			type = rand() % 3;
 			makeAsteroid(&asteroid[0], borderWidth, borderHeight,
-					asteroidListSize, 0, 40);
+					asteroidListSize, type , r);
 		}
 
 		/*
@@ -168,11 +171,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 					resetbgcolor();
-					printf("o ");
+					printf("%d ",i);
 					asteroid[i].pos.x -= 1;
-				}
-				if (asteroid[i].pos.x <= 0 - asteroid[i].size) {
-					asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+
+					// Reset asteroid, so it can be used to make a new one
+					if (asteroid[i].pos.x <= (0 - asteroid[i].size)) {
+						asteroid[i].pos.x = 0, asteroid[i].pos.y = 0;
+					}
 				}
 
 				/*if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
@@ -520,20 +525,13 @@ void bosskey(char input) {
 				if (input == 'b') {
 					pause = 0;
 					clrscr();
+					game_background();
 					break;
 				}
 			}
 		}
 	}
 
-	/*RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
-	 enableTimer();
-	 TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	 setPrescaler(0); // prescale value
-	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
-
-	 NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
-	 NVIC_EnableIRQ(TIM2_IRQn);*/
 }
 /*
  void life_score(uint8_t buffer[512]) {
