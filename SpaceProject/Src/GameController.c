@@ -70,7 +70,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t type = rand() % 3;
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
 			sizeof(ship) / sizeof(ship[0]);
-	int asteroidListSize = sizeof(asteroid) / sizeof(asteroid);
+	int asteroidListSize = sizeof(asteroid) / sizeof(asteroid[0]);
 	char input, input2;
 
 	clrscr(); // clear screen
@@ -171,7 +171,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				if (asteroid[i].pos.y != 0 && asteroid[i].pos.x > 0 - asteroid[i].size) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 					resetbgcolor();
-					printf("%d ",i);
+					printf("o ");
 					asteroid[i].pos.x -= 1;
 
 					// Reset asteroid, so it can be used to make a new one
