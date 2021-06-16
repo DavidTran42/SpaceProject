@@ -166,12 +166,27 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 */
 
 		// Update bullets and astroids
-
+		if (t > 2000) {
+			t = 0;
+			for (int k = 0; k < bulletListSize; k++) {
+				if (bullet1[k].pos.x != 0) {
+					gotoxy(bullet1[k].pos.x, bullet1[k].pos.y);
+					update_bullet(bullet1[k].pos);
+					printf(" o");
+					bullet1[k].pos.x += bullet1[k].vel.x;
+					bullet1[k].pos.y += bullet1[k].vel.y;
+					if (bullet1[k].pos.x == borderWidth) {
+						bullet1[k].pos.x = 0, bullet1[k].pos.y = 0;
+					}
+				}
+			}
+		}
 
 		if (g > 5000) {
 			g = 0;
 
 			for (int i = 0; i < asteroidListSize; i++) {
+
 				if (asteroid[i].alive) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
 					if (asteroid[i].size == 2) {
