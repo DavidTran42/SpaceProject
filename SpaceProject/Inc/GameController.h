@@ -25,11 +25,9 @@ typedef struct asteroid {
 	struct vector pos;
 	uint8_t size;
 };
-
 typedef struct bullet{
 	struct vector pos, vel;
 };
-
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight);
@@ -50,4 +48,5 @@ void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls
 void init_pixels();
 void update_pixels(struct vector *p);
 void gravity2();
+void update_bullet(struct vector bullet);
 

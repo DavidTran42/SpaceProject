@@ -523,6 +523,7 @@ void clear_medium_asteroid(struct asteroid *asteroid2) {
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 }
 
+
 void large_asteroid(struct asteroid *asteroid3) {
 	newfgcolor(240);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 5);
