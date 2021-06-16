@@ -29,6 +29,7 @@ void guitGameMenu();
 void singleplayerMenu();
 void multiplayerMenu();
 void helpMenu();
+void newfgcolor(uint8_t forground);
 
 
 
