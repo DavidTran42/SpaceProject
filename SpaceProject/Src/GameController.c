@@ -367,7 +367,7 @@ void updateShip2Pos(char input2, struct vector *shipptr,
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
 	// Initialize the ships positions
-	/*if (gameMode == 2) { // Multiplayer
+	if (gameMode == 2) { // Multiplayer
 
 		shipptr->x = 10, shipptr->y = (borderHeight + 5) / 3;
 
@@ -378,8 +378,7 @@ void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth,
 
 		shipptr->x = 10, shipptr->y = (borderHeight + 5) / 2;
 
-	}*/
-	shipptr->x = 0, shipptr->y = 0;
+	}
 }
 
 struct joystick addJoystick() {
