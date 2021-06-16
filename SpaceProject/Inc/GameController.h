@@ -48,4 +48,5 @@ void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls
 void init_pixels();
 void update_pixels(struct vector *p);
 void gravity2();
+void update_bullet(struct vector bullet);
 
