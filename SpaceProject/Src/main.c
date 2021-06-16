@@ -1,6 +1,5 @@
 #include "stm32f30x_conf.h" // STM32 config
 #include "30010_io.h" 	// Input/output library for this course
-#include "ansi.h"
 #include "main.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,7 +16,7 @@
 
 
 int main(void) {
-	uart_init(960000);
+	uart_init(2000000);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
@@ -30,8 +29,7 @@ int main(void) {
 	//uint16_t borderWidth = 270, borderHeight = 75;
 	//initGame(borderWidth, borderHeight, 1);
 
-
-	//mainMenu();
+	mainMenu();
 
 
 

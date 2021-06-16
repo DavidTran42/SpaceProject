@@ -126,6 +126,27 @@ void lcd_write_string2(uint8_t buffer[512], char *slice, uint8_t line) {
 	}
 	lcd_push_buffer(buffer);
 }
+int32_t expand(int32_t i) {
+	// Converts an 18.14 fixed point number to 16.16
+	return i << 2;
+}
+
+int32_t calcSin(int32_t i) {
+	i = (i * 512) / 360;
+	if (i < 0) {
+		int temp_i = -i;
+	return -expand(SIN[temp_i]);
+	} else if (i > 512) {
+		i = i % 512;
+	}
+	return expand(SIN[i]);
+}
+
+int32_t calcCos(int32_t i) {
+	i += 90;
+	return calcSin(i);
+}
+
 
 
 void printFix(int32_t i) {
@@ -138,26 +159,7 @@ void printFix(int32_t i) {
 	// Print a maximum of 4 decimal digits to avoid overflow
 }
 
-int32_t expand(int32_t i) {
-	// Converts an 18.14 fixed point number to 16.16
-	return i << 2;
-}
 
-int32_t calcSin(int32_t i) {
-	i = (i * 512) / 360;
-	if (i < 0) {
-		int temp_i = -i;
-		return -expand(SIN[temp_i]);
-	} else if (i > 512) {
-		i = i % 512;
-	}
-	return expand(SIN[i]);
-}
-
-int32_t calcCos(int32_t i) {
-	i += 90;
-	return calcSin(i);
-}
 
 void rotateVector(struct vector *v, int32_t degree) {
 	int32_t tempX;

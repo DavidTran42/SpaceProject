@@ -17,7 +17,6 @@
 
 #endif /* ANSI_H_ */
 
-typedef struct vector_t v;
 
 void fgcolor(uint8_t foreground);
 void bgcolor(uint8_t background);
@@ -30,5 +29,10 @@ void underline(uint8_t on);
 void blink(uint8_t on);
 void inverse(uint8_t on);
 void repeat(int c, int count);
+
+int32_t expand(int32_t i);
+int32_t calcSin(int32_t i);
+int32_t calcCos(int32_t i);
+
 
 

@@ -12,7 +12,6 @@
 
 #ifndef MAIN_H_
 #define MAIN_H_
-typedef struct vector_t v;
 void test();
 
 
