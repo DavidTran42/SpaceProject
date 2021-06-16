@@ -22,7 +22,7 @@ typedef struct clockTimer {
 };
 
 typedef struct asteroid {
-	struct vector pos;
+	struct vector pos; // Due to the fact that u can see the asteroid outside boundaries
 	uint8_t size;
 };
 typedef struct bullet{
