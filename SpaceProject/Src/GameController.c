@@ -226,6 +226,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 void gravity2(struct bullet *bulletptr, struct asteroid *asteroidptr) {
 	uint32_t fx = 0, fy = 0;
+	if (asteroidptr->size == 2){
+		fx = (100/((bulletptr->pos.x*bulletptr->pos.x)+(asteroidptr->pos.x*asteroidptr->pos.x)));
+		fy = (100/((bulletptr->pos.y*bulletptr->pos.y)+(asteroidptr->pos.y*asteroidptr->pos.y)));
+	}
 
 
 }
