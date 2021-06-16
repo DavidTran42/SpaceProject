@@ -67,26 +67,26 @@ void clear_ship1(struct vector position) {
 
 void print_ship2(struct vector position) {
 	printf("%c[?25l", ESC); //Hiding curser
-	gotoxy(position.x, position.y - 2);
+	gotoxy(position.x-4, position.y - 2);
 	fgcolor(2);
 	printf(" ");
-	gotoxy(position.x, position.y - 1);
+	gotoxy(position.x-4, position.y - 1);
 	printf("   ");
-	gotoxy(position.x, position.y);
+	gotoxy(position.x-4, position.y);
 	printf("     ");
-	gotoxy(position.x, position.y + 1);
+	gotoxy(position.x-4, position.y + 1);
 	printf("   ");
-	gotoxy(position.x, position.y + 2);
+	gotoxy(position-4.x, position.y + 2);
 	printf(" ");
-	gotoxy(position.x - 1, position.y - 1);
+	gotoxy(position.x - 5, position.y - 1);
 	fgcolor(1);
 	printf(" ");
-	gotoxy(position.x - 1, position.y + 1);
+	gotoxy(position.x - 5, position.y + 1);
 	printf(" ");
-	gotoxy(position.x - 2, position.y + 1);
+	gotoxy(position.x - 6, position.y + 1);
 	fgcolor(3);
 	printf(" ");
-	gotoxy(position.x - 2, position.y - 1);
+	gotoxy(position.x - 6, position.y - 1);
 	printf(" ");
 
 }

@@ -155,6 +155,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int i = 0; i < bulletListSize; i++) {
 				if (bullet1[i].pos.x != 0) {
 					gotoxy(bullet1[i].pos.x, bullet1[i].pos.y);
+					update_bullet(bullet1[i].pos);
 					printf(" o");
 					bullet1[i].pos.x += bullet1[i].vel.x;
 					bullet1[i].pos.y += bullet1[i].vel.y;
@@ -171,6 +172,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				if (asteroid[i].pos.y != 0
 						&& asteroid[i].pos.x > 0 - asteroid[i].size) {
 					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+					resetbgcolor();
 					printf("o ");
 					asteroid[i].pos.x -= 1;
 				}
