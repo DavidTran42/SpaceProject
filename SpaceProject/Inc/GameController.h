@@ -37,7 +37,6 @@ void setUpTimer();
 void enableTimer();
 void disableTimer();
 void rotateVector(struct vector *v, int32_t degree);
-void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r);
 void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 		int bListSize, struct joystick controls);
@@ -47,6 +46,6 @@ void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();
 void update_pixels(struct vector *p);
-void gravity2();
+void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
 void update_bullet(struct vector bullet);
 
