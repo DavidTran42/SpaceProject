@@ -503,7 +503,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				}
 			}
 
-			asteroidptr->pos.x = borderWidth + asteroidptr->size;
+			asteroidptr->pos.x = borderWidth -asteroidptr->size;
 			asteroidptr->pos.y = r;
 
 			break;
