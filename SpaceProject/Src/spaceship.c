@@ -76,7 +76,7 @@ void print_ship2(struct vector position) {
 	printf("     ");
 	gotoxy(position.x-4, position.y + 1);
 	printf("   ");
-	gotoxy(position-4.x, position.y + 2);
+	gotoxy(position.x-4, position.y + 2);
 	printf(" ");
 	gotoxy(position.x - 5, position.y - 1);
 	fgcolor(1);
