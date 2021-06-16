@@ -25,7 +25,7 @@ void TIM2_IRQHandler(void) {
 
 	timer.sec100++;
 
-	if (timer.sec100 >= 10000) {
+	if (timer.sec100 >= 100) {
 		timer.sec++;
 		timer.sec100 = 0;
 	}
@@ -82,7 +82,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
-
+	gotoxy(1,1);
 	// Draw the intial ships
 	if (gameMode == 2) {
 		print_ship2(ship[2]);
@@ -159,10 +159,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				if (bullet1[i].pos.x != 0) {
 					gotoxy(bullet1[i].pos.x, bullet1[i].pos.y);
 					update_bullet(bullet1[i].pos);
-					printf(" o");
+					// printf(" o");
 					bullet1[i].pos.x += bullet1[i].vel.x;
 					bullet1[i].pos.y += bullet1[i].vel.y;
-					if (bullet1[i].pos.x == borderWidth) {
+					printf(" %d",bullet1[i].pos.x);
+					if (bullet1[i].pos.x == borderWidth-1) {
+						printf("hi");
 						bullet1[i].pos.x = 0, bullet1[i].pos.y = 0;
 					}
 				}
@@ -475,6 +477,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 	for (int i = 0; i < aListSize; i++) {
 		if (asteroidptr->pos.x == 0 && asteroidptr->pos.y == 0) {
 			asteroidptr->pos.x = borderWidth + asteroidptr->size;
+			printf("%d", asteroidptr->pos.x);
 			asteroidptr->pos.y = r;
 			break;
 		}

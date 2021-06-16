@@ -18,7 +18,7 @@ typedef struct joystick {
 };
 
 typedef struct clockTimer {
-	volatile int8_t hour, min, sec, sec100;
+	volatile uint8_t hour, min, sec, sec100;
 };
 
 typedef struct asteroid {
