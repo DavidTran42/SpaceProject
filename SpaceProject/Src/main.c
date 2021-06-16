@@ -30,7 +30,7 @@ int main(void) {
 	//initGame(borderWidth, borderHeight, 1);
 
 	mainMenu();
-level_led(3);
+
 
 	/*background();
 =======

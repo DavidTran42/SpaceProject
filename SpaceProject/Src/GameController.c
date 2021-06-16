@@ -82,7 +82,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Initialize the ships positions
 	initializeShips(gameMode, ship, borderWidth, borderHeight);
-
+	gotoxy(1,1);
 	// Draw the intial ships
 	if (gameMode == 2) {
 		print_ship2(ship[2]);
@@ -162,7 +162,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					printf(" o");
 					bullet1[i].pos.x += bullet1[i].vel.x;
 					bullet1[i].pos.y += bullet1[i].vel.y;
-					if (bullet1[i].pos.x == borderWidth) {
+					if (bullet1[i].pos.x == borderWidth-1) {
 						bullet1[i].pos.x = 0, bullet1[i].pos.y = 0;
 					}
 				}
@@ -475,6 +475,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 	for (int i = 0; i < aListSize; i++) {
 		if (asteroidptr->pos.x == 0 && asteroidptr->pos.y == 0) {
 			asteroidptr->pos.x = borderWidth + asteroidptr->size;
+			printf("%d", asteroidptr->pos.x);
 			asteroidptr->pos.y = r;
 			break;
 		}
