@@ -182,7 +182,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 		}
 
-		if (g > 5000) {
+		if (g > 2000) {
 			g = 0;
 
 			for (int i = 0; i < asteroidListSize; i++) {
