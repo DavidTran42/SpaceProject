@@ -4,11 +4,9 @@
  *  Created on: 16. jun. 2021
  *      Author: Marius Mainz
  */
-#define ESC 0x1B
 #include "main.h"
 #include "ansi.h"
-#include "30010_io.h"
-#include "GameController.h"
+#include "help.h"
 
 void help_screen() {
 	char input;

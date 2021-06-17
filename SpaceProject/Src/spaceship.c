@@ -1,12 +1,5 @@
-#include <stdio.h>
-#include "main.h"
-#define ESC 0x1B
-#include "Excellutex.h"
-#include "charset.h"
-#include "30010_io.h"
 #include "ansi.h"
 #include "spaceship.h"
-#include "GameController.h"
 /*
  * spacehip.c
  *
@@ -66,7 +59,7 @@ void clear_ship1(struct vector position) {
 
 
 void print_ship2(struct vector position) {
-	printf("%c[?25l", ESC); //Hiding curser
+	// printf("%c[?25l", ESC); //Hiding curser
 	gotoxy(position.x-4, position.y - 2);
 	fgcolor(2);
 	printf(" ");

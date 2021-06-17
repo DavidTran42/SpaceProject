@@ -9,6 +9,8 @@
 #include "ansi.h"
 #include "30010_io.h"
 #include "GameController.h"
+#include "background.h"
+#include "help.h"
 
 void repeat(int c, int count) {
 	for (int i = 0; i < count; i++)
@@ -119,6 +121,31 @@ void gameTitle() {
 	resetbgcolor();
 }
 
+void quitGameMenu() {
+	gotoxy(110, 53);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 53 + 1; i < 58 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 57);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 54);
+	printf("         .-. . . .-. .-.   .-. .-. .  . .-.       ");
+	gotoxy(111, 55);
+	printf("         |.| | |  |   |    |.. |-| |\\/| |-        ");
+	gotoxy(111, 56);
+	printf("         `-`.`-' `-'  '    `-' ` ' '  ` `-'       ");
+}
+
 void mainOptions() {
 	color(6, 0);
 	singleplayerMenu();
@@ -201,43 +228,17 @@ void helpMenu() {
 	printf("                   ' ` `-' `-' '                  ");
 }
 
-void quitGameMenu() {
-	gotoxy(110, 53);
-	printf("%c", 201);
-	repeat(205, 50);
-	printf("%c", 187);
-	for (int i = 53 + 1; i < 58 - 1; i++) {
-		gotoxy(110, i);
-		printf("%c", 186);
-		gotoxy(161, i);
-		printf("%c\n", 186);
-	}
-	gotoxy(110, 57);
-	printf("%c", 200);
-	repeat(205, 50);
-	printf("%c", 188);
-
-	// text
-	gotoxy(111, 54);
-	printf("         .-. . . .-. .-.   .-. .-. .  . .-.       ");
-	gotoxy(111, 55);
-	printf("         |.| | |  |   |    |.. |-| |\\/| |-        ");
-	gotoxy(111, 56);
-	printf("         `-`.`-' `-'  '    `-' ` ' '  ` `-'       ");
-}
-
 void optionsSelect() {
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	enableTimer();
 	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	setPrescaler(0); // prescale value
+	TIM2->PSC = 0; // prescale value
 	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
 	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
 	NVIC_EnableIRQ(TIM2_IRQn);
 
 	uint8_t i = 1;
-	uint8_t t = 0;
 	color(6, 0);
 	char input;
 

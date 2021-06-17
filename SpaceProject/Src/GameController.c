@@ -1,9 +1,10 @@
 #include "GameController.h"
 #include <time.h>
-#include <stdlib.h>
 #include "30010_io.h"
 #define ESC 0x1B
 #include "spaceship.h"
+#include "ansi.h"
+#include "background.h"
 
 //////////////////////// CLOCK & TIMER //////////////////////////
 
@@ -15,10 +16,6 @@ void enableTimer() {
 
 void disableTimer() {
 	TIM2->CR1 &= 0x0000;
-}
-
-void setPrescaler(int32_t s) {
-	TIM2->PSC = s;
 }
 
 void TIM2_IRQHandler(void) {
@@ -47,7 +44,7 @@ void setUpTimer() {
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	enableTimer();
 	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	setPrescaler(0); // prescale value
+	TIM2->PSC = 0; // prescale value
 	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
 	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
@@ -60,7 +57,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t bulletListSize = 20, asteroidListSize = 10, gameLevel = 1,
 			gameloop = 1, hearts = 3, score = 0,
 			r = rand() % borderHeight, type = rand() % 3;
-	uint16_t t, s, l, g;
+	uint16_t t, l, g;
 	struct vector ship[4] = { 0 }; // More ships due to power ups
 	struct asteroid asteroid[10] = { 0 };
 	struct bullet bullet1[20] = { 0 };
@@ -184,7 +181,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					// Check collision against ship
 					if (abs(asteroid[i].pos.x - ship[0].x) < 9
-							&& abs(asteroid[i].pos.y - ship[0].y) < 9) {
+							&& abs(asteroid[i].pos.y - ship[0].y) < 6) {
 						if (checkCollisionWithAsteroid(ship[0], asteroid[i])) {
 							asteroid[i].alive = 0;
 						}
@@ -192,9 +189,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					// Check collision against bullet
 					for(int j = 0; j < bulletListSize; j++) {
-						if (checkHit(bullet1[j],asteroid[i])) {
-							asteroid[i].alive = 0;
-							bullet1[j].alive = 0;
+						if(abs(asteroid[i].pos.x - bullet1[j].pos.x) < 9
+								&& abs(asteroid[i].pos.y - bullet1[j].pos.y) < 6) {
+							if (checkHit(bullet1[j],asteroid[i])) {
+								asteroid[i].alive = 0;
+								bullet1[j].alive = 0;
+							}
 						}
 					}
 
@@ -454,7 +454,7 @@ void makeBullet1(char input, struct bullet *bulletptr, struct vector ship,
 		int bListSize) {
 	if (input == ' ') {
 // Function to shoot a bullet
-		for (int i = 0; i < bListSize; i++) {
+		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.x + 5;
 				bulletptr->pos.y = ship.y;
@@ -463,7 +463,6 @@ void makeBullet1(char input, struct bullet *bulletptr, struct vector ship,
 
 				break;
 			}
-			bulletptr++;
 		}
 	}
 }
@@ -472,7 +471,7 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr, struct vect
 		int bListSize) {
 	if (controls.center) {
 // Function to shoot a bullet
-		for (int i = 0; i < bListSize; i++) {
+		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.x + 5;
 				bulletptr->pos.y = ship.y;
@@ -481,7 +480,6 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr, struct vect
 
 				break;
 			}
-			bulletptr++;
 		}
 	}
 }
@@ -492,7 +490,7 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 
 	int16_t x;
 
-	for (int i = 0; i < aListSize; i++) {
+	for (int i = 0; i < aListSize; i++, asteroidptr++) {
 		if (!(asteroidptr->alive)) {
 
 			// Give asteroid it's size and y-spawn
@@ -658,7 +656,6 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 			asteroidptr->alive = 1;
 			break;
 		}
-		asteroidptr++;
 	}
 }
 
@@ -827,7 +824,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	enableTimer();
 	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	setPrescaler(0); // prescale value
+	TIM2->PSC = 0; // prescale value
 	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
 	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15

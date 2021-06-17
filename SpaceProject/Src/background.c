@@ -6,10 +6,9 @@
  */
 
 #include <stdio.h>
-#include "main.h"
 #define ESC 0x1B
-#include "Excellutex.h"
 #include "charset.h"
+#include "ansi.h"
 #include "GameController.h"
 
 void newbgcolor(uint8_t background) {
@@ -631,6 +630,49 @@ void clear_large_asteroid(struct asteroid *asteroid3) {
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
 }
 
+
+void stars_only() {
+	resetbgcolor();
+	fgcolor(15);
+	for (int i = 1; i < 5; i++) {
+		gotoxy(54 * i, 2);
+		printf("*");
+	}
+	for (int i = 1; i < 8; i++) {
+		gotoxy(33 * i, 10);
+		printf("*");
+	}
+	for (int i = 1; i < 4; i++) {
+		gotoxy(67 * i, 15);
+		printf("*");
+	}
+	for (int i = 1; i < 9; i++) {
+		gotoxy(30 * i, 21);
+		printf("*");
+	}
+	for (int i = 1; i < 6; i++) {
+		gotoxy(45 * i, 29);
+		printf("*");
+	}
+	for (int i = 1; i < 12; i++) {
+		gotoxy(22 * i, 37);
+		printf("*");
+	}
+	for (int i = 1; i < 5; i++) {
+		gotoxy(54 * i, 44);
+		printf("*");
+	}
+	for (int i = 1; i < 7; i++) {
+		gotoxy(38 * i, 52);
+		printf("*");
+	}
+	for (int i = 1; i < 8; i++) {
+		gotoxy(33 * i, 60);
+		printf("*");
+	}
+
+}
+
 void game_background() {
 //atmosphere
 	gotoxy(0, 68);
@@ -678,48 +720,6 @@ void game_background() {
 
 	resetbgcolor();
 	stars_only();
-
-}
-
-void stars_only() {
-	resetbgcolor();
-	fgcolor(15);
-	for (int i = 1; i < 5; i++) {
-		gotoxy(54 * i, 2);
-		printf("*");
-	}
-	for (int i = 1; i < 8; i++) {
-		gotoxy(33 * i, 10);
-		printf("*");
-	}
-	for (int i = 1; i < 4; i++) {
-		gotoxy(67 * i, 15);
-		printf("*");
-	}
-	for (int i = 1; i < 9; i++) {
-		gotoxy(30 * i, 21);
-		printf("*");
-	}
-	for (int i = 1; i < 6; i++) {
-		gotoxy(45 * i, 29);
-		printf("*");
-	}
-	for (int i = 1; i < 12; i++) {
-		gotoxy(22 * i, 37);
-		printf("*");
-	}
-	for (int i = 1; i < 5; i++) {
-		gotoxy(54 * i, 44);
-		printf("*");
-	}
-	for (int i = 1; i < 7; i++) {
-		gotoxy(38 * i, 52);
-		printf("*");
-	}
-	for (int i = 1; i < 8; i++) {
-		gotoxy(33 * i, 60);
-		printf("*");
-	}
 
 }
 
@@ -1379,7 +1379,7 @@ void update_bullet(struct vector bullet) {
 
  }
 
- /*
+
  void check_background(struct vector *p){
  //atmosphere
  if (p->y == 66){

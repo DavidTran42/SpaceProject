@@ -17,9 +17,9 @@
 
 typedef struct joystick {
 	uint16_t left, right, up, down, center;
-};
+} controls;
 
-typedef struct clockTimer {
+struct clockTimer {
 	volatile uint8_t hour, min, sec, sec100;
 };
 
@@ -28,12 +28,12 @@ typedef struct asteroid {
 	uint8_t size, amountOfPoints;
 	struct vector points[36];
 	bool alive;
-};
+} asteroid;
 
 typedef struct bullet{
 	struct vector pos, vel;
 	bool alive;
-};
+} bullet1, bullet2;
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
