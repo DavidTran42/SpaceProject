@@ -231,6 +231,26 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						}
 
 					}
+					for (int j = 0; j < asteroid[i].amountOfPoints; j++) {
+						asteroid[i].points[j].x -= 1;
+					}
+
+					//if (abs(asteroid[i].pos.x - ship[0].x) < 9 && abs(asteroid[i].pos.y - ship[0].y) < 9) {
+						if(checkCollisionWithAsteroid(ship[0],asteroid[i])) {
+							if (asteroid[i].size == 2) {
+								clear_small_asteroid(&asteroid[i]);
+							} else if (asteroid[i].size == 4) {
+								clear_medium_asteroid(&asteroid[i]);
+							} else {
+								clear_large_asteroid(&asteroid[i]);
+
+							}
+							asteroid[i].alive = 0;
+							if (asteroid[i].pos.y > 63) {
+								game_background();
+							}
+						}
+					// }
 					/*
 					 if (checkCollisionWithAsteroid(ship[0], asteroid[i]) > 0) {
 					 printf("%d",t);
@@ -327,10 +347,27 @@ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
 	printFix(fy);
 }
 
-int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
+bool checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 // 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
 	int wide = 6, height = 2, wing = 4;
-	if (ship.x - wide >= asteroid.pos.x - 11
+
+	for(int i = 0; i < asteroid.amountOfPoints; i++) {
+		if (ship.x == asteroid.points[i].x && ship.y == asteroid.points[i].y) {
+			return 1;
+		}
+		if (ship.x - wide == asteroid.points[i].x && ship.y == asteroid.points[i].y) {
+			return 1;
+		}
+		if (ship.x - wing == asteroid.points[i].x && ship.y + height == asteroid.points[i].y) {
+			return 1;
+		}
+		if (ship.x - wing == asteroid.points[i].x && ship.y - height == asteroid.points[i].y) {
+			return 1;
+		}
+	}
+	return 0;
+
+	/*if (ship.x - wide >= asteroid.pos.x - 11
 			&& ship.y - height >= asteroid.pos.y - 8
 			&& ship.x <= asteroid.pos.x + 11
 			&& ship.y + height <= asteroid.pos.y + 8) {
@@ -473,7 +510,7 @@ int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 				return 1;
 			}
 		}
-	}
+	}*/
 	return 0;
 }
 
@@ -595,6 +632,9 @@ void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
 // Given the size of the asteroid, make a random asteroid
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r) {
+
+	int16_t x;
+
 	for (int i = 0; i < aListSize; i++) {
 		if (!(asteroidptr->alive)) {
 
@@ -606,6 +646,49 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				} else if (r > borderHeight - 11) {
 					r = borderHeight - 11;
 				}
+				x = borderWidth - asteroidptr->size;
+				asteroidptr->amountOfPoints = 36;
+
+				// Assign each indivial contact points of asteroid
+				asteroidptr->points[0].x = x+8, asteroidptr->points[0].y = r;
+				asteroidptr->points[1].x = x-8, asteroidptr->points[1].y = r;
+				asteroidptr->points[2].x = x+8, asteroidptr->points[2].y = r+1;
+				asteroidptr->points[3].x = x-8, asteroidptr->points[3].y = r+1;
+				asteroidptr->points[4].x = x+8, asteroidptr->points[4].y = r-1;
+				asteroidptr->points[5].x = x-8, asteroidptr->points[5].y = r-1;
+
+				asteroidptr->points[6].x = x-2, asteroidptr->points[6].y = r+5;
+				asteroidptr->points[7].x = x-1, asteroidptr->points[7].y = r+5;
+				asteroidptr->points[8].x = x, asteroidptr->points[8].y = r+5;
+				asteroidptr->points[9].x = x+1, asteroidptr->points[9].y = r+5;
+				asteroidptr->points[10].x = x+2, asteroidptr->points[10].y = r+5;
+				asteroidptr->points[11].x = x-2, asteroidptr->points[11].y = r-5;
+				asteroidptr->points[12].x = x-1, asteroidptr->points[12].y = r-5;
+				asteroidptr->points[13].x = x, asteroidptr->points[13].y = r-5;
+				asteroidptr->points[14].x = x+1, asteroidptr->points[14].y = r-5;
+				asteroidptr->points[15].x = x+2, asteroidptr->points[15].y = r-5;
+
+				asteroidptr->points[16].x = x-5, asteroidptr->points[16].y = r+4;
+				asteroidptr->points[17].x = x-4, asteroidptr->points[17].y = r+4;
+				asteroidptr->points[18].x = x-3, asteroidptr->points[18].y = r+4;
+				asteroidptr->points[19].x = x+3, asteroidptr->points[19].y = r+4;
+				asteroidptr->points[20].x = x+4, asteroidptr->points[20].y = r+4;
+				asteroidptr->points[21].x = x+5, asteroidptr->points[21].y = r+4;
+				asteroidptr->points[22].x = x-5, asteroidptr->points[22].y = r-4;
+				asteroidptr->points[23].x = x-4, asteroidptr->points[23].y = r-4;
+				asteroidptr->points[24].x = x-3, asteroidptr->points[24].y = r-4;
+				asteroidptr->points[25].x = x+3, asteroidptr->points[25].y = r-4;
+				asteroidptr->points[26].x = x+4, asteroidptr->points[26].y = r-4;
+				asteroidptr->points[27].x = x+5, asteroidptr->points[27].y = r-4;
+
+				asteroidptr->points[28].x = x+7, asteroidptr->points[28].y = r+2;
+				asteroidptr->points[29].x = x+7, asteroidptr->points[29].y = r-2;
+				asteroidptr->points[30].x = x-7, asteroidptr->points[30].y = r+2;
+				asteroidptr->points[31].x = x-7, asteroidptr->points[31].y = r-2;
+				asteroidptr->points[32].x = x+6, asteroidptr->points[32].y = r+3;
+				asteroidptr->points[33].x = x+6, asteroidptr->points[33].y = r-3;
+				asteroidptr->points[34].x = x-6, asteroidptr->points[34].y = r+3;
+				asteroidptr->points[35].x = x-6, asteroidptr->points[35].y = r-3;
 			} else if (type == 1) {
 				asteroidptr->size = 4;
 				if (r < 7) { // Ensures that the asteroid will be spawned correctly
@@ -613,6 +696,32 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				} else if (r > borderHeight - 7) {
 					r = borderHeight - 7;
 				}
+				x = borderWidth - asteroidptr->size;
+				asteroidptr->amountOfPoints = 20;
+
+				// Assign each indivial contact points of asteroid
+				asteroidptr->points[0].x = x+4, asteroidptr->points[0].y = r;
+				asteroidptr->points[1].x = x-4, asteroidptr->points[1].y = r;
+				asteroidptr->points[2].x = x+4, asteroidptr->points[2].y = r+1;
+				asteroidptr->points[3].x = x-4, asteroidptr->points[3].y = r+1;
+				asteroidptr->points[4].x = x+4, asteroidptr->points[4].y = r-1;
+				asteroidptr->points[5].x = x-4, asteroidptr->points[5].y = r-1;
+
+				asteroidptr->points[6].x = x-2, asteroidptr->points[6].y = r+3;
+				asteroidptr->points[7].x = x-1, asteroidptr->points[7].y = r+3;
+				asteroidptr->points[8].x = x, asteroidptr->points[8].y = r+3;
+				asteroidptr->points[9].x = x+1, asteroidptr->points[9].y = r+3;
+				asteroidptr->points[10].x = x+2, asteroidptr->points[10].y = r+3;
+				asteroidptr->points[11].x = x-2, asteroidptr->points[11].y = r-3;
+				asteroidptr->points[12].x = x-1, asteroidptr->points[12].y = r-3;
+				asteroidptr->points[13].x = x, asteroidptr->points[13].y = r-3;
+				asteroidptr->points[14].x = x+1, asteroidptr->points[14].y = r-3;
+				asteroidptr->points[15].x = x+2, asteroidptr->points[15].y = r-3;
+
+				asteroidptr->points[16].x = x+3, asteroidptr->points[16].y = r-2;
+				asteroidptr->points[17].x = x+3, asteroidptr->points[17].y = r+2;
+				asteroidptr->points[18].x = x-3, asteroidptr->points[18].y = r-2;
+				asteroidptr->points[19].x = x-3, asteroidptr->points[19].y = r+2;
 			} else {
 				asteroidptr->size = 2;
 				if (r < 3) { // Ensures that the asteroid will be spawned correctly
@@ -620,12 +729,24 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				} else if (r > borderHeight - 3) {
 					r = borderHeight - 3;
 				}
-			}
 
-			asteroidptr->pos.x = borderWidth - asteroidptr->size;
+				x = borderWidth - asteroidptr->size;
+				asteroidptr->amountOfPoints = 8;
+
+				// Assign each indivial contact points of asteroid
+				asteroidptr->points[0].x = x+2, asteroidptr->points[0].y = r;
+				asteroidptr->points[1].x = x-2, asteroidptr->points[1].y = r;
+				asteroidptr->points[2].x = x+1, asteroidptr->points[2].y = r-1;
+				asteroidptr->points[3].x = x+1, asteroidptr->points[3].y = r+1;
+				asteroidptr->points[4].x = x-1, asteroidptr->points[4].y = r-1;
+				asteroidptr->points[5].x = x-1, asteroidptr->points[5].y = r+1;
+				asteroidptr->points[6].x = x, asteroidptr->points[6].y = r-1;
+			    asteroidptr->points[7].x = x, asteroidptr->points[7].y = r+1;
+				}
+
+			asteroidptr->pos.x = x;
 			asteroidptr->pos.y = r;
 			asteroidptr->alive = 1;
-
 			break;
 		}
 		asteroidptr++;

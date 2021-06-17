@@ -9,6 +9,7 @@
 #define GAMECONTROLLER_H_
 
 #include <stdint.h>
+#include <stdlib.h>
 #include "spaceship.h"
 #include <stdbool.h>
 
@@ -24,7 +25,8 @@ typedef struct clockTimer {
 
 typedef struct asteroid {
 	struct vector pos; // Due to the fact that u can see the asteroid outside boundaries
-	uint8_t size;
+	uint8_t size, amountOfPoints;
+	struct vector points[36];
 	bool alive;
 };
 
@@ -53,4 +55,5 @@ void update_pixels(struct vector *p);
 void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
 		int bListSize, int aListSize, int i,int k);
 void update_bullet(struct vector bullet);
+bool checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid);
 
