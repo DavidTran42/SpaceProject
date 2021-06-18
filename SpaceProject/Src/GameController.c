@@ -56,10 +56,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint16_t buffer[512] = { 0 };
 	char s_score[10] = "0";
 
-
-	uint8_t bulletListSize = 10, asteroidListSize = 5, gameLevel = 1,
-			gameloop = 1, hearts = 3, score = 0, r = rand() % borderHeight,
-			type = rand() % 3;
+	uint8_t bulletListSize = 10, asteroidListSize = 5, gameLevel = 1, gameloop =
+			1, hearts = 3, score = 0, r = rand() % borderHeight, type = rand()
+			% 3;
 	uint16_t t, l, g;
 	struct ship ship[4] = { 0 }; // More ships due to power ups
 	struct asteroid asteroid[5] = { 0 };
@@ -114,7 +113,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			// Check if boss key has been pressed
 			bosskey(input);
 
-
 			// Update ships from key press
 			clear_ship1(ship[0]);
 			updateShipPos(input, &ship[0], borderWidth, borderHeight);
@@ -126,8 +124,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 		// Update if multiplayer
 		if (gameMode == 2) {
-			if(controls.right || controls.left || controls.down
-					|| controls.up || controls.center) {
+			if (controls.right || controls.left || controls.down || controls.up
+					|| controls.center) {
 				clear_ship1(ship[2]);
 				updateShip2Pos(&ship[2], controls, borderWidth, borderHeight);
 				stars_only();
@@ -246,6 +244,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								lcd_write_string(buffer, "LIVES REMAINING: *  ",
 										1);
 							} else if (hearts == 1) {
+								gotoxy(130, 40);
+								printf("--- GAME OVER ---");
 								hearts--;
 								lcd_write_string(buffer,
 										"GAME OVER!   GAME OVER!  ", 1);
@@ -376,7 +376,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	}
 }
-
 
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid) {
 	int wide = 7, height = 3;
@@ -834,30 +833,30 @@ void bosskey(char input) {
 
 }
 /*
-void life_lcd(uint16_t buffer[512], uint8_t *hearts) {
-//uint8_t hearts = 3, score = 0;
-//char s_score[20] = "SCORE = ";
+ void life_lcd(uint16_t buffer[512], uint8_t *hearts) {
+ //uint8_t hearts = 3, score = 0;
+ //char s_score[20] = "SCORE = ";
 
-//life remaining
+ //life remaining
 
-//		lcd_write_string(buffer, "SCORE: ", 3);
+ //		lcd_write_string(buffer, "SCORE: ", 3);
 
-//	lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
+ //	lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
 
-	if (hearts == 3) {
-		hearts--;
-		lcd_write_string(&buffer, "LIVES REMAINING: ** ", 1);
-	} else if (hearts == 2) {
-		hearts--;
-		lcd_write_string(&buffer, "LIVES REMAINING: *  ", 1);
-	} else if (hearts == 1) {
-		hearts--;
-		lcd_write_string(&buffer, "GAME OVER!   GAME OVER!  ", 1);
-		lcd_update(&buffer, 1);
+ if (hearts == 3) {
+ hearts--;
+ lcd_write_string(&buffer, "LIVES REMAINING: ** ", 1);
+ } else if (hearts == 2) {
+ hearts--;
+ lcd_write_string(&buffer, "LIVES REMAINING: *  ", 1);
+ } else if (hearts == 1) {
+ hearts--;
+ lcd_write_string(&buffer, "GAME OVER!   GAME OVER!  ", 1);
+ lcd_update(&buffer, 1);
 
-	}
-}
-s
+ }
+ }
+ s
  if (gameMode == 2) {
  lcd_write_string(buffer, "P1 SCORE: ", 3);
  lcd_write_string2(buffer, "P2 SCORE: ", 3);
