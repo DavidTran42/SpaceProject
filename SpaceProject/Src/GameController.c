@@ -65,7 +65,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t gameLevel = 1; // Starting level
 	struct joystick controls; // For joystick support
 	int gameloop = 1, hearts = 3, score = 0;
-	uint32_t t, s,l, g;
+	uint32_t t, s, l, g;
 	uint8_t r = rand() % borderHeight;
 	uint8_t type = rand() % 3;
 	int bulletListSize = sizeof(bullet1) / sizeof(bullet1[0]), shipListSize =
@@ -166,24 +166,27 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 */
 
 		// Update bullets and astroids
-		if (t > 2000) {
-			t = 0;
+
+
+		if (timer.sec100 % 10 == 0) {
+
 			for (int k = 0; k < bulletListSize; k++) {
+
 				if (bullet1[k].pos.x != 0) {
 					gotoxy(bullet1[k].pos.x, bullet1[k].pos.y);
 					update_bullet(bullet1[k].pos);
 					printf(" o");
+					gravity(&bullet1[k], &asteroid[0]);
 					bullet1[k].pos.x += bullet1[k].vel.x;
 					bullet1[k].pos.y += bullet1[k].vel.y;
-					if (bullet1[k].pos.x == borderWidth) {
+					if (bullet1[k].pos.x == borderWidth-2 || bullet1[k].pos.y > borderHeight-2) {
 						bullet1[k].alive = 0;
 					}
 				}
 			}
 		}
 
-		if (g > 2000) {
-			g = 0;
+		if (timer.sec100 % 20 == 0) {
 
 			for (int i = 0; i < asteroidListSize; i++) {
 
@@ -241,90 +244,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			// printf("asteroid%d_x = %d, asteroid%d_y = %d\n", i, asteroid[i].pos.x, i, asteroid[i].pos.y);
 		}
 	}
-}
-
-void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr,
-		int bListSize, int aListSize, int i, int k) {
-	int64_t fx = 0, fy = 0;
-	/*
-	 for (int e = 0; e < aListSize; e++) {
-	 for (int k = 0; k < bListSize; k++) {
-	 if (bulletptr[k].pos.x != 0) {
-	 gotoxy(bulletptr[k].pos.x, bulletptr[k].pos.y);
-	 update_bullet(bulletptr[k].pos);
-	 printf(" o");
-	 bulletptr[k].pos.x += bulletptr[k].vel.x;
-	 bulletptr[k].pos.y += bulletptr[k].vel.y;
-	 if (asteroidptr[e].pos.y != 0
-	 && asteroidptr[e].pos.x > 0 - asteroidptr[e].size) {
-	 if (asteroidptr[e].pos.x <= (0 - asteroidptr[e].size)) {
-	 asteroidptr[e].pos.x = 0, asteroidptr[e].pos.y = 0;
-	 }
-
-	 <<<<<<< HEAD
-	 if (bulletptr[k].pos.x == 270) {
-	 bulletptr[k].pos.x = 0, bulletptr[k].pos.y = 0;
-	 }*/
-
-	if (asteroidptr->size == 2) {
-		fx =
-				expand(
-						(50000
-								/ ((bulletptr[k].pos.x - asteroidptr[i].pos.x)
-										* (bulletptr[k].pos.x
-												- asteroidptr[i].pos.x))));
-		fy =
-				expand(
-						(50000
-								/ ((bulletptr[k].pos.y - asteroidptr[i].pos.y)
-										* (bulletptr[k].pos.y
-												- asteroidptr[i].pos.y))));
-
-		bulletptr[k].vel.x *= fx;
-		bulletptr[k].vel.y *= fy;
-
-	}
-	if (asteroidptr->size == 4) {
-		fx =
-				expand(
-						(50000
-								/ ((bulletptr[k].pos.x - asteroidptr[i].pos.x)
-										* (bulletptr[k].pos.x
-												- asteroidptr[i].pos.x))));
-		fy =
-				expand(
-						(50000
-								/ ((bulletptr[k].pos.y - asteroidptr[i].pos.y)
-										* (bulletptr[k].pos.y
-												- asteroidptr[i].pos.y))));
-
-		bulletptr[k].vel.x *= fx;
-		bulletptr[k].vel.y *= fy;
-
-	}
-	if (asteroidptr->size == 8) {
-		fx =
-				expand(
-						(50000
-								/ ((bulletptr[k].pos.x - asteroidptr[i].pos.x)
-										* (bulletptr[k].pos.x
-												- asteroidptr[i].pos.x))));
-		fy =
-				expand(
-						(50000
-								/ ((bulletptr[k].pos.y - asteroidptr[i].pos.y)
-										* (bulletptr[k].pos.y
-												- asteroidptr[i].pos.y))));
-
-		bulletptr[k].vel.x *= fx;
-		bulletptr[k].vel.y *= fy;
-
-	}
-	gotoxy(10, 10);
-	printf("%04ld,%04ld\n", fx, fy);
-	printFix(fx);
-	printf(" , ");
-	printFix(fy);
 }
 
 int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
