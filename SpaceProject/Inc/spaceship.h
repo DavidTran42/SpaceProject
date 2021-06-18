@@ -12,8 +12,12 @@ struct vector{
 	int16_t x,y;
 };
 
-void print_ship1(struct vector position);
-void clear_ship1(struct vector position);
-void print_ship2(struct vector position);
+struct ship {
+	struct vector pos, vel;
+};
+
+void print_ship1(struct ship position);
+void clear_ship1(struct ship position);
+void print_ship2(struct ship position);
 
 #endif /* SPACESHIP_H_ */

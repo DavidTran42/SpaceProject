@@ -25,7 +25,7 @@ void clear_medium_asteroid(struct asteroid *asteroid2);
 void clear_small_asteroid(struct asteroid *asteroid1);
 
 
-void update_pixels_ship(struct vector *p);
+void update_pixels_ship(struct ship *p);
 void update_bullet(struct vector bullet);
 void update_large_background(struct asteroid *p);
 void update_medium_background(struct asteroid *p);

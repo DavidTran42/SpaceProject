@@ -9,18 +9,12 @@
 #define HELP 3;
 
 int main(void) {
-	uart_init(2000000);
+	uart_init(1000000);
 	clrscr();
 	uint16_t buffer[512] = { 0 };
 
 	lcd_init();
 	//test();
-
-	//shiptest();
-	//bosskey();
-
-	//uint16_t borderWidth = 270, borderHeight = 75;
-	//initGame(borderWidth, borderHeight, 1);
 
 	mainMenu();
 
