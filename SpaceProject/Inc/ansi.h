@@ -13,6 +13,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <string.h>
+#include "30010_io.h"
 
 
 #endif /* ANSI_H_ */
@@ -35,5 +36,8 @@ int32_t calcSin(int32_t i);
 int32_t calcCos(int32_t i);
 void printFix(int32_t i);
 int32_t expand2(int32_t i);
+
+void turnOn(GPIO_TypeDef *pin, uint32_t pinnum);
+void turnOff(GPIO_TypeDef *pin, uint32_t pinnum);
 
 

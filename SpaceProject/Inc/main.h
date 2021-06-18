@@ -14,7 +14,6 @@ void test();
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#include <string.h>
 #include "30010_io.h"
 
 

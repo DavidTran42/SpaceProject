@@ -9,6 +9,7 @@
 #define GAMECONTROLLER_H_
 
 #include <stdint.h>
+#include <stdlib.h>
 #include "spaceship.h"
 #include <stdbool.h>
 
@@ -16,25 +17,26 @@
 
 typedef struct joystick {
 	uint16_t left, right, up, down, center;
-};
+} controls;
 
-typedef struct clockTimer {
+struct clockTimer {
 	volatile uint8_t hour, min, sec, sec100;
 };
 
 typedef struct asteroid {
 	struct vector pos; // Due to the fact that u can see the asteroid outside boundaries
-	uint8_t size;
+	uint8_t size, amountOfPoints;
+	struct vector points[36];
 	bool alive;
-};
+} asteroid;
 
 typedef struct bullet{
 	struct vector pos, vel;
 	bool alive;
-};
+} bullet1, bullet2;
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
-void updateShipPos(char input, struct vector *shipptr, struct joystick controls, uint16_t borderWidth, uint16_t borderHeight);
+void updateShipPos(char input, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
 void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
 struct joystick addJoystick();
 void setUpTimer();
@@ -42,14 +44,17 @@ void enableTimer();
 void disableTimer();
 void rotateVector(struct vector *v, int32_t degree);
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r);
-void makeBullet(char input, struct bullet *bulletptr, struct vector *ship,
-		int bListSize, struct joystick controls);
+void makeBullet1(char input, struct bullet *bulletptr, struct vector ship,
+		int bListSize);
+void makeBullet2(struct joystick controls, struct bullet *bulletptr, struct vector ship,
+		int bListSize);
 void bosskey(char input);
 
-void updateShip2Pos(char input2, struct vector *shipptr,struct joystick controls,
+void updateShip2Pos(struct vector *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();
 void update_pixels(struct vector *p);
 void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
 void update_bullet(struct vector bullet);
-
+bool checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid);
+bool checkHit(struct bullet bullet, struct asteroid asteroid);

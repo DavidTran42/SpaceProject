@@ -2,7 +2,6 @@
 #include "ansi.h"
 #include "Excellutex.h"
 #include "charset.h"
-#include "30010_io.h"
 
 
 void fgcolor(uint8_t foreground) {
@@ -157,14 +156,14 @@ void printFix(int32_t i) {
 	printf("%ld.%04ld", i >> 16, 10000 * (uint32_t) (i & 0xFFFF) >> 16);
 	// Print a maximum of 4 decimal digits to avoid overflow
 }
-int32_t expand2(int32_t i){
+/*int32_t expand2(int32_t i){
 
 }
 
 
 
 
-/*void rotateVector(struct vector *v, int32_t degree) {
+void rotateVector(struct vector *v, int32_t degree) {
 	int32_t tempX;
 	tempX = v->x * calcCos(degree) - v->y * calcSin(degree);
 	v->y = v->x * calcSin(degree) + v->y * calcCos(degree);

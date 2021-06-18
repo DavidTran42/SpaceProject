@@ -49,7 +49,7 @@
 // sqrt_i32 computes the squrare root of a 32bit integer and returns
 // a 32bit integer value. It requires that v is positive.
 int32_t sqrt_i32(int32_t v) {
-    uint32_t b = 1<<30, q = 0, r = v;
+    uint32_t b = 1<<12, q = 0, r = v;
     while (b > r)
         b >>= 2;
     while( b > 0 ) {
