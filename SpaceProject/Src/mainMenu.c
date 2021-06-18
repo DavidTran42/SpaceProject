@@ -378,6 +378,7 @@ void optionsSelect() {
 					inverse(0);
 					disableTimer();
 					clrscr();
+					quit_screen();
 
 				}
 				if (i > 4) {

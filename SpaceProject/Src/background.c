@@ -990,12 +990,14 @@ void update_small_background(struct vector *p) {
 	} else if (p->y == 68) {
 		newbgcolor(18);
 		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
 		newbgcolor(17);
 		gotoxy(p->x + 3, p->y);
 		printf(" ");
 	} else if (p->y == 69) {
 		newbgcolor(19);
 		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
 		newbgcolor(18);
 		gotoxy(p->x + 3, p->y);
 		printf(" ");
@@ -1005,6 +1007,7 @@ void update_small_background(struct vector *p) {
 	} else if (p->y == 70) {
 		newbgcolor(20);
 		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
 		newbgcolor(19);
 		gotoxy(p->x + 3, p->y);
 		printf(" ");
@@ -1014,6 +1017,7 @@ void update_small_background(struct vector *p) {
 	} else if (p->y == 71) {
 		newbgcolor(21);
 		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
 		newbgcolor(20);
 		gotoxy(p->x + 3, p->y);
 		printf(" ");
@@ -1033,6 +1037,7 @@ void update_small_background(struct vector *p) {
 	} else if (p->y == 73) {
 		newbgcolor(195);
 		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
 		newbgcolor(15);
 		gotoxy(p->x + 3, p->y);
 		printf(" ");
@@ -1042,6 +1047,7 @@ void update_small_background(struct vector *p) {
 	} else if (p->y == 74) {
 		newbgcolor(159);
 		gotoxy(p->x + 2, p->y + 1);
+		printf(" ");
 		newbgcolor(195);
 		gotoxy(p->x + 3, p->y);
 		printf(" ");

@@ -53,8 +53,8 @@ void setUpTimer() {
 //////////////////////////////////////////////////////////////////
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
-
-
+	uint16_t buffer[512] = { 0 };
+	char s_score[10] = "0";
 	uint8_t bulletListSize = 20, asteroidListSize = 10, gameLevel = 1,
 			gameloop = 1, hearts = 3, score = 0, r = rand() % borderHeight,
 			type = rand() % 3;
@@ -89,8 +89,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	// Start timer
 	setUpTimer();
 
+	lcd_write_string(buffer, "SCORE: ", 3);
+	lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
+	itoa(score, s_score, 10);
+	lcd_write_string(buffer, s_score, 4);
+
 	// Game loop
 	while (gameloop) {
+
 		t++; // For every interupt, increment
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
@@ -106,7 +112,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			// Check if boss key has been pressed
 			bosskey(input);
-
+			level_led(&gameLevel);
 			// Update ships from key press or joystick input
 			clear_ship1(ship[0]);
 			updateShipPos(input, &ship[0], borderWidth, borderHeight);
@@ -145,7 +151,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 }*/
 
 		// Update bullets and astroids
-
 		if (t > 2000) {
 			l++;
 			g++;
@@ -194,6 +199,24 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 							&& abs(asteroid[i].pos.y - ship[0].y) < 8) {
 						if (checkCollisionWithAsteroid(ship[0], asteroid[i])) {
 							asteroid[i].alive = 0;
+							//update lcd
+
+							if (hearts == 3) {
+								hearts--;
+								lcd_write_string(buffer, "LIVES REMAINING: ** ",
+										1);
+							} else if (hearts == 2) {
+								hearts--;
+								lcd_write_string(buffer, "LIVES REMAINING: *  ",
+										1);
+							} else if (hearts == 1) {
+								hearts--;
+								lcd_write_string(buffer,
+										"GAME OVER!   GAME OVER!  ", 1);
+								lcd_update(buffer, 1);
+
+							}
+
 						}
 					}
 
@@ -207,6 +230,20 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								if (checkHit(bullet1[j], asteroid[i])) {
 									asteroid[i].alive = 0;
 									bullet1[j].alive = 0;
+
+									if (asteroid[i].size == 2) {
+										score += 1;
+										itoa(score, s_score, 10);
+										lcd_write_string(buffer, s_score, 4);
+									} else if (asteroid[i].size == 4) {
+										score += 2;
+										itoa(score, s_score, 10);
+										lcd_write_string(buffer, s_score, 4);
+									} else {
+										score += 4;
+										itoa(score, s_score, 10);
+										lcd_write_string(buffer, s_score, 4);
+									}
 								}
 
 							}
@@ -215,14 +252,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					if (asteroid[i].size == 2) {
 						clear_small_asteroid(&asteroid[i]);
+
 					} else if (asteroid[i].size == 4) {
 						clear_medium_asteroid(&asteroid[i]);
+
 					} else {
 						clear_large_asteroid(&asteroid[i]);
 
 					}
-
-					resetbgcolor();
 
 					if (asteroid[i].alive) {
 
@@ -234,7 +271,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 						if (asteroid[i].size == 2) {
 							small_asteroid(&asteroid[i]);
-
 							update_small_background(&asteroid[i]);
 
 						} else if (asteroid[i].size == 4) {
@@ -262,7 +298,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 						}
 						if (g > 5) {
-							for (int j = 0; j < asteroid[i].amountOfPoints; j++) {
+							for (int j = 0; j < asteroid[i].amountOfPoints;
+									j++) {
 								asteroid[i].points[j].x -= 1;
 							}
 						}
@@ -276,9 +313,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				move = false;
 			}
 		}
+
 	}
 }
-
 
 /*int checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
  // 0 = false, 1 = size 0, 2 = size 1, 3 = size 2
@@ -301,8 +338,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
  && ship.x <= asteroid.pos.x + 2
  && ship.y - height >= asteroid.pos.y - 5
  && ship.y + height <= asteroid.pos.y + 5)*/
-
-
 
 bool checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid) {
 	int wide = 7, height = 3;
@@ -689,42 +724,31 @@ void bosskey(char input) {
 
 }
 /*
- void life_score(uint8_t buffer[512]) {
- uint32_t score1 = 0;
- uint32_t score2 = 0;
- uint8_t lives1 = 3;
- uint8_t lives2 = 3;
- char s_score[20] = "SCORE = ";
+void life_lcd(uint16_t buffer[512], uint8_t *hearts) {
+//uint8_t hearts = 3, score = 0;
+//char s_score[20] = "SCORE = ";
 
- //life remaining
- <<<<<<< HEAD
- if (single_player) {
- =======
- if (gameMode == 1) {
- >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
- lcd_write_string(buffer, "SCORE: ", 3);
+//life remaining
 
- lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
+//		lcd_write_string(buffer, "SCORE: ", 3);
 
- if (p1_hit && life == 3) {
- lives1--;
- lcd_write_string(buffer, "LIVES REMAINING: ** ", 1);
- } else if (p1_hit && life == 2) {
- lives1--;
- lcd_write_string(buffer, "LIVES REMAINING: *  ", 1);
- } else if (p1_hit && life == 1) {
- lives1--;
- lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
- lcd_update(buffer, 1);
+//	lcd_write_string(buffer, "LIVES REMAINING: ***", 1);
 
- }
- }
+	if (hearts == 3) {
+		hearts--;
+		lcd_write_string(&buffer, "LIVES REMAINING: ** ", 1);
+	} else if (hearts == 2) {
+		hearts--;
+		lcd_write_string(&buffer, "LIVES REMAINING: *  ", 1);
+	} else if (hearts == 1) {
+		hearts--;
+		lcd_write_string(&buffer, "GAME OVER!   GAME OVER!  ", 1);
+		lcd_update(&buffer, 1);
 
- <<<<<<< HEAD
- if (multiplayer) {
- =======
+	}
+}
+s
  if (gameMode == 2) {
- >>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
  lcd_write_string(buffer, "P1 SCORE: ", 3);
  lcd_write_string2(buffer, "P2 SCORE: ", 3);
 
@@ -742,7 +766,6 @@ void bosskey(char input) {
  lives1--;
  lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
  lcd_update(buffer, 1);
-
  }
 
  //player two
@@ -759,18 +782,19 @@ void bosskey(char input) {
  }
 
  }
+
  //score player one
  if (p1_collision_asteroid_1) {
- score1 += 100;
+ score1 += 1;
  itoa(score1, s_score, 10);
  lcd_write_string(buffer, s_score, 4);
 
  } else if (collision_asteroid_2) {
- score1 += 200;
+ score1 += 2;
  itoa(score1, s_score, 10);
  lcd_write_string(buffer, s_score, 4);
  } else if (collision_asteroid_3) {
- score1 += 500;
+ score1 += 4;
  itoa(score1, s_score, 10);
  lcd_write_string(buffer, s_score, 4);
  }
@@ -790,10 +814,9 @@ void bosskey(char input) {
  itoa(score2, s_score, 10);
  lcd_write_string2(buffer, s_score, 4);
  }
+
  }
-
  */
-
 void lcd_update(uint8_t buffer[512], uint8_t line) {
 
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
@@ -824,7 +847,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 }
 
 void level_led(uint8_t gameLevel) {
-	setUpTimer();
+	//setUpTimer();
 	if (gameLevel == 1) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOB, 4);

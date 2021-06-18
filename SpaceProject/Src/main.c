@@ -11,8 +11,6 @@
 int main(void) {
 	uart_init(2000000);
 	clrscr();
-	uint16_t buffer[512] = { 0 };
-
 	lcd_init();
 	//test();
 
