@@ -36,25 +36,26 @@ typedef struct bullet{
 } bullet1, bullet2;
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
-void updateShipPos(char input, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
-void initializeShips(int gameMode, struct vector *shipptr, uint16_t borderWidth, uint16_t borderHeight);
+void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
+void initializeShips(int gameMode, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
 struct joystick addJoystick();
 void setUpTimer();
 void enableTimer();
 void disableTimer();
 void rotateVector(struct vector *v, int32_t degree);
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r);
-void makeBullet1(char input, struct bullet *bulletptr, struct vector ship,
+void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 		int bListSize);
-void makeBullet2(struct joystick controls, struct bullet *bulletptr, struct vector ship,
+void makeBullet2(struct joystick controls, struct bullet *bulletptr, struct ship ship,
 		int bListSize);
 void bosskey(char input);
 
-void updateShip2Pos(struct vector *shipptr,struct joystick controls,
+void updateShip2Pos(struct ship *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();
 void update_pixels(struct vector *p);
 void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
 void update_bullet(struct vector bullet);
-bool checkCollisionWithAsteroid(struct vector ship, struct asteroid asteroid);
+bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid);
 bool checkHit(struct bullet bullet, struct asteroid asteroid);
+void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);

@@ -723,259 +723,259 @@ void game_background() {
 
 }
 
-void update_pixels_ship(struct vector *p) {
-	if (p->y == 65) {
-		gotoxy(p->x - 4, p->y + 3);
+void update_pixels_ship(struct ship *p) {
+	if (p->pos.y == 65) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(17);
 		printf(" ");
 
-	} else if (p->y == 66) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 66) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(18);
 		printf(" ");
 		newbgcolor(17);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 
-	} else if (p->y == 67) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 67) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(19);
 		printf(" ");
 		newbgcolor(18);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(17);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 
-	} else if (p->y == 68) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 68) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(20);
 		printf(" ");
 		newbgcolor(19);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(18);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(17);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 
-	} else if (p->y == 69) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 69) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(21);
 		printf(" ");
 		newbgcolor(20);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(19);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(18);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(17);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 
-	} else if (p->y == 70) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 70) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(15);
 		printf(" ");
 		newbgcolor(21);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(20);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(19);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(18);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(17);
-		gotoxy(p->x - 6, p->y - 2);
+		gotoxy(p->pos.x - 6, p->pos.y - 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y - 2);
+		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 
-	} else if (p->y == 71) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 71) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(195);
 		printf(" ");
 		newbgcolor(15);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(21);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(20);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(19);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(18);
-		gotoxy(p->x - 6, p->y - 2);
+		gotoxy(p->pos.x - 6, p->pos.y - 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y - 2);
+		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 		newbgcolor(17);
-		gotoxy(p->x - 4, p->y - 3);
+		gotoxy(p->pos.x - 4, p->pos.y - 3);
 		printf(" ");
 
-	} else if (p->y == 72) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 72) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(159);
 		printf(" ");
 		newbgcolor(195);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(15);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(21);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(20);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(19);
-		gotoxy(p->x - 6, p->y - 2);
+		gotoxy(p->pos.x - 6, p->pos.y - 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y - 2);
+		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 		newbgcolor(18);
-		gotoxy(p->x - 4, p->y - 3);
+		gotoxy(p->pos.x - 4, p->pos.y - 3);
 		printf(" ");
 
-	} else if (p->y == 73) {
-		gotoxy(p->x - 4, p->y + 3);
+	} else if (p->pos.y == 73) {
+		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(159);
-		gotoxy(p->x - 6, p->y + 2);
+		gotoxy(p->pos.x - 6, p->pos.y + 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(195);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(15);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(21);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(20);
-		gotoxy(p->x - 6, p->y - 2);
+		gotoxy(p->pos.x - 6, p->pos.y - 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y - 2);
+		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 		newbgcolor(19);
-		gotoxy(p->x - 4, p->y - 3);
+		gotoxy(p->pos.x - 4, p->pos.y - 3);
 		printf(" ");
 
-	} else if (p->y == 74) {
+	} else if (p->pos.y == 74) {
 
-		gotoxy(p->x - 3, p->y + 2);
+		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(159);
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(195);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(15);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(21);
-		gotoxy(p->x - 6, p->y - 2);
+		gotoxy(p->pos.x - 6, p->pos.y - 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y - 2);
+		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 		newbgcolor(20);
-		gotoxy(p->x - 4, p->y - 3);
+		gotoxy(p->pos.x - 4, p->pos.y - 3);
 		printf(" ");
-	} else if (p->y == 75) {
+	} else if (p->pos.y == 75) {
 
-		gotoxy(p->x - 7, p->y + 1);
+		gotoxy(p->pos.x - 7, p->pos.y + 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y + 1);
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(159);
-		gotoxy(p->x - 6, p->y);
+		gotoxy(p->pos.x - 6, p->pos.y);
 		printf("  ");
-		gotoxy(p->x + 1, p->y);
+		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(195);
-		gotoxy(p->x - 7, p->y - 1);
+		gotoxy(p->pos.x - 7, p->pos.y - 1);
 		printf(" ");
-		gotoxy(p->x - 1, p->y - 1);
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(15);
-		gotoxy(p->x - 6, p->y - 2);
+		gotoxy(p->pos.x - 6, p->pos.y - 2);
 		printf("  ");
-		gotoxy(p->x - 3, p->y - 2);
+		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 		newbgcolor(21);
-		gotoxy(p->x - 4, p->y - 3);
+		gotoxy(p->pos.x - 4, p->pos.y - 3);
 		printf(" ");
 	}
 

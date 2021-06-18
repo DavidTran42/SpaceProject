@@ -7,80 +7,80 @@
  *      Author: Marius Mainz
  */
 
-void print_ship1(struct vector position) {
-	gotoxy(position.x-4, position.y - 2);
+void print_ship1(struct ship position) {
+	gotoxy(position.pos.x-4, position.pos.y - 2);
 	fgcolor(6);
 	printf("%c", 219);
-	gotoxy(position.x-4, position.y - 1);
+	gotoxy(position.pos.x-4, position.pos.y - 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.x-4, position.y);
+	gotoxy(position.pos.x-4, position.pos.y);
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
-	gotoxy(position.x-4, position.y + 1);
+	gotoxy(position.pos.x-4, position.pos.y + 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.x-4, position.y + 2);
+	gotoxy(position.pos.x-4, position.pos.y + 2);
 	printf("%c", 219);
-	gotoxy(position.x - 5, position.y - 1);
+	gotoxy(position.pos.x - 5, position.pos.y - 1);
 	fgcolor(1);
 	printf("%c", 219);
-	gotoxy(position.x - 5, position.y + 1);
+	gotoxy(position.pos.x - 5, position.pos.y + 1);
 	printf("%c", 219);
-	gotoxy(position.x - 6, position.y + 1);
+	gotoxy(position.pos.x - 6, position.pos.y + 1);
 	fgcolor(3);
 	printf("%c", 219);
-	gotoxy(position.x - 6, position.y - 1);
+	gotoxy(position.pos.x - 6, position.pos.y - 1);
 	printf("%c", 219);
 
 }
-void clear_ship1(struct vector position) {
+void clear_ship1(struct ship position) {
 	fgcolor(0);
-	gotoxy(position.x-4, position.y - 2);
+	gotoxy(position.pos.x-4, position.pos.y - 2);
 	printf("%c", 219);
-	gotoxy(position.x-4, position.y - 1);
+	gotoxy(position.pos.x-4, position.pos.y - 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.x-4, position.y);
+	gotoxy(position.pos.x-4, position.pos.y);
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
-	gotoxy(position.x-4, position.y + 1);
+	gotoxy(position.pos.x-4, position.pos.y + 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.x-4, position.y + 2);
+	gotoxy(position.pos.x-4, position.pos.y + 2);
 	printf("%c", 219);
-	gotoxy(position.x - 5, position.y - 1);
+	gotoxy(position.pos.x - 5, position.pos.y - 1);
 
 	printf("%c", 219);
-	gotoxy(position.x - 5, position.y + 1);
+	gotoxy(position.pos.x - 5, position.pos.y + 1);
 	printf("%c", 219);
-	gotoxy(position.x - 6, position.y + 1);
+	gotoxy(position.pos.x - 6, position.pos.y + 1);
 
 	printf("%c", 219);
-	gotoxy(position.x - 6, position.y - 1);
+	gotoxy(position.pos.x - 6, position.pos.y - 1);
 	printf("%c", 219);
 
 
 }
 
 
-void print_ship2(struct vector position) {
+void print_ship2(struct ship position) {
 	// printf("%c[?25l", ESC); //Hiding curser
-	gotoxy(position.x-4, position.y - 2);
+	gotoxy(position.pos.x-4, position.pos.y - 2);
 	fgcolor(2);
-	printf(" ");
-	gotoxy(position.x-4, position.y - 1);
-	printf("   ");
-	gotoxy(position.x-4, position.y);
-	printf("     ");
-	gotoxy(position.x-4, position.y + 1);
-	printf("   ");
-	gotoxy(position.x-4, position.y + 2);
-	printf(" ");
-	gotoxy(position.x - 5, position.y - 1);
+	printf("%c", 219);
+	gotoxy(position.pos.x-4, position.pos.y - 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(position.pos.x-4, position.pos.y);
+	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	gotoxy(position.pos.x-4, position.pos.y + 1);
+	printf("%c%c%c", 219, 219, 219);
+	gotoxy(position.pos.x-4, position.pos.y + 2);
+	printf("%c", 219);
+	gotoxy(position.pos.x - 5, position.pos.y - 1);
 	fgcolor(1);
-	printf(" ");
-	gotoxy(position.x - 5, position.y + 1);
-	printf(" ");
-	gotoxy(position.x - 6, position.y + 1);
+	printf("%c", 219);
+	gotoxy(position.pos.x - 5, position.pos.y + 1);
+	printf("%c", 219);
+	gotoxy(position.pos.x - 6, position.pos.y + 1);
 	fgcolor(3);
-	printf(" ");
-	gotoxy(position.x - 6, position.y - 1);
-	printf(" ");
+	printf("%c", 219);
+	gotoxy(position.pos.x - 6, position.pos.y - 1);
+	printf("%c", 219);
 
 }
 
