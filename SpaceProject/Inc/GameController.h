@@ -31,7 +31,7 @@ typedef struct asteroid {
 } asteroid;
 
 typedef struct bullet{
-	struct vector pos, vel;
+	struct vector pos, vel, prev_pos;
 	bool alive;
 } bullet1, bullet2;
 
