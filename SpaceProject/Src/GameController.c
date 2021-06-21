@@ -375,8 +375,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 
 					// If multiplayer
-					if (gameMode == 2) {
+
 						for (int j = 0; j < ship[2].bulletAmount; j++) {
+							if (gameMode == 2) {
 							if (bullet2[j].alive) {
 								if (abs(asteroid[i].pos.x - bullet2[j].pos.x)
 										< (9 >> 14)
@@ -768,7 +769,7 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
-				bulletptr->vel.x = 1;
+				bulletptr->vel.x = (1 << 14);
 				bulletptr->alive = 1;
 
 				break;
