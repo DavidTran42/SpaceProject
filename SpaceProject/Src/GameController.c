@@ -57,7 +57,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	char s_score[10] = "0", s_score2[10] = "0";
 	struct gamesettings settings;
 
-		settings.gameLevel = 1, settings.asteroidSpeed = 8, settings.amountOfAsteroids = 5, settings.gameLoop = 1;
+		settings.gameLevel = 1, settings.asteroidSpeed = 16, settings.amountOfAsteroids = 5, settings.gameLoop = 1;
 	struct powers powerups[3] = { 0 };
 	struct ship ship[4] = { 0 };
 	ship[0].bulletAmount = 5;
@@ -160,7 +160,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		 }*/
 
 		// Update bullets and astroids
-		if (t > 2000) {
+		if (t > 500) {
 			l++;
 			g++;
 			s++;
@@ -186,7 +186,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 
 			// Make random asteroid
-			if (l > 100) {
+			if (l > 500) {
 				l = 0;
 				r = rand() % borderHeight;
 				type = rand() % 3;
