@@ -567,10 +567,10 @@ void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 
 void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
-	int16_t acc = 1 << 3;
+	int16_t acc = 1 << 9;
 
-	shipptr->pos.x += (shipptr->vel.x >> 8);
-	shipptr->pos.y += (shipptr->vel.y >> 8);
+	shipptr->pos.x += (shipptr->vel.x >> 14);
+	shipptr->pos.y += (shipptr->vel.y >> 14);
 
 	if (shipptr->pos.x < 8) {
 		shipptr->pos.x = 7;
