@@ -170,17 +170,17 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			gotoxy(2, 1);
 			printf("                         ");
 			gotoxy(1, 1);
-			printf("x: %ld, y: %ld", ship[0].pos.x >> 14, ship[0].pos.y >> 14);
+			printf("x: %ld, y: %ld", ship[2].vel.x >> 14, ship[0].vel.y >> 14);
 
 			// Update ship with no joystick/keypress
 			clear_ship1(ship[0]);
-			updatingShip(&ship[0], borderWidth, borderHeight);
+			updatingShip(&ship[0], borderWidth, borderHeight, (1 << 9));
 			print_ship1(ship[0]);
 			update_pixels_ship(&ship[0]);
 
 			if (gameMode == 2) {
 				clear_ship1(ship[2]);
-				updatingShip(&ship[2], borderWidth, borderHeight);
+				updatingShip(&ship[2], borderWidth, borderHeight, (1 << 4));
 				print_ship2(ship[2]);
 				update_pixels_ship(&ship[2]);
 			}
@@ -378,11 +378,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					if (gameMode == 2) {
 						for (int j = 0; j < ship[2].bulletAmount; j++) {
 							if (bullet2[j].alive) {
-								if (abs(asteroid[i].pos.x - bullet2[j].pos.x)
-										< (9 >> 14)
-										&& abs(
-												asteroid[i].pos.y
-														- bullet2[j].pos.y)
+								if (abs(asteroid[i].pos.x - bullet2[j].pos.x) < (9 >> 14)
+										&& abs(asteroid[i].pos.y - bullet2[j].pos.y)
 												< (6 >> 14)) {
 									if (checkHit(bullet2[j], asteroid[i])) {
 										asteroid[i].alive = 0;
@@ -614,41 +611,40 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 
 void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight) {
-	int16_t acc = 1 << 9;
+	int16_t acc = 1 << 8;
 // Player 1 controls
 	if ((controls.left) && shipptr->pos.x > 1 << 14) {
 		shipptr->vel.x -= acc;
-		if (shipptr->vel.x < -(3 << 14)) {
-			shipptr->vel.x = -(3 << 14);
+		if (shipptr->vel.x < -(3 << 13)) {
+			shipptr->vel.x = -(3 << 13);
 		}
 		shipptr->pos.x += shipptr->vel.x;
 	}
 	if ((controls.up) && shipptr->pos.y > 1 << 14) {
 		shipptr->vel.y -= acc;
-		if (shipptr->vel.y < -(3 << 14)) {
-			shipptr->vel.y = -(3 << 14);
+		if (shipptr->vel.y < -(3 << 13)) {
+			shipptr->vel.y = -(3 << 13);
 		}
 		shipptr->pos.y += shipptr->vel.y;
 	}
 	if ((controls.right) && shipptr->pos.x < borderWidth << 14) {
 		shipptr->vel.x += acc;
-		if (shipptr->vel.x > (3 << 14)) {
-			shipptr->vel.x = (3 << 14);
+		if (shipptr->vel.x > (3 << 13)) {
+			shipptr->vel.x = (3 << 13);
 		}
 		shipptr->pos.x += shipptr->vel.x;
 	}
 	if ((controls.down) && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y += acc;
-		if (shipptr->vel.y > (3 << 14)) {
-			shipptr->vel.y = (3 << 14);
+		if (shipptr->vel.y > (3 << 13)) {
+			shipptr->vel.y = (3 << 13);
 		}
 		shipptr->pos.y += shipptr->vel.y;
 	}
 }
 
 void updatingShip(struct ship *shipptr, uint16_t borderWidth,
-		uint16_t borderHeight) {
-	int16_t acc = 1 << 9;
+		uint16_t borderHeight, int16_t acc) {
 
 	shipptr->pos.x += shipptr->vel.x;
 	shipptr->pos.y += shipptr->vel.y;
@@ -753,6 +749,7 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
 				bulletptr->vel.x = (1 << 14);
+				bulletptr->vel.y = 0;
 				bulletptr->alive = 1;
 				break;
 			}
@@ -768,9 +765,9 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
-				bulletptr->vel.x = 1;
+				bulletptr->vel.x = (1 << 14);
+				bulletptr->vel.y = 0;
 				bulletptr->alive = 1;
-
 				break;
 			}
 		}

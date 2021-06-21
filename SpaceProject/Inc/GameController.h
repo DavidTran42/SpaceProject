@@ -51,6 +51,7 @@ struct joystick addJoystick();
 void setUpTimer();
 void enableTimer();
 void disableTimer();
+void level_led(uint8_t gameLevel);
 void rotateVector(struct vector *v, int32_t degree);
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r);
 void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
@@ -68,5 +69,5 @@ void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
 void update_bullet(struct vector bullet);
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid);
 bool checkHit(struct bullet bullet, struct asteroid asteroid);
-void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
+void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight, int16_t acc);
 void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);
