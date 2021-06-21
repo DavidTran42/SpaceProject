@@ -64,9 +64,10 @@ void updateShip2Pos(struct ship *shipptr,struct joystick controls,
 void init_pixels();
 void lcd_update(uint8_t buffer[512], uint8_t line);
 void update_pixels(struct vector *p);
-void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
+void gravity(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a, int64_t b);
 void update_bullet(struct vector bullet);
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid);
 bool checkHit(struct bullet bullet, struct asteroid asteroid);
 void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
 void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);
+void blackHole(int32_t a, int32_t b);
