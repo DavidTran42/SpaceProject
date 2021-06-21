@@ -690,6 +690,7 @@ void stars_only() {
 		gotoxy(33 * i, 60);
 		printf("*");
 	}
+	blackHole(125,32);
 
 }
 
@@ -1472,3 +1473,23 @@ void update_bullet(struct vector bullet) {
  }
  }
  */
+
+
+
+void blackHole(int32_t a, int32_t b){
+		newbgcolor(52);
+		gotoxy(a-1,b);
+		printf("   ");
+
+		newbgcolor(88);
+		gotoxy(a-2,b);
+		printf(" ");
+		gotoxy(a + 2 , b);
+		printf(" ");
+		gotoxy(a - 1, b -1);
+		printf("   ");
+
+		gotoxy(a - 1, b + 1);
+		printf("   ");
+
+}
