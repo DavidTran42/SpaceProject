@@ -74,7 +74,7 @@ void quit_screen() {
 
 			t--;
 			if (t < 40) {
-				gotoxy(110, 50);
+				gotoxy(115, 50);
 				printf("(Press 'SPACE' to return to Main Menu)");
 			}
 		}
