@@ -310,12 +310,11 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						itoa(ship[2].score, s_score2, 10);
 						lcd_write_string2(buffer, s_score2, 4);
 
-						if (abs(asteroid[i].pos.x - ship[2].pos.x) < (9 >> 14)
+						if (abs(asteroid[i].pos.x - ship[2].pos.x) < (9 << 14)
 								&& abs(asteroid[i].pos.y - ship[2].pos.y)
-										< (8 >> 14)) {
+										< (8 << 14)) {
 
-							if (checkCollisionWithAsteroid(ship[2],
-									asteroid[i])) {
+							if (checkCollisionWithAsteroid(ship[2],asteroid[i])) {
 								asteroid[i].alive = 0;
 
 								if (ship[2].hearts == 3) {
