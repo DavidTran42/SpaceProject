@@ -498,70 +498,70 @@ bool checkHit(struct bullet bullet, struct asteroid asteroid) {
 
 void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
-	int16_t acc = 1 << 6;
+	int16_t acc = 1 << 12;
 
 // Player 1 controls
 	if ((input == 'a') && shipptr->pos.x > 1) {
 		shipptr->vel.x -= acc;
-		if (shipptr->vel.x < -(2 << 8)) {
-			shipptr->vel.x = -(2 << 8);
+		if (shipptr->vel.x < -(2 << 14)) {
+			shipptr->vel.x = -(2 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 8);
+		shipptr->pos.x += (shipptr->vel.x >> 14);
 	}
 	if ((input == 'w') && shipptr->pos.y > 1) {
 		shipptr->vel.y -= acc;
-		if (shipptr->vel.y < -(2 << 8)) {
-			shipptr->vel.y = -(2 << 8);
+		if (shipptr->vel.y < -(2 << 14)) {
+			shipptr->vel.y = -(2 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 8);
+		shipptr->pos.y += (shipptr->vel.x >> 14);
 	}
 	if ((input == 'd') && shipptr->pos.x < borderWidth) {
 		shipptr->vel.x += acc;
-		if (shipptr->vel.x > (2 << 8)) {
-			shipptr->vel.x = (2 << 8);
+		if (shipptr->vel.x > (2 << 14)) {
+			shipptr->vel.x = (2 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 8);
+		shipptr->pos.x += (shipptr->vel.x >> 14);
 	}
 	if ((input == 's') && shipptr->pos.y < borderHeight) {
 		shipptr->vel.y += acc;
-		if (shipptr->vel.y > (2 << 8)) {
-			shipptr->vel.y = (2 << 8);
+		if (shipptr->vel.y > (2 << 14)) {
+			shipptr->vel.y = (2 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 8);
+		shipptr->pos.y += (shipptr->vel.x >> 14);
 	}
 }
 
 void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight) {
-	int16_t acc = 1 << 3;
+	int16_t acc = 1 << 9;
 // Player 1 controls
 	if ((controls.left) && shipptr->pos.x > 1) {
 		shipptr->vel.x -= acc;
-		if (shipptr->vel.x < -(3 << 8)) {
-			shipptr->vel.x = -(3 << 8);
+		if (shipptr->vel.x < -(3 << 14)) {
+			shipptr->vel.x = -(3 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 8);
+		shipptr->pos.x += (shipptr->vel.x >> 14);
 	}
 	if ((controls.up) && shipptr->pos.y > 1) {
 		shipptr->vel.y -= acc;
-		if (shipptr->vel.y < -(3 << 8)) {
-			shipptr->vel.y = -(3 << 8);
+		if (shipptr->vel.y < -(3 << 14)) {
+			shipptr->vel.y = -(3 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 8);
+		shipptr->pos.y += (shipptr->vel.x >> 14);
 	}
 	if ((controls.right) && shipptr->pos.x < borderWidth) {
 		shipptr->vel.x += acc;
-		if (shipptr->vel.x > (3 << 8)) {
-			shipptr->vel.x = (3 << 8);
+		if (shipptr->vel.x > (3 << 14)) {
+			shipptr->vel.x = (3 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 8);
+		shipptr->pos.x += (shipptr->vel.x >> 14);
 	}
 	if ((controls.down) && shipptr->pos.y < borderHeight) {
 		shipptr->vel.y += acc;
-		if (shipptr->vel.y > (3 << 8)) {
-			shipptr->vel.y = (3 << 8);
+		if (shipptr->vel.y > (3 << 14)) {
+			shipptr->vel.y = (3 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 8);
+		shipptr->pos.y += (shipptr->vel.x >> 14);
 	}
 }
 
