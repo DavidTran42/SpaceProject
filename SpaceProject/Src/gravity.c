@@ -7,65 +7,46 @@
 #define FIX14_SHIFT 14
 #define FIX14_MULT(a, b) ( (a)*(b) >> FIX14_SHIFT )
 #define FIX14_DIV(a, b) ( ((a) << FIX14_SHIFT) / b )
+#define G 1 << 6
 
-void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr) {
+void gravity2(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a,
+		int64_t b) {
 
-	int64_t x1 = bulletptr->pos.x, x2 = asteroidptr->pos.x;
-	int64_t y1 = bulletptr->pos.y, y2 = asteroidptr->pos.y;
-	int64_t a = x2-x1, b = y2-y1;
-	int64_t r = FIX14_MULT(a, a) + FIX14_MULT(b, b);
-	int64_t r2 = sqrt_i32(r);
-	int64_t ex = FIX14_DIV(a, r2), ey = FIX14_DIV(b, r2);
-	int64_t f = 0, ax = 0, ay = 0;
+	int32_t x1 = bulletptr->pos.x, y1 = bulletptr->pos.y;
+	int64_t x = a - x1, y = b - y1;
+	int32_t r = FIX14_MULT(x, x) + FIX14_MULT(y, y);
+	int64_t r2 = (sqrt_i32_to_fx16_16(r >> 14)) >> 2;
+	//gotoxy(10,10);
 
-	f = FIX14_DIV(100, r);
-	ax = f * ex;
-	ay = f * ey;
+	int64_t f = FIX14_MULT(G, FIX14_DIV(FIX14_MULT((int64_t)m1,(int64_t)m2),r));
 
-	bulletptr->vel.x += FIX14_DIV(ax, 1);
-	bulletptr->vel.y += FIX14_DIV(ay, 1);
+	int64_t ay = FIX14_DIV(FIX14_MULT(FIX14_DIV(y,r2),f), (int64_t )m1);
+	int64_t ax = FIX14_DIV(FIX14_MULT(FIX14_DIV(x,r2),f), (int64_t )m1);
+	bulletptr->vel.x += ax;
+	bulletptr->vel.y += ay;
 
-	gotoxy(10, 10);
-	printf("ex = %d , ey = %d", ex, ey);
-	gotoxy(10, 11);
-	printf("f = %d", f);
-	gotoxy(10, 12);
-	printf("ax = %d , ay = %d", ax, ay);
-	gotoxy(10, 13);
-	printf("a = %d , b = %d", a, b);
-	gotoxy(10, 14);
-	printf("bullet x = %d , bullet y = %d", bulletptr->vel.x, bulletptr->vel.y);
-	/*
-	 if (asteroidptr->size == 2) {
-	 f = FIX14_DIV(2, r);
-	 ax = f * ex;
-	 ay = f * ey;
-
-	 bulletptr->vel.x += FIX14_DIV(ax, 1);
-	 bulletptr->vel.y += FIX14_DIV(ay, 1);
-
-	 /*
-	 }
-	 if (asteroidptr->size == 4) {
-	 f = FIX14_DIV(2, r);
-	 ax = f * ex;
-	 ay = f * ey;
-
-	 bulletptr->vel.x += FIX14_DIV(ax, 1);
-	 bulletptr->vel.y += FIX14_DIV(ay, 1);
-
-	 }
-	 if (asteroidptr->size == 8) {
-	 f = FIX14_DIV(2, r);
-	 ax = f * ex;
-	 ay = f * ey;
-
-	 bulletptr->vel.x += FIX14_DIV(ax, 1);
-	 bulletptr->vel.y += FIX14_DIV(ay, 1);
-
-	 }*/
-	if (bulletptr->pos.x > 260 || bulletptr->pos.y > 70) {
-		bulletptr->vel.x = 0;
-		bulletptr->vel.y = 0;
+	if (bulletptr->vel.x >> 14 >= 3) {
+		bulletptr->vel.x = 2 << 14;
 	}
+	if (bulletptr->vel.y >> 14 >= 3) {
+		bulletptr->vel.y = 2 << 14;
+	}
+}
+
+void blackHole(int32_t a, int32_t b) {
+	newbgcolor(52);
+	gotoxy(a - 1, b);
+	printf("   ");
+
+	newbgcolor(88);
+	gotoxy(a - 2, b);
+	printf(" ");
+	gotoxy(a + 2, b);
+	printf(" ");
+	gotoxy(a - 1, b - 1);
+	printf("   ");
+
+	gotoxy(a - 1, b + 1);
+	printf("   ");
+
 }

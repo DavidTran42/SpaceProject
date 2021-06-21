@@ -57,7 +57,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	char s_score[10] = "0", s_score2[10] = "0";
 	struct gamesettings settings;
 
-		settings.gameLevel = 1, settings.asteroidSpeed = 8, settings.amountOfAsteroids = 5, settings.gameLoop = 1;
+	settings.gameLevel = 1, settings.asteroidSpeed = 8, settings.amountOfAsteroids =
+			5, settings.gameLoop = 1;
 	struct powers powerups[3] = { 0 };
 	struct ship ship[4] = { 0 };
 	ship[0].bulletAmount = 5;
@@ -217,7 +218,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[k].prev_pos.y = bullet1[k].pos.y;
 
 					// Move bullet
-
+					gravity2(1 << 14, 400 << 14, &bullet1, 125 << 14, 35 << 14);
 					bullet1[k].pos.x += bullet1[k].vel.x;
 					bullet1[k].pos.y += bullet1[k].vel.y;
 
@@ -314,7 +315,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								&& abs(asteroid[i].pos.y - ship[2].pos.y)
 										< (8 << 14)) {
 
-							if (checkCollisionWithAsteroid(ship[2],asteroid[i])) {
+							if (checkCollisionWithAsteroid(ship[2],
+									asteroid[i])) {
 								asteroid[i].alive = 0;
 
 								if (ship[2].hearts == 3) {
@@ -375,9 +377,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 
 					// If multiplayer
-
+					if (gameMode == 2) {
 						for (int j = 0; j < ship[2].bulletAmount; j++) {
-							if (gameMode == 2) {
+
 							if (bullet2[j].alive) {
 								if (abs(asteroid[i].pos.x - bullet2[j].pos.x)
 										< (9 >> 14)
@@ -596,8 +598,8 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		if (shipptr->vel.x > (2 << 14)) {
 			shipptr->vel.x = (2 << 14);
 		}
-		if(shipptr->vel.x < (1 << 14)) {
-			shipptr->vel.x = (1<<14);
+		if (shipptr->vel.x < (1 << 14)) {
+			shipptr->vel.x = (1 << 14);
 		}
 		shipptr->pos.x += shipptr->vel.x;
 	}
@@ -606,8 +608,8 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		if (shipptr->vel.y > (2 << 14)) {
 			shipptr->vel.y = (2 << 14);
 		}
-		if(shipptr->vel.y < (1 << 14)) {
-			shipptr->vel.y = (1<<14);
+		if (shipptr->vel.y < (1 << 14)) {
+			shipptr->vel.y = (1 << 14);
 		}
 		shipptr->pos.y += shipptr->vel.y;
 	}
