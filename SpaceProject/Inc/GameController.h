@@ -11,11 +11,10 @@
 #include <stdint.h>
 #include <stdlib.h>
 #include "spaceship.h"
-#include <stdbool.h>
 
 #endif /* GAMECONTROLLER_H_ */
 
-typedef struct joystick {
+struct joystick {
 	uint16_t left, right, up, down, center;
 } controls;
 
@@ -23,17 +22,27 @@ struct clockTimer {
 	volatile uint8_t hour, min, sec, sec100;
 };
 
-typedef struct asteroid {
+struct asteroid {
 	struct vector pos; // Due to the fact that u can see the asteroid outside boundaries
 	uint8_t size, amountOfPoints;
 	struct vector points[36];
 	bool alive;
-} asteroid;
+};
 
-typedef struct bullet{
+struct bullet{
 	struct vector pos, vel, prev_pos;
 	bool alive;
-} bullet1, bullet2;
+};
+
+struct powers {
+	struct vector pos;
+	bool rapidFire, onField, doubleBullets, moreHearts;
+};
+
+struct gamesettings {
+	uint8_t gameLevel, amountOfAsteroids, asteroidSpeed, gameLoop;
+};
+
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
@@ -53,9 +62,11 @@ void bosskey(char input);
 void updateShip2Pos(struct ship *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();
+void lcd_update(uint8_t buffer[512], uint8_t line);
 void update_pixels(struct vector *p);
 void gravity(struct bullet *bulletptr, struct asteroid *asteroidptr);
 void update_bullet(struct vector bullet);
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid);
 bool checkHit(struct bullet bullet, struct asteroid asteroid);
 void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
+void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);

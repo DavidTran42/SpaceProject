@@ -40,4 +40,6 @@ int32_t expand2(int32_t i);
 void turnOn(GPIO_TypeDef *pin, uint32_t pinnum);
 void turnOff(GPIO_TypeDef *pin, uint32_t pinnum);
 
+void lcd_write_string(uint8_t buffer[512], char *slice, uint8_t line);
+void lcd_write_string2(uint8_t buffer[512], char *slice, uint8_t line);
 
