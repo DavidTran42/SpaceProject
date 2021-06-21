@@ -46,7 +46,7 @@ struct gamesettings {
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
-void initializeShips(int gameMode, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
+void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2, uint16_t borderWidth, uint16_t borderHeight);
 struct joystick addJoystick();
 void setUpTimer();
 void enableTimer();
