@@ -18,7 +18,7 @@ struct ship {
 	struct vector pos, vel;
 	uint8_t hearts, score, bulletAmount, bulletSpeed;
 	int16_t rf_time, db_time, ds_time;
-	bool powered_up, rapidFire, doubleBullets;
+	bool powered_up, rapidFire, doubleBullets, alive;
 };
 
 void print_ship1(struct ship position);

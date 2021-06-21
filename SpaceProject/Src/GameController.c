@@ -55,8 +55,7 @@ void setUpTimer() {
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t buffer[512] = { 0 };
 	char s_score[10] = "0", s_score2[10] = "0";
-	struct gamesettings settings;
-
+	struct gameSettings settings;
 	settings.gameLevel = 1, settings.asteroidSpeed = 16, settings.amountOfAsteroids =
 			5, settings.gameLoop = 1;
 	struct powers powerups[3] = { 0 };
@@ -568,8 +567,26 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					ship2.rapidFire = false;
 				}
 			}
+			checkLevelGameUp(&settings);
 		}
 
+	}
+}
+
+void checkLevelGameUp(struct gameSettings *settings) {
+	// Level 2
+	if (settings->asteroidCount > 9) {
+		settings->gameLevel = 2;
+		settings->asteroidSpeed  = 8;
+	// Level 3
+	} else if (settings->asteroidCount > 24) {
+		settings->gameLevel = 3;
+		settings->asteroidSpeed  = 4;
+	}
+	// level 4
+	else if (settings->asteroidCount > 49) {
+		settings->gameLevel = 4;
+		settings-> asteroidSpeed = 1;
 	}
 }
 
