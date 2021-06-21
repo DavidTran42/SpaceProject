@@ -180,6 +180,7 @@ void helpSelect() {
 	}
 }
 void controllerMenu() {
+	char input;
 	// printer
 	fgcolor(13);
 	gotoxy(90, 5);
@@ -210,27 +211,340 @@ void controllerMenu() {
 	printf(
 			" $$$$$$/   $$$$$$/  $$/   $$/    $$$$/  $$/        $$$$$$/  $$/ $$/  $$$$$$$/ $$/");
 
+	//keyboard box
+	gotoxy(20, 22);
+	printf("%c", 201);
+	repeat(205, 84);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 51 - 1; i++) {
+		gotoxy(20, i);
+		printf("%c", 186);
+		gotoxy(105, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(20, 50);
+	printf("%c", 200);
+	repeat(205, 84);
+	printf("%c", 188);
 
+	// text
+	gotoxy(45, 23);
+	printf(". . .-. . . .-. .-. .-. .-. .-.");
+	gotoxy(45, 24);
+	printf("|<  |-   |  |(  | | |-| |(  |  )");
+	gotoxy(45, 25);
+	printf("' ` `-'  `  `-' `-' ` ' ' ' `-'");
+	gotoxy(20, 26);
+	printf("%c", 204);
+	repeat(205, 84);
+	printf("%c", 186);
 
+//W
+	gotoxy(50, 30);
+	printf("__      __");
+	gotoxy(50, 31);
+	printf("\\ \\    / /");
+	gotoxy(50, 32);
+	printf(" \\ \\/\\/ /  =  UP");
+	gotoxy(50, 33);
+	printf("  \\_/\\_/");
 
+//A
+	gotoxy(30, 37);
+	printf("   _");
+	gotoxy(30, 38);
+	printf("  /_\\");
+	gotoxy(30, 39);
+	printf(" / _ \\  =  LEFT");
+	gotoxy(30, 40);
+	printf("/_/ \\_\\");
 
+//S
+	gotoxy(52, 37);
+	printf(" ___ ");
+	gotoxy(52, 38);
+	printf("/ __|");
+	gotoxy(52, 39);
+	printf("\\__ \\  =  DOWN");
+	gotoxy(52, 40);
+	printf("|___/");
 
+//D
+	gotoxy(72, 37);
+	printf(" ___ ");
+	gotoxy(72, 38);
+	printf("|   \\");
+	gotoxy(72, 39);
+	printf("| |) |  =  RIGHT");
+	gotoxy(72, 40);
+	printf("|___/");
+
+//SPACE
+	gotoxy(40, 45);
+	printf("%c", 201);
+	repeat(205, 30);
+	printf("%c", 187);
+	gotoxy(40, 46);
+	printf("%c", 186);
+	gotoxy(71, 46);
+	printf("%c\n", 186);
+	gotoxy(40, 47);
+	printf("%c", 200);
+	repeat(205, 30);
+	printf("%c", 188);
+	gotoxy(41, 46);
+	printf("       SPACE  =  SHOOT    ");
+
+	//Joystick box
+	gotoxy(165, 22);
+	printf("%c", 201);
+	repeat(205, 84);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 51 - 1; i++) {
+		gotoxy(165, i);
+		printf("%c", 186);
+		gotoxy(250, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(165, 50);
+	printf("%c", 200);
+	repeat(205, 84);
+	printf("%c", 188);
+
+	// text
+	gotoxy(195, 23);
+	printf("  . .-. . . .-. .-. .-. .-. . .");
+	gotoxy(195, 24);
+	printf("  | | |  |  `-.  |   |  |   |< ");
+	gotoxy(195, 25);
+	printf("`-' `-'  `  `-'  '  `-' `-' ' `");
+	gotoxy(165, 26);
+	printf("%c", 204);
+	repeat(205, 84);
+	printf("%c", 186);
+
+//Up
+	gotoxy(202, 30);
+	printf("  /\\");
+	gotoxy(202, 31);
+	printf(" /||\\");
+	gotoxy(202, 32);
+	printf("/ || \\  =  UP");
+	gotoxy(202, 33);
+	printf("  ||");
+
+//Left
+	gotoxy(180, 37);
+	printf(" /");
+	gotoxy(180, 38);
+	printf("/-----");
+	gotoxy(180, 39);
+	printf("\\-----  =  LEFT");
+	gotoxy(180, 40);
+	printf(" \\");
+
+//Center
+	gotoxy(202, 37);
+	printf("  ___");
+	gotoxy(202, 38);
+	printf(" / _ \\");
+	gotoxy(202, 39);
+	printf("| (_) |  =  SHOOT");
+	gotoxy(202, 40);
+	printf(" \\___/");
+
+//Down
+	gotoxy(202, 45);
+	printf("  || ");
+	gotoxy(202, 46);
+	printf("\\ || /");
+	gotoxy(202, 47);
+	printf(" \\||/  =  DOWN");
+	gotoxy(202, 48);
+	printf("  \\/");
+
+//RIGHT
+	gotoxy(224, 37);
+	printf("   \\");
+	gotoxy(224, 38);
+	printf("-----\\");
+	gotoxy(224, 39);
+	printf("-----/  =  RIGHT");
+	gotoxy(224, 40);
+	printf("    /");
+
+	gotoxy(110, 65);
+	printf("Press SPACE to go back");
+
+	while (1) {
+
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == ' ') {
+				inverse(0);
+				clrscr();
+				help_screen();
+			}
+		}
+
+	}
 }
 
 //Menuerne!!
 
 void howToPlayMenu() {
+	char input;
+// printer overskrift
+	fgcolor(13);
+	gotoxy(90, 5);
+	printf(
+			" __    __                                ________               _______   __                       ____ ");
+	gotoxy(90, 6);
+	printf(
+			"/  |  /  |                              /        |             /       \\ /  |                     /    \\");
+	gotoxy(90, 7);
+	printf(
+			"$$ |  $$ |  ______   __   __   __       $$$$$$$$/______        $$$$$$$  |$$ |  ______   __    __ /$$$$  |");
+	gotoxy(90, 8);
+	printf(
+			"$$ |__$$ | /      \\ /  | /  | /  |         $$ | /      \\       $$ |__$$ |$$ | /      \\ /  |  /  |$$  $$ |");
+	gotoxy(90, 9);
+	printf(
+			"$$    $$ |/$$$$$$  |$$ | $$ | $$ |         $$ |/$$$$$$  |      $$    $$/ $$ | $$$$$$  |$$ |  $$ |   /$$/ ");
+	gotoxy(90, 10);
+	printf(
+			"$$$$$$$$ |$$ |  $$ |$$ | $$ | $$ |         $$ |$$ |  $$ |      $$$$$$$/  $$ | /    $$ |$$ |  $$ |  /$$/");
+	gotoxy(90, 11);
+	printf(
+			"$$ |  $$ |$$ \\__$$ |$$ \\_$$ \\_$$ |         $$ |$$ \\__$$ |      $$ |      $$ |/$$$$$$$ |$$ \\__$$ |  $$/ ");
+	gotoxy(90, 12);
+	printf(
+			"$$ |  $$ |$$    $$/ $$   $$   $$/          $$ |$$    $$/       $$ |      $$ |$$    $$ |$$    $$ |  /  |");
+	gotoxy(90, 13);
+	printf(
+			"$$/   $$/  $$$$$$/   $$$$$/$$$$/           $$/  $$$$$$/        $$/       $$/  $$$$$$$/  $$$$$$$ |  $$/");
+	gotoxy(90, 14);
+	printf(
+			"                                                                                       /  \\__$$ |");
+	gotoxy(90, 15);
+	printf(
+			"                                                                                       $$    $$/ ");
+	gotoxy(90, 16);
+	printf(
+			"                                                                                        $$$$$$/");
 
+// Print box to
+	gotoxy(85, 22);
+	printf("%c", 201);
+	repeat(205, 114);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 61 - 1; i++) {
+		gotoxy(85, i);
+		printf("%c", 186);
+		gotoxy(200, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(85, 60);
+	printf("%c", 200);
+	repeat(205, 114);
+	printf("%c", 188);
+
+	gotoxy(90, 30);
+	printf("Dette spil handler om at destroere asteroieder!");
+	gotoxy(90, 31);
+	printf("Men styre rumskibene med enten keyboard eller joystick.");
+	gotoxy(90, 32);
+	printf(
+			"Hvis der spilles multiplayer er player 1 på keyboard og player 2 på joysticket.");
+	gotoxy(90, 33);
+	printf("Man får point ved at skyde de asteroider der flyver mod én!");
+	gotoxy(90, 34);
+	printf(
+			"Man har 3 liv og man mister et liv ved, at flyve ind i en asteroide.");
+	gotoxy(90, 35);
+	printf(
+			"Når en spiller mister alle liv er der game over/den modsatte spille vinder.");
+	gotoxy(90, 36);
+	printf("Der er et sort hul som er mærkeret med rødt.");
+	gotoxy(90, 37);
+	printf(
+			"Dette hul tiltrækker skudende så det bliver sværer at ramme asteroiderne.");
+
+	gotoxy(110, 65);
+	printf("Press SPACE to go back");
+
+	while (1) {
+
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == ' ') {
+				inverse(0);
+				clrscr();
+				help_screen();
+			}
+		}
+	}
 }
 void aboutUsMenu() {
+	char input;
+	// printer overskrift
+	fgcolor(13);
+	gotoxy(90, 5);
+	printf("  ______   __                              __            __    __");
+	gotoxy(90, 6);
+	printf(
+			" /      \\ /  |                            /  |          /  |  /  | ");
+	gotoxy(90, 7);
+	printf(
+			"/$$$$$$  |$$ |____    ______   __    __  _$$ |_         $$ |  $$ |  _______ ");
+	gotoxy(90, 8);
+	printf(
+			"$$ |__$$ |$$      \\  /      \\ /  |  /  |/ $$   |        $$ |  $$ | /       |");
+	gotoxy(90, 9);
+	printf(
+			"$$    $$ |$$$$$$$  |/$$$$$$  |$$ |  $$ |$$$$$$/         $$ |  $$ |/$$$$$$$/  ");
+	gotoxy(90, 10);
+	printf(
+			"$$$$$$$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ | __       $$ |  $$ |$$      \\");
+	gotoxy(90, 11);
+	printf(
+			"$$ |  $$ |$$ |__$$ |$$ \\__$$ |$$ \\__$$ |  $$ |/  |      $$ \\__$$ | $$$$$$  | ");
+	gotoxy(90, 12);
+	printf(
+			"$$ |  $$ |$$    $$/ $$    $$/ $$    $$/   $$  $$/       $$    $$/ /     $$/ ");
+	gotoxy(90, 13);
+	printf(
+			"$$/   $$/ $$$$$$$/   $$$$$$/   $$$$$$/     $$$$/         $$$$$$/  $$$$$$$/");
 
-}
+	// Print box to
+	gotoxy(85, 22);
+	printf("%c", 201);
+	repeat(205, 114);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 61 - 1; i++) {
+		gotoxy(85, i);
+		printf("%c", 186);
+		gotoxy(200, i);
+		printf("%c\n", 186);
+	}
 
-void helpKeyboad() {
+	gotoxy(110, 65);
+	printf("Press SPACE to go back");
+	while (1) {
 
-}
-void helpJoystick() {
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == ' ') {
+				inverse(0);
+				clrscr();
+				help_screen();
+			}
+		}
 
+	}
 }
 
 //Opstions
@@ -356,7 +670,6 @@ void help_screen() {
 	printf("| __ || _| | |__ |  _/)\\  ");
 	gotoxy(120, 17);
 	printf("|_||_||___||____||_| ((_)  ");
-
 
 	background();
 	newfgcolor(226);

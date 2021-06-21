@@ -121,6 +121,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		if (uart_get_count() > 0) {
 			input = uart_get_char(); // Might need to put it outside the if statement
 			uart_clear();
+			if (input == 'm'){
+				mainMenu();
+			}
 
 			// Check if boss key has been pressed
 			bosskey(input);

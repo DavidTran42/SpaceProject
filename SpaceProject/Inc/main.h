@@ -36,8 +36,6 @@ void controllerMenu();
 void howToPlayMenu();
 void aboutUsMenu();
 void backMenu();
-void helpKeyboad();
-void helpJoystick();
 void controllerOption();
 void howToPlayOption();
 void aboutUsOption();
