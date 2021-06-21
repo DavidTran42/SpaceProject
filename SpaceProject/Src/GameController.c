@@ -56,8 +56,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t buffer[512] = { 0 };
 	char s_score[10] = "0", s_score2[10] = "0";
 	struct gamesettings settings;
-	settings.asteroidSpeed = 5, settings.amountOfAsteroids = 5, settings.gameLoop =
-			1;
+	settings.gameLevel = 2, settings.asteroidSpeed = 5, settings.amountOfAsteroids =
+			5, settings.gameLoop = 1;
 	struct powers powerups[3] = { 0 };
 	struct ship ship[4] = { 0 };
 	ship[0].bulletAmount = 5;
@@ -108,7 +108,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 	// Game loop
 	while (settings.gameLoop) {
-
+		level_led(settings.gameLevel);
 		t++; // For every interupt, increment
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
@@ -214,7 +214,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[k].pos.y += bullet1[k].vel.y;
 
 					if (bullet1[k].pos.x > borderWidth || bullet1[k].pos.x < 0
-							|| bullet1[k].pos.y > borderHeight || bullet1[k].pos.y < 0) {
+							|| bullet1[k].pos.y > borderHeight
+							|| bullet1[k].pos.y < 0) {
 						gotoxy(bullet1[k].prev_pos.x, bullet1[k].prev_pos.y);
 
 						bullet1[k].alive = 0;
@@ -270,6 +271,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 							} else if (ship[0].hearts == 1) {
 								gotoxy(130, 40);
 								printf("--- GAME OVER ---");
+
 								ship[0].hearts--;
 								lcd_write_string(buffer,
 										"GAME OVER!   GAME OVER!  ", 1);
@@ -1057,22 +1059,24 @@ void bosskey(char input) {
  }
  */
 void lcd_update(uint8_t buffer[512], uint8_t line) {
+	/*
+	 RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	 enableTimer();
+	 TIM2->ARR = 63999999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	 TIM2->PSC = 0; // prescale value
+	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
-	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
-	enableTimer();
-	TIM2->ARR = 63999999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	TIM2->PSC = 0; // prescale value
-	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
+	 NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
+	 NVIC_EnableIRQ(TIM2_IRQn);
+	 */
+	turnOff(GPIOA, 9);
+	turnOff(GPIOC, 7);
+	turnOn(GPIOB, 4);
 
-	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
-	NVIC_EnableIRQ(TIM2_IRQn);
-
-	uint32_t t = 0;
 	while (1) {
-		if (!timer.sec++) {
-			t++;
-		}
-		if (t == 800) {
+		if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+				|| timer.sec100 == 75) {
+			// Scrolling text
 			for (int i = (line - 1) * 128; i <= line * 128 - 1; i++) {
 				if (i == (line - 1) * 128) {
 					buffer[line * 128 - 1] = buffer[(line - 1) * 128];
@@ -1080,8 +1084,17 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 				buffer[i] = buffer[i + 1];
 			}
 			lcd_push_buffer(buffer);
-			t = 0;
 		}
+
+		//blinking led
+		if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+				|| timer.sec100 == 75) {
+			turnOn(GPIOB, 4);
+		} else if (timer.sec100 == 13 || timer.sec100 == 37
+				|| timer.sec100 == 62 || timer.sec100 == 88) {
+			GPIOB->ODR |= (0x0001 << 4); //Set pin to high (turned off)
+		}
+
 	}
 }
 
@@ -1090,36 +1103,63 @@ void level_led(uint8_t gameLevel) {
 	if (gameLevel == 1) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOB, 4);
+		turnOn(GPIOC, 7);
+		/*
+		 while (1) {
+		 if (timer.sec100 == 1) {
+		 turnOn(GPIOC, 7);
+		 } else if (timer.sec100 == 50) {
+		 turnOff(GPIOC, 7);
+		 }
 
-		while (1) {
-			if (timer.sec100 == 1) {
-				turnOn(GPIOC, 7);
-			} else if (timer.sec100 == 50) {
-				turnOff(GPIOC, 7);
-			}
-		}
+		 }
+		 */
 	} else if (gameLevel == 2) {
 		turnOff(GPIOA, 9);
-		while (1) {
-			if (timer.sec100 == 1 || timer.sec100 == 50) {
-				turnOn(GPIOB, 4);
-				turnOn(GPIOC, 7);
-			} else if (timer.sec100 == 25 || timer.sec100 == 75) {
-				turnOff(GPIOB, 4);
-				turnOff(GPIOC, 7);
-			}
-		}
+		turnOn(GPIOB, 4);
+		turnOn(GPIOC, 7);
+		/*
+		 while (1) {
+		 if (timer.sec100 == 1 || timer.sec100 == 50) {
+		 turnOn(GPIOB, 4);
+		 turnOn(GPIOC, 7);
+		 } else if (timer.sec100 == 25 || timer.sec100 == 75) {
+		 turnOff(GPIOB, 4);
+		 turnOff(GPIOC, 7);
+		 }
+		 }
+		 */
 	} else if (gameLevel == 3) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOC, 7);
-		while (1) {
-			if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
-					|| timer.sec100 == 75) {
-				turnOn(GPIOB, 4);
-			} else if (timer.sec100 == 13 || timer.sec100 == 37
-					|| timer.sec100 == 62 || timer.sec100 == 88) {
-				turnOff(GPIOB, 4);
-			}
+		turnOn(GPIOB, 4);
+		/*
+		 while (1) {
+		 if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+		 || timer.sec100 == 75) {
+		 turnOn(GPIOB, 4);
+		 } else if (timer.sec100 == 13 || timer.sec100 == 37
+		 || timer.sec100 == 62 || timer.sec100 == 88) {
+		 turnOff(GPIOB, 4);
+		 }
+		 }*/
+	}
+
+}
+
+void gameover_led() {
+
+	turnOff(GPIOA, 9);
+	turnOff(GPIOC, 7);
+	turnOn(GPIOB, 4);
+
+	while (1) {
+		if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
+				|| timer.sec100 == 75) {
+			turnOn(GPIOB, 4);
+		} else if (timer.sec100 == 13 || timer.sec100 == 37
+				|| timer.sec100 == 62 || timer.sec100 == 88) {
+			turnOff(GPIOB, 4);
 		}
 	}
 }
