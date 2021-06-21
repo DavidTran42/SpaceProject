@@ -11,7 +11,7 @@
 #include <stdbool.h>
 
 struct vector{
-	int16_t x,y;
+	int32_t x,y;
 };
 
 struct ship {
