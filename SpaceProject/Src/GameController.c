@@ -56,8 +56,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	uint8_t buffer[512] = { 0 };
 	char s_score[10] = "0", s_score2[10] = "0";
 	struct gamesettings settings;
-	settings.gameLevel = 2, settings.asteroidSpeed = 5, settings.amountOfAsteroids =
-			5, settings.gameLoop = 1;
+
+		settings.gameLevel = 1, settings.asteroidSpeed = 8, settings.amountOfAsteroids = 5, settings.gameLoop = 1;
 	struct powers powerups[3] = { 0 };
 	struct ship ship[4] = { 0 };
 	ship[0].bulletAmount = 5;
@@ -429,7 +429,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					if (asteroid[i].alive) {
 
 						// Higher number = slower asteroid.
-						if (g > 5) {
+						if (g > settings.asteroidSpeed) {
 							move = true;
 							asteroid[i].pos.x -= (1 << 14);
 						}
@@ -576,7 +576,6 @@ bool checkHit(struct bullet bullet, struct asteroid asteroid) {
 void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
 	int16_t acc = 1 << 12;
-
 // Player 1 controls
 	if ((input == 'a') && shipptr->pos.x > 1 << 14) {
 		shipptr->vel.x -= acc;
@@ -597,12 +596,18 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		if (shipptr->vel.x > (2 << 14)) {
 			shipptr->vel.x = (2 << 14);
 		}
+		if(shipptr->vel.x < (1 << 14)) {
+			shipptr->vel.x = (1<<14);
+		}
 		shipptr->pos.x += shipptr->vel.x;
 	}
 	if ((input == 's') && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y += acc;
 		if (shipptr->vel.y > (2 << 14)) {
 			shipptr->vel.y = (2 << 14);
+		}
+		if(shipptr->vel.y < (1 << 14)) {
+			shipptr->vel.y = (1<<14);
 		}
 		shipptr->pos.y += shipptr->vel.y;
 	}
