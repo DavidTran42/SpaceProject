@@ -165,6 +165,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			g++;
 			s++;
 
+			gotoxy(1, 1);
+			printf("                         ");
+			gotoxy(2, 1);
+			printf("                         ");
+			gotoxy(1, 1);
+			printf("x: %ld, y: %ld", ship[0].pos.x >> 14, ship[0].pos.y >> 14);
+
 			// Update ship with no joystick/keypress
 			clear_ship1(ship[0]);
 			updatingShip(&ship[0], borderWidth, borderHeight);
@@ -199,9 +206,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int k = 0; k < ship[0].bulletAmount; k++) {
 				if (bullet1[k].alive && s % ship[0].bulletSpeed == 0) {
 
-					gotoxy(bullet1[k].prev_pos.x, bullet1[k].prev_pos.y);
+					gotoxy(bullet1[k].prev_pos.x >> 14,
+							bullet1[k].prev_pos.y >> 14);
 					printf(" ");
-					gotoxy(bullet1[k].pos.x, bullet1[k].pos.y);
+					gotoxy(bullet1[k].pos.x >> 14, bullet1[k].pos.y >> 14);
 					update_bullet(bullet1[k].pos);
 					printf("o");
 					// For better collision detection
@@ -213,10 +221,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[k].pos.x += bullet1[k].vel.x;
 					bullet1[k].pos.y += bullet1[k].vel.y;
 
-					if (bullet1[k].pos.x > borderWidth || bullet1[k].pos.x < 0
-							|| bullet1[k].pos.y > borderHeight
-							|| bullet1[k].pos.y < 0) {
-						gotoxy(bullet1[k].prev_pos.x, bullet1[k].prev_pos.y);
+					if ((bullet1[k].pos.x >> 14) > borderWidth
+							|| (bullet1[k].pos.x >> 14) < 0
+							|| (bullet1[k].pos.y >> 14) > borderHeight
+							|| (bullet1[k].pos.y >> 14) < 0) {
+						gotoxy(bullet1[k].prev_pos.x >> 14,
+								bullet1[k].prev_pos.y >> 14);
 
 						bullet1[k].alive = 0;
 						printf(" ");
@@ -228,9 +238,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int k = 0; k < ship[2].bulletAmount; k++) {
 				if (bullet2[k].alive && s % ship[2].bulletSpeed == 0) {
 
-					gotoxy(bullet2[k].pos.x, bullet2[k].pos.y);
+					gotoxy(bullet2[k].prev_pos.x >> 14,
+							bullet2[k].prev_pos.y >> 14);
+					printf(" ");
+					gotoxy(bullet2[k].pos.x >> 14, bullet2[k].pos.y >> 14);
 					update_bullet(bullet2[k].pos);
-					printf(" -");
+					printf("-");
 					// For better collision detection
 					bullet2[k].prev_pos.x = bullet2[k].pos.x;
 					bullet2[k].prev_pos.y = bullet2[k].pos.y;
@@ -240,8 +253,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet2[k].pos.x += bullet2[k].vel.x;
 					bullet2[k].pos.y += bullet2[k].vel.y;
 
-					if (bullet2[k].pos.x > borderWidth) {
-						gotoxy(bullet2[k].pos.x, bullet2[k].pos.y);
+					if ((bullet2[k].pos.x >> 14) > borderWidth
+							|| (bullet2[k].pos.x >> 14) < 0
+							|| (bullet2[k].pos.y >> 14) > borderHeight
+							|| (bullet2[k].pos.y >> 14) < 0) {
+						gotoxy(bullet2[k].prev_pos.x >> 14,
+								bullet2[k].prev_pos.y >> 14);
 
 						bullet2[k].alive = 0;
 						printf(" ");
@@ -253,11 +270,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int i = 0; i < settings.amountOfAsteroids; i++) {
 
 				if (asteroid[i].alive) {
-					gotoxy(asteroid[i].pos.x, asteroid[i].pos.y);
+					gotoxy(asteroid[i].pos.x >> 14, asteroid[i].pos.y >> 14);
 
 					// Check collision against ship
-					if (abs(asteroid[i].pos.x - ship[0].pos.x) < 9
-							&& abs(asteroid[i].pos.y - ship[0].pos.y) < 8) {
+					if (abs(asteroid[i].pos.x - ship[0].pos.x) < (9 << 14)
+							&& abs(asteroid[i].pos.y - ship[0].pos.y)
+									< (8 << 14)) {
 						if (checkCollisionWithAsteroid(ship[0], asteroid[i])) {
 							asteroid[i].alive = 0;
 							//update lcd
@@ -284,6 +302,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					// Check for ship 2
 					if (gameMode == 2) {
+
 						lcd_write_string2(buffer, "SCORE: ", 3);
 						if (ship[2].hearts == 3) {
 							lcd_write_string2(buffer, "P2 HP: ***", 1);
@@ -291,8 +310,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						itoa(ship[2].score, s_score2, 10);
 						lcd_write_string2(buffer, s_score2, 4);
 
-						if (abs(asteroid[i].pos.x - ship[2].pos.x) < 9
-								&& abs(asteroid[i].pos.y - ship[2].pos.y) < 8) {
+						if (abs(asteroid[i].pos.x - ship[2].pos.x) < (9 >> 14)
+								&& abs(asteroid[i].pos.y - ship[2].pos.y)
+										< (8 >> 14)) {
+
 							if (checkCollisionWithAsteroid(ship[2],
 									asteroid[i])) {
 								asteroid[i].alive = 0;
@@ -320,14 +341,23 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					for (int j = 0; j < ship[0].bulletAmount; j++) {
 
 						if (bullet1[j].alive) {
-							if (abs(asteroid[i].pos.x - bullet1[j].pos.x) < 9
+							if (abs(asteroid[i].pos.x - bullet1[j].pos.x)
+									< (9 << 14)
 									&& abs(asteroid[i].pos.y - bullet1[j].pos.y)
-											< 6) {
+											< (6 << 14)) {
 								if (checkHit(bullet1[j], asteroid[i])) {
 									asteroid[i].alive = 0;
 									bullet1[j].alive = 0;
 
 									//Count and print score for p1
+
+									gotoxy(bullet1[j].prev_pos.x >> 14,
+											bullet1[j].prev_pos.y >> 14);
+									printf(" ");
+									gotoxy(bullet1[j].pos.x >> 14,
+											bullet1[j].pos.y >> 14);
+									printf(" ");
+
 									if (asteroid[i].size == 2) {
 										ship[0].score += 1;
 									} else if (asteroid[i].size == 4) {
@@ -350,14 +380,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						for (int j = 0; j < ship[2].bulletAmount; j++) {
 							if (bullet2[j].alive) {
 								if (abs(asteroid[i].pos.x - bullet2[j].pos.x)
-										< 9
+										< (9 >> 14)
 										&& abs(
 												asteroid[i].pos.y
 														- bullet2[j].pos.y)
-												< 6) {
+												< (6 >> 14)) {
 									if (checkHit(bullet2[j], asteroid[i])) {
 										asteroid[i].alive = 0;
-										bullet2[j].alive = 0;
 
 										//Count and print score for p2
 										if (asteroid[i].size == 2) {
@@ -372,6 +401,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 										}
 										itoa(ship[2].score, s_score2, 10);
 										lcd_write_string2(buffer, s_score2, 4);
+
+										gotoxy(bullet2[j].prev_pos.x >> 14,
+												bullet2[j].prev_pos.y >> 14);
+										printf(" ");
+										gotoxy(bullet2[j].pos.x >> 14,
+												bullet2[j].pos.y >> 14);
+										printf(" ");
 									}
 
 								}
@@ -395,7 +431,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						// Higher number = slower asteroid.
 						if (g > 5) {
 							move = true;
-							asteroid[i].pos.x -= 1;
+							asteroid[i].pos.x -= (1 << 14);
 						}
 
 						if (asteroid[i].size == 2) {
@@ -411,7 +447,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						}
 
 						// Reset asteroid, so it can be used to make a new one
-						if (asteroid[i].pos.x <= asteroid[i].size + 1) {
+						if (asteroid[i].pos.x <= (asteroid[i].size + 1) << 14) {
 							if (asteroid[i].size == 2) {
 								clear_small_asteroid(&asteroid[i]);
 							} else if (asteroid[i].size == 4) {
@@ -421,7 +457,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 							}
 							asteroid[i].alive = 0;
-							if (asteroid[i].pos.y > 63) {
+							if (asteroid[i].pos.y > (63 << 14)) {
 								game_background();
 							}
 
@@ -431,7 +467,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						if (g > settings.asteroidSpeed) {
 							for (int j = 0; j < asteroid[i].amountOfPoints;
 									j++) {
-								asteroid[i].points[j].x -= 1;
+								asteroid[i].points[j].x -= (1 << 14);
 							}
 						}
 					}
@@ -495,8 +531,8 @@ void setRandomPowerUp(uint8_t buff, struct powers *powerups,
 
 	for (int i = 0; i < 3; i++, powerups++) {
 		if (!powerups->onField) {
-			powerups->pos.x = width;
-			powerups->pos.y = height;
+			powerups->pos.x = width << 14;
+			powerups->pos.y = height << 14;
 
 			if (buff == 2) {
 				powerups->rapidFire = true;
@@ -513,10 +549,10 @@ bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid) {
 	int wide = 7, height = 3;
 
 	for (int i = 0; i < asteroid.amountOfPoints; i++) {
-		if (ship.pos.x + 1 > asteroid.points[i].x
-				&& ship.pos.x - wide < asteroid.points[i].x
-				&& ship.pos.y + height > asteroid.points[i].y
-				&& ship.pos.y - height < asteroid.points[i].y) {
+		if (ship.pos.x + (1 << 14) > asteroid.points[i].x
+				&& ship.pos.x - (wide << 14) < asteroid.points[i].x
+				&& ship.pos.y + (height << 14) > asteroid.points[i].y
+				&& ship.pos.y - (height << 14) < asteroid.points[i].y) {
 			return 1;
 		}
 	}
@@ -542,33 +578,33 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 	int16_t acc = 1 << 12;
 
 // Player 1 controls
-	if ((input == 'a') && shipptr->pos.x > 1) {
+	if ((input == 'a') && shipptr->pos.x > 1 << 14) {
 		shipptr->vel.x -= acc;
 		if (shipptr->vel.x < -(2 << 14)) {
 			shipptr->vel.x = -(2 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 14);
+		shipptr->pos.x += shipptr->vel.x;
 	}
-	if ((input == 'w') && shipptr->pos.y > 1) {
+	if ((input == 'w') && shipptr->pos.y > 1 << 14) {
 		shipptr->vel.y -= acc;
 		if (shipptr->vel.y < -(2 << 14)) {
 			shipptr->vel.y = -(2 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 14);
+		shipptr->pos.y += shipptr->vel.y;
 	}
-	if ((input == 'd') && shipptr->pos.x < borderWidth) {
+	if ((input == 'd') && shipptr->pos.x < borderWidth << 14) {
 		shipptr->vel.x += acc;
 		if (shipptr->vel.x > (2 << 14)) {
 			shipptr->vel.x = (2 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 14);
+		shipptr->pos.x += shipptr->vel.x;
 	}
-	if ((input == 's') && shipptr->pos.y < borderHeight) {
+	if ((input == 's') && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y += acc;
 		if (shipptr->vel.y > (2 << 14)) {
 			shipptr->vel.y = (2 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 14);
+		shipptr->pos.y += shipptr->vel.y;
 	}
 }
 
@@ -576,33 +612,33 @@ void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight) {
 	int16_t acc = 1 << 9;
 // Player 1 controls
-	if ((controls.left) && shipptr->pos.x > 1) {
+	if ((controls.left) && shipptr->pos.x > 1 << 14) {
 		shipptr->vel.x -= acc;
 		if (shipptr->vel.x < -(3 << 14)) {
 			shipptr->vel.x = -(3 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 14);
+		shipptr->pos.x += shipptr->vel.x;
 	}
-	if ((controls.up) && shipptr->pos.y > 1) {
+	if ((controls.up) && shipptr->pos.y > 1 << 14) {
 		shipptr->vel.y -= acc;
 		if (shipptr->vel.y < -(3 << 14)) {
 			shipptr->vel.y = -(3 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 14);
+		shipptr->pos.y += shipptr->vel.y;
 	}
-	if ((controls.right) && shipptr->pos.x < borderWidth) {
+	if ((controls.right) && shipptr->pos.x < borderWidth << 14) {
 		shipptr->vel.x += acc;
 		if (shipptr->vel.x > (3 << 14)) {
 			shipptr->vel.x = (3 << 14);
 		}
-		shipptr->pos.x += (shipptr->vel.x >> 14);
+		shipptr->pos.x += shipptr->vel.x;
 	}
-	if ((controls.down) && shipptr->pos.y < borderHeight) {
+	if ((controls.down) && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y += acc;
 		if (shipptr->vel.y > (3 << 14)) {
 			shipptr->vel.y = (3 << 14);
 		}
-		shipptr->pos.y += (shipptr->vel.x >> 14);
+		shipptr->pos.y += shipptr->vel.y;
 	}
 }
 
@@ -610,21 +646,21 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
 	int16_t acc = 1 << 9;
 
-	shipptr->pos.x += (shipptr->vel.x >> 14);
-	shipptr->pos.y += (shipptr->vel.y >> 14);
+	shipptr->pos.x += shipptr->vel.x;
+	shipptr->pos.y += shipptr->vel.y;
 
-	if (shipptr->pos.x < 8) {
-		shipptr->pos.x = 7;
+	if (shipptr->pos.x < (8 << 14)) {
+		shipptr->pos.x = (7 << 14);
 	}
-	if (shipptr->pos.x > borderWidth - 2) {
-		shipptr->pos.x = borderWidth - 1;
+	if (shipptr->pos.x > (borderWidth - 2) << 14) {
+		shipptr->pos.x = (borderWidth - 1) << 14;
 	}
 
-	if (shipptr->pos.y < 4) {
-		shipptr->pos.y = 3;
+	if (shipptr->pos.y < (4 << 14)) {
+		shipptr->pos.y = (3 << 14);
 	}
-	if (shipptr->pos.y > borderHeight - 3) {
-		shipptr->pos.y = borderHeight - 2;
+	if (shipptr->pos.y > (borderHeight - 3) << 14) {
+		shipptr->pos.y = (borderHeight - 2) << 14;
 	}
 
 	// Deacceleration
@@ -648,14 +684,17 @@ void initializeShips(int gameMode, struct ship *shipptr, uint16_t borderWidth,
 // Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
 
-		shipptr->pos.x = 10, shipptr->pos.y = (borderHeight + 5) / 3;
+		shipptr->pos.x = 10 << 14, shipptr->pos.y = ((borderHeight + 5) / 3)
+				<< 14;
 
 		shipptr += 2;
 
-		shipptr->pos.x = 10, shipptr->pos.y = ((borderHeight + 5) / 3) * 2;
+		shipptr->pos.x = 10 << 14, shipptr->pos.y = (((borderHeight + 5) / 3)
+				* 2) << 14;
 	} else { // Singleplayer
 
-		shipptr->pos.x = 10, shipptr->pos.y = (borderHeight + 5) / 2;
+		shipptr->pos.x = 10 << 14, shipptr->pos.y = ((borderHeight + 5) / 2)
+				<< 14;
 
 	}
 }
@@ -707,11 +746,10 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 // Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
-				bulletptr->pos.x = ship.pos.x + 5;
+				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
-				bulletptr->vel.x = 1;
+				bulletptr->vel.x = (1 << 14);
 				bulletptr->alive = 1;
-
 				break;
 			}
 		}
@@ -724,7 +762,7 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 // Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
-				bulletptr->pos.x = ship.pos.x + 5;
+				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
 				bulletptr->vel.x = 1;
 				bulletptr->alive = 1;
@@ -756,77 +794,78 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				asteroidptr->amountOfPoints = 36;
 
 				// Assign each indivial contact points of asteroid
-				asteroidptr->points[0].x = x + 8, asteroidptr->points[0].y = r;
-				asteroidptr->points[1].x = x - 8, asteroidptr->points[1].y = r;
-				asteroidptr->points[2].x = x + 8, asteroidptr->points[2].y = r
-						+ 1;
-				asteroidptr->points[3].x = x - 8, asteroidptr->points[3].y = r
-						+ 1;
-				asteroidptr->points[4].x = x + 8, asteroidptr->points[4].y = r
-						- 1;
-				asteroidptr->points[5].x = x - 8, asteroidptr->points[5].y = r
-						- 1;
-
-				asteroidptr->points[6].x = x - 2, asteroidptr->points[6].y = r
-						+ 5;
-				asteroidptr->points[7].x = x - 1, asteroidptr->points[7].y = r
-						+ 5;
-				asteroidptr->points[8].x = x, asteroidptr->points[8].y = r + 5;
-				asteroidptr->points[9].x = x + 1, asteroidptr->points[9].y = r
-						+ 5;
-				asteroidptr->points[10].x = x + 2, asteroidptr->points[10].y = r
-						+ 5;
-				asteroidptr->points[11].x = x - 2, asteroidptr->points[11].y = r
-						- 5;
-				asteroidptr->points[12].x = x - 1, asteroidptr->points[12].y = r
-						- 5;
-				asteroidptr->points[13].x = x, asteroidptr->points[13].y = r - 5;
-				asteroidptr->points[14].x = x + 1, asteroidptr->points[14].y = r
-						- 5;
-				asteroidptr->points[15].x = x + 2, asteroidptr->points[15].y = r
-						- 5;
-
-				asteroidptr->points[16].x = x - 5, asteroidptr->points[16].y = r
-						+ 4;
-				asteroidptr->points[17].x = x - 4, asteroidptr->points[17].y = r
-						+ 4;
-				asteroidptr->points[18].x = x - 3, asteroidptr->points[18].y = r
-						+ 4;
-				asteroidptr->points[19].x = x + 3, asteroidptr->points[19].y = r
-						+ 4;
-				asteroidptr->points[20].x = x + 4, asteroidptr->points[20].y = r
-						+ 4;
-				asteroidptr->points[21].x = x + 5, asteroidptr->points[21].y = r
-						+ 4;
-				asteroidptr->points[22].x = x - 5, asteroidptr->points[22].y = r
-						- 4;
-				asteroidptr->points[23].x = x - 4, asteroidptr->points[23].y = r
-						- 4;
-				asteroidptr->points[24].x = x - 3, asteroidptr->points[24].y = r
-						- 4;
-				asteroidptr->points[25].x = x + 3, asteroidptr->points[25].y = r
-						- 4;
-				asteroidptr->points[26].x = x + 4, asteroidptr->points[26].y = r
-						- 4;
-				asteroidptr->points[27].x = x + 5, asteroidptr->points[27].y = r
-						- 4;
-
-				asteroidptr->points[28].x = x + 7, asteroidptr->points[28].y = r
-						+ 2;
-				asteroidptr->points[29].x = x + 7, asteroidptr->points[29].y = r
-						- 2;
-				asteroidptr->points[30].x = x - 7, asteroidptr->points[30].y = r
-						+ 2;
-				asteroidptr->points[31].x = x - 7, asteroidptr->points[31].y = r
-						- 2;
-				asteroidptr->points[32].x = x + 6, asteroidptr->points[32].y = r
-						+ 3;
-				asteroidptr->points[33].x = x + 6, asteroidptr->points[33].y = r
-						- 3;
-				asteroidptr->points[34].x = x - 6, asteroidptr->points[34].y = r
-						+ 3;
-				asteroidptr->points[35].x = x - 6, asteroidptr->points[35].y = r
-						- 3;
+				asteroidptr->points[0].x = (x + 8) << 14, asteroidptr->points[0].y =
+						r << 14;
+				asteroidptr->points[1].x = (x - 8) << 14, asteroidptr->points[1].y =
+						r << 14;
+				asteroidptr->points[2].x = (x + 8) << 14, asteroidptr->points[2].y =
+						(r + 1) << 14;
+				asteroidptr->points[3].x = (x - 8) << 14, asteroidptr->points[3].y =
+						(r + 1) << 14;
+				asteroidptr->points[4].x = (x + 8) << 14, asteroidptr->points[4].y =
+						(r - 1) << 14;
+				asteroidptr->points[5].x = (x - 8) << 14, asteroidptr->points[5].y =
+						(r - 1) << 14;
+				asteroidptr->points[6].x = (x - 2) << 14, asteroidptr->points[6].y =
+						(r + 5) << 14;
+				asteroidptr->points[7].x = (x - 1) << 14, asteroidptr->points[7].y =
+						(r + 5) << 14;
+				asteroidptr->points[8].x = x << 14, asteroidptr->points[8].y =
+						(r + 5) << 14;
+				asteroidptr->points[9].x = (x + 1) << 14, asteroidptr->points[9].y =
+						(r + 5) << 14;
+				asteroidptr->points[10].x = (x + 2) << 14, asteroidptr->points[10].y =
+						(r + 5) << 14;
+				asteroidptr->points[11].x = (x - 2) << 14, asteroidptr->points[11].y =
+						(r - 5) << 14;
+				asteroidptr->points[12].x = (x - 1) << 14, asteroidptr->points[12].y =
+						(r - 5) << 14;
+				asteroidptr->points[13].x = x << 14, asteroidptr->points[13].y =
+						(r - 5) << 14;
+				asteroidptr->points[14].x = (x + 1) << 14, asteroidptr->points[14].y =
+						(r - 5) << 14;
+				asteroidptr->points[15].x = (x + 2) << 14, asteroidptr->points[15].y =
+						(r - 5) << 14;
+				asteroidptr->points[16].x = (x - 5) << 14, asteroidptr->points[16].y =
+						(r + 4) << 14;
+				asteroidptr->points[17].x = (x - 4) << 14, asteroidptr->points[17].y =
+						(r + 4) << 14;
+				asteroidptr->points[18].x = (x - 3) << 14, asteroidptr->points[18].y =
+						(r + 4) << 14;
+				asteroidptr->points[19].x = (x + 3) << 14, asteroidptr->points[19].y =
+						(r + 4) << 14;
+				asteroidptr->points[20].x = (x + 4) << 14, asteroidptr->points[20].y =
+						(r + 4) << 14;
+				asteroidptr->points[21].x = (x + 5) << 14, asteroidptr->points[21].y =
+						(r + 4) << 14;
+				asteroidptr->points[22].x = (x - 5) << 14, asteroidptr->points[22].y =
+						(r - 4) << 14;
+				asteroidptr->points[23].x = (x - 4) << 14, asteroidptr->points[23].y =
+						(r - 4) << 14;
+				asteroidptr->points[24].x = (x - 3) << 14, asteroidptr->points[24].y =
+						(r - 4) << 14;
+				asteroidptr->points[25].x = (x + 3) << 14, asteroidptr->points[25].y =
+						(r - 4) << 14;
+				asteroidptr->points[26].x = (x + 4) << 14, asteroidptr->points[26].y =
+						(r - 4) << 14;
+				asteroidptr->points[27].x = (x + 5) << 14, asteroidptr->points[27].y =
+						(r - 4) << 14;
+				asteroidptr->points[28].x = (x + 7) << 14, asteroidptr->points[28].y =
+						(r + 2) << 14;
+				asteroidptr->points[29].x = (x + 7) << 14, asteroidptr->points[29].y =
+						(r - 2) << 14;
+				asteroidptr->points[30].x = (x - 7) << 14, asteroidptr->points[30].y =
+						(r + 2) << 14;
+				asteroidptr->points[31].x = (x - 7) << 14, asteroidptr->points[31].y =
+						(r - 2) << 14;
+				asteroidptr->points[32].x = (x + 6) << 14, asteroidptr->points[32].y =
+						(r + 3) << 14;
+				asteroidptr->points[33].x = (x + 6) << 14, asteroidptr->points[33].y =
+						(r - 3) << 14;
+				asteroidptr->points[34].x = (x - 6) << 14, asteroidptr->points[34].y =
+						(r + 3) << 14;
+				asteroidptr->points[35].x = (x - 6) << 14, asteroidptr->points[35].y =
+						(r - 3) << 14;
 			} else if (type == 1) {
 				asteroidptr->size = 4;
 				if (r < 7) { // Ensures that the asteroid will be spawned correctly
@@ -838,44 +877,46 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				asteroidptr->amountOfPoints = 20;
 
 				// Assign each indivial contact points of asteroid
-				asteroidptr->points[0].x = x + 4, asteroidptr->points[0].y = r;
-				asteroidptr->points[1].x = x - 4, asteroidptr->points[1].y = r;
-				asteroidptr->points[2].x = x + 4, asteroidptr->points[2].y = r
-						+ 1;
-				asteroidptr->points[3].x = x - 4, asteroidptr->points[3].y = r
-						+ 1;
-				asteroidptr->points[4].x = x + 4, asteroidptr->points[4].y = r
-						- 1;
-				asteroidptr->points[5].x = x - 4, asteroidptr->points[5].y = r
-						- 1;
-
-				asteroidptr->points[6].x = x - 2, asteroidptr->points[6].y = r
-						+ 3;
-				asteroidptr->points[7].x = x - 1, asteroidptr->points[7].y = r
-						+ 3;
-				asteroidptr->points[8].x = x, asteroidptr->points[8].y = r + 3;
-				asteroidptr->points[9].x = x + 1, asteroidptr->points[9].y = r
-						+ 3;
-				asteroidptr->points[10].x = x + 2, asteroidptr->points[10].y = r
-						+ 3;
-				asteroidptr->points[11].x = x - 2, asteroidptr->points[11].y = r
-						- 3;
-				asteroidptr->points[12].x = x - 1, asteroidptr->points[12].y = r
-						- 3;
-				asteroidptr->points[13].x = x, asteroidptr->points[13].y = r - 3;
-				asteroidptr->points[14].x = x + 1, asteroidptr->points[14].y = r
-						- 3;
-				asteroidptr->points[15].x = x + 2, asteroidptr->points[15].y = r
-						- 3;
-
-				asteroidptr->points[16].x = x + 3, asteroidptr->points[16].y = r
-						- 2;
-				asteroidptr->points[17].x = x + 3, asteroidptr->points[17].y = r
-						+ 2;
-				asteroidptr->points[18].x = x - 3, asteroidptr->points[18].y = r
-						- 2;
-				asteroidptr->points[19].x = x - 3, asteroidptr->points[19].y = r
-						+ 2;
+				asteroidptr->points[0].x = (x + 4) << 14, asteroidptr->points[0].y =
+						r << 14;
+				asteroidptr->points[1].x = (x - 4) << 14, asteroidptr->points[1].y =
+						r << 14;
+				asteroidptr->points[2].x = (x + 4) << 14, asteroidptr->points[2].y =
+						(r + 1) << 14;
+				asteroidptr->points[3].x = (x - 4) << 14, asteroidptr->points[3].y =
+						(r + 1) << 14;
+				asteroidptr->points[4].x = (x + 4) << 14, asteroidptr->points[4].y =
+						(r - 1) << 14;
+				asteroidptr->points[5].x = (x - 4) << 14, asteroidptr->points[5].y =
+						(r - 1) << 14;
+				asteroidptr->points[6].x = (x - 2) << 14, asteroidptr->points[6].y =
+						(r + 3) << 14;
+				asteroidptr->points[7].x = (x - 1) << 14, asteroidptr->points[7].y =
+						(r + 3) << 14;
+				asteroidptr->points[8].x = x << 14, asteroidptr->points[8].y =
+						(r + 3) << 14;
+				asteroidptr->points[9].x = (x + 1) << 14, asteroidptr->points[9].y =
+						(r + 3) << 14;
+				asteroidptr->points[10].x = (x + 2) << 14, asteroidptr->points[10].y =
+						(r + 3) << 14;
+				asteroidptr->points[11].x = (x - 2), asteroidptr->points[11].y =
+						(r - 3) << 14;
+				asteroidptr->points[12].x = (x - 1), asteroidptr->points[12].y =
+						(r - 3) << 14;
+				asteroidptr->points[13].x = x << 14, asteroidptr->points[13].y =
+						(r - 3) << 14;
+				asteroidptr->points[14].x = (x + 1) << 14, asteroidptr->points[14].y =
+						(r - 3) << 14;
+				asteroidptr->points[15].x = (x + 2) << 14, asteroidptr->points[15].y =
+						(r - 3) << 14;
+				asteroidptr->points[16].x = (x + 3) << 14, asteroidptr->points[16].y =
+						(r - 2) << 14;
+				asteroidptr->points[17].x = (x + 3) << 14, asteroidptr->points[17].y =
+						(r + 2) << 14;
+				asteroidptr->points[18].x = (x - 3) << 14, asteroidptr->points[18].y =
+						(r - 2) << 14;
+				asteroidptr->points[19].x = (x - 3) << 14, asteroidptr->points[19].y =
+						(r + 2) << 14;
 			} else {
 				asteroidptr->size = 2;
 				if (r < 3) { // Ensures that the asteroid will be spawned correctly
@@ -888,22 +929,26 @@ void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth,
 				asteroidptr->amountOfPoints = 8;
 
 				// Assign each indivial contact points of asteroid
-				asteroidptr->points[0].x = x + 2, asteroidptr->points[0].y = r;
-				asteroidptr->points[1].x = x - 2, asteroidptr->points[1].y = r;
-				asteroidptr->points[2].x = x + 1, asteroidptr->points[2].y = r
-						- 1;
-				asteroidptr->points[3].x = x + 1, asteroidptr->points[3].y = r
-						+ 1;
-				asteroidptr->points[4].x = x - 1, asteroidptr->points[4].y = r
-						- 1;
-				asteroidptr->points[5].x = x - 1, asteroidptr->points[5].y = r
-						+ 1;
-				asteroidptr->points[6].x = x, asteroidptr->points[6].y = r - 1;
-				asteroidptr->points[7].x = x, asteroidptr->points[7].y = r + 1;
+				asteroidptr->points[0].x = (x + 2) << 14, asteroidptr->points[0].y =
+						r << 14;
+				asteroidptr->points[1].x = (x - 2) << 14, asteroidptr->points[1].y =
+						r << 14;
+				asteroidptr->points[2].x = (x + 1) << 14, asteroidptr->points[2].y =
+						(r - 1) << 14;
+				asteroidptr->points[3].x = (x + 1) << 14, asteroidptr->points[3].y =
+						(r + 1) << 14;
+				asteroidptr->points[4].x = (x - 1) << 14, asteroidptr->points[4].y =
+						(r - 1) << 14;
+				asteroidptr->points[5].x = (x - 1) << 14, asteroidptr->points[5].y =
+						(r + 1) << 14;
+				asteroidptr->points[6].x = x << 14, asteroidptr->points[6].y =
+						(r - 1) << 14;
+				asteroidptr->points[7].x = x << 14, asteroidptr->points[7].y =
+						(r + 1) << 14;
 			}
 
-			asteroidptr->pos.x = x;
-			asteroidptr->pos.y = r;
+			asteroidptr->pos.x = x << 14;
+			asteroidptr->pos.y = r << 14;
 			asteroidptr->alive = 1;
 			break;
 		}
