@@ -31,6 +31,19 @@ void helpMenu();
 void newfgcolor(uint8_t forground);
 void newbgcolor();
 
+//help menu:
+void controllerMenu();
+void howToPlayMenu();
+void aboutUsMenu();
+void backMenu();
+void helpKeyboad();
+void helpJoystick();
+void controllerOption();
+void howToPlayOption();
+void aboutUsOption();
+void backOption();
+void helpSelect();
+
 
 
 

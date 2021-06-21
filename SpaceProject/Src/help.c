@@ -17,9 +17,326 @@ typedef struct time1 {
 
 struct time1 timer; // Global timer
 
-void help_screen() {
+void helpSelect() {
+	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	enableTimer();
+	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	TIM2->PSC = 0; // prescale value
+	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
+
+	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
+	NVIC_EnableIRQ(TIM2_IRQn);
+
+	uint8_t i = 1;
 	char input;
 
+	while (1) {
+
+		while (i == 1) { // blinker controller menu
+
+			if (timer.sec100 == 1) {
+				inverse(1);
+				controllerOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				controllerOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					controllerOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					controllerOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					controllerMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+			}
+		}
+
+		while (i == 2) { // blinker Help Option
+			if (timer.sec100 == 1) {
+				inverse(1);
+				howToPlayOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				howToPlayOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					howToPlayOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					howToPlayOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					howToPlayMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+			}
+		}
+		while (i == 3) { // blinker Help
+			if (timer.sec100 == 1) {
+				inverse(1);
+				aboutUsOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				aboutUsOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					aboutUsOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					aboutUsOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					aboutUsMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+
+			}
+		}
+
+		while (i == 4) { // blinker Quit game
+			if (timer.sec100 == 1) {
+				inverse(1);
+				backOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				backOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					backOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					backOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					mainMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+			}
+
+		}
+	}
+}
+void controllerMenu() {
+	// printer
+	fgcolor(13);
+	gotoxy(90, 5);
+	printf(
+			"  ______                         __                          __  __ ");
+	gotoxy(90, 6);
+	printf(
+			" /      \\                       /  |                        /  |/  | ");
+	gotoxy(90, 7);
+	printf(
+			"/$$$$$$  |  ______   _______   _$$ |_     ______    ______  $$ |$$ |  ______    ______ ");
+	gotoxy(90, 8);
+	printf(
+			"$$ |  $$/  /      \\ /       \\ / $$   |   /      \\  /      \\ $$ |$$ | /      \\  /      \\");
+	gotoxy(90, 9);
+	printf(
+			"$$ |      /$$$$$$  |$$$$$$$  |$$$$$$/   /$$$$$$  |/$$$$$$  |$$ |$$ |/$$$$$$  |/$$$$$$  |");
+	gotoxy(90, 10);
+	printf(
+			"$$ |   __ $$ |  $$ |$$ |  $$ |  $$ | __ $$ |  $$/ $$ |  $$ |$$ |$$ |$$    $$ |$$ |  $$/");
+	gotoxy(90, 11);
+	printf(
+			"$$ \\__/  |$$ \\__$$ |$$ |  $$ |  $$ |/  |$$ |      $$ \\__$$ |$$ |$$ |$$$$$$$$/ $$ |");
+	gotoxy(90, 12);
+	printf(
+			"$$    $$/ $$    $$/ $$ |  $$ |  $$  $$/ $$ |      $$    $$/ $$ |$$ |$$       |$$ |");
+	gotoxy(90, 13);
+	printf(
+			" $$$$$$/   $$$$$$/  $$/   $$/    $$$$/  $$/        $$$$$$/  $$/ $$/  $$$$$$$/ $$/");
+
+
+
+
+
+
+}
+
+//Menuerne!!
+
+void howToPlayMenu() {
+
+}
+void aboutUsMenu() {
+
+}
+
+void helpKeyboad() {
+
+}
+void helpJoystick() {
+
+}
+
+//Opstions
+
+void controllerOption() {
+	gotoxy(110, 22);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 27 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 26);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 23);
+	printf("     .-. .-. . . .-. .-. .-. .   .   .-. .-.      ");
+	gotoxy(111, 24);
+	printf("     |   | | |\\|  |  |(  | | |   |   |-  |(       ");
+	gotoxy(111, 25);
+	printf("     `-' `-' ' `  '  ' ' `-' `-' `-' `-' ' '      ");
+
+}
+void howToPlayOption() {
+	gotoxy(110, 29);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 29 + 1; i < 34 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 33);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 30);
+	printf("  . . .-. . . .   .-. .-.   .-. .   .-. . . .-.   ");
+	gotoxy(111, 31);
+	printf("  |-| | | | | |    |  | |   |-' |   |-|  |   .'   ");
+	gotoxy(111, 32);
+	printf("  ' ` `-' `.'.'    '  `-'   '   `-' ` '  `   .    ");
+
+}
+void aboutUsOption() {
+	gotoxy(110, 36);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 36 + 1; i < 41 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 40);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 37);
+	printf("          .-. .-. .-. . . .-.   . . .-.           ");
+	gotoxy(111, 38);
+	printf("          |-| |(  | | | |  |    | | `-.           ");
+	gotoxy(111, 39);
+	printf("          ` ' `-' `-' `-'  '    `-' `-'           ");
+
+}
+void backOption() {
+	gotoxy(110, 43);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 43 + 1; i < 48 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 47);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 44);
+	printf("                 .-. .-. .-. . .                  ");
+	gotoxy(111, 45);
+	printf("                 |(  |-| |   |<                   ");
+	gotoxy(111, 46);
+	printf("                 `-' ` ' `-' ' `                  ");
+
+}
+
+void help_screen() {
 	newfgcolor(214);
 	gotoxy(120, 10);
 	printf("    )       (     (     ____");
@@ -39,15 +356,17 @@ void help_screen() {
 	printf("| __ || _| | |__ |  _/)\\  ");
 	gotoxy(120, 17);
 	printf("|_||_||___||____||_| ((_)  ");
-	while (1) {
-		if (uart_get_count() > 0) {
-			input = uart_get_char();
-			uart_clear();
-			if (input == ' ') {
-				mainMenu();
-			}
-		}
-	}
+
+
+	background();
+	newfgcolor(226);
+	controllerOption();
+	howToPlayOption();
+	aboutUsOption();
+	backOption();
+
+	helpSelect();
+
 }
 
 void quit_screen() {
@@ -59,7 +378,8 @@ void quit_screen() {
 		if (timer.sec100 == 1 || timer.sec100 == 50) {
 			for (int i = 0; i < 75; i++) {
 				gotoxy(100, i);
-				printf("                                                                          ");
+				printf(
+						"                                                                          ");
 			}
 			gotoxy(122, t - 6);
 			printf("THANK YOU FOR PLAYING !");

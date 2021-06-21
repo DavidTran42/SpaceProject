@@ -249,7 +249,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet2[k].prev_pos.y = bullet2[k].pos.y;
 
 					// Move bullet
-
+					gravity(1<<14,400<<14,&bullet2[k],125<<14,35<<14);
 					bullet2[k].pos.x += bullet2[k].vel.x;
 					bullet2[k].pos.y += bullet2[k].vel.y;
 
