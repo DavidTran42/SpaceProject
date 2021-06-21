@@ -557,12 +557,12 @@ bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid) {
 
 bool checkHit(struct bullet bullet, struct asteroid asteroid) {
 	for (int i = 0; i < asteroid.amountOfPoints; i++) {
-		if (bullet.pos.x == asteroid.points[i].x
-				&& bullet.pos.y == asteroid.points[i].y) {
+		if ((bullet.pos.x >> 14) == (asteroid.points[i].x >> 14)
+				&& (bullet.pos.y >> 14) == (asteroid.points[i].y >> 14)) {
 			return 1;
 		}
-		if (bullet.prev_pos.x == asteroid.points[i].x
-				&& bullet.prev_pos.y == asteroid.points[i].y) {
+		if ((bullet.prev_pos.x >> 14) == (asteroid.points[i].x >> 14)
+				&& (bullet.prev_pos.y >> 14) == (asteroid.points[i].y >> 14)) {
 			return 1;
 		}
 	}
