@@ -206,9 +206,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int k = 0; k < ship[0].bulletAmount; k++) {
 				if (bullet1[k].alive && s % ship[0].bulletSpeed == 0) {
 
-					gotoxy(bullet1[k].prev_pos.x, bullet1[k].prev_pos.y);
+					gotoxy(bullet1[k].prev_pos.x >> 14, bullet1[k].prev_pos.y >> 14);
 					printf(" ");
-					gotoxy(bullet1[k].pos.x, bullet1[k].pos.y);
+					gotoxy(bullet1[k].pos.x >> 14, bullet1[k].pos.y >> 14);
 					update_bullet(bullet1[k].pos);
 					printf("o");
 					// For better collision detection
@@ -220,9 +220,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[k].pos.x += bullet1[k].vel.x;
 					bullet1[k].pos.y += bullet1[k].vel.y;
 
-					if (bullet1[k].pos.x > borderWidth || bullet1[k].pos.x < 0
-							|| bullet1[k].pos.y > borderHeight || bullet1[k].pos.y < 0) {
-						gotoxy(bullet1[k].prev_pos.x, bullet1[k].prev_pos.y);
+					if ((bullet1[k].pos.x >> 14)  > borderWidth || (bullet1[k].pos.x >> 14) < 0
+							|| (bullet1[k].pos.y >> 14) > borderHeight || (bullet1[k].pos.y >> 14) < 0) {
+						gotoxy(bullet1[k].prev_pos.x >> 14, bullet1[k].prev_pos.y >> 14);
 
 						bullet1[k].alive = 0;
 						printf(" ");
@@ -234,9 +234,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int k = 0; k < ship[2].bulletAmount; k++) {
 				if (bullet2[k].alive && s % ship[2].bulletSpeed == 0) {
 
-					gotoxy(bullet2[k].prev_pos.x, bullet2[k].prev_pos.y);
+					gotoxy(bullet2[k].prev_pos.x >> 14, bullet2[k].prev_pos.y >> 14);
 					printf(" ");
-					gotoxy(bullet2[k].pos.x, bullet2[k].pos.y);
+					gotoxy(bullet2[k].pos.x >> 14, bullet2[k].pos.y >> 14);
 					update_bullet(bullet2[k].pos);
 					printf("-");
 					// For better collision detection
@@ -248,9 +248,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet2[k].pos.x += bullet2[k].vel.x;
 					bullet2[k].pos.y += bullet2[k].vel.y;
 
-					if (bullet2[k].pos.x > borderWidth || bullet2[k].pos.x < 0
-							|| bullet2[k].pos.y > borderHeight || bullet2[k].pos.y < 0) {
-						gotoxy(bullet2[k].prev_pos.x, bullet2[k].prev_pos.y);
+					if ((bullet2[k].pos.x >> 14) > borderWidth || (bullet2[k].pos.x >> 14) < 0
+							|| (bullet2[k].pos.y >> 14) > borderHeight || (bullet2[k].pos.y >> 14) < 0) {
+						gotoxy(bullet2[k].prev_pos.x >> 14, bullet2[k].prev_pos.y >> 14);
 
 						bullet2[k].alive = 0;
 						printf(" ");
@@ -294,8 +294,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					// Check for ship 2
 					if (gameMode == 2) {
-						if (abs(asteroid[i].pos.x - ship[2].pos.x) < 9
-								&& abs(asteroid[i].pos.y - ship[2].pos.y) < 8) {
+						if (abs(asteroid[i].pos.x - ship[2].pos.x) < (9 >> 14)
+								&& abs(asteroid[i].pos.y - ship[2].pos.y) < (8 >> 14)) {
 							if (checkCollisionWithAsteroid(ship[2],
 									asteroid[i])) {
 								asteroid[i].alive = 0;
@@ -313,7 +313,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								if (checkHit(bullet1[j], asteroid[i])) {
 									asteroid[i].alive = 0;
 									bullet1[j].alive = 0;
-
+									gotoxy(bullet1[j].prev_pos.x >> 14, bullet1[j].prev_pos.y >> 14);
+									printf(" ");
+									gotoxy(bullet1[j].pos.x >> 14, bullet1[j].pos.y >> 14);
+									printf(" ");
 									if (asteroid[i].size == 2) {
 										ship[0].score += 1;
 										itoa(ship[0].score, s_score, 10);
@@ -339,14 +342,18 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						for (int j = 0; j < ship[0].bulletAmount; j++) {
 							if (bullet2[j].alive) {
 								if (abs(asteroid[i].pos.x - bullet2[j].pos.x)
-										< 9
+										< (9 >> 14)
 										&& abs(
 												asteroid[i].pos.y
 														- bullet2[j].pos.y)
-												< 6) {
+												< (6 >> 14)) {
 									if (checkHit(bullet2[j], asteroid[i])) {
 										asteroid[i].alive = 0;
 										bullet2[j].alive = 0;
+										gotoxy(bullet2[j].prev_pos.x >> 14, bullet2[j].prev_pos.y >> 14);
+										printf(" ");
+										gotoxy(bullet2[j].pos.x >> 14, bullet2[j].pos.y >> 14);
+										printf(" ");
 									}
 
 								}
@@ -386,7 +393,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						}
 
 						// Reset asteroid, so it can be used to make a new one
-						if (asteroid[i].pos.x <= (asteroid[i].size + 1 << 14)) {
+						if (asteroid[i].pos.x <= (asteroid[i].size + 1) << 14) {
 							if (asteroid[i].size == 2) {
 								clear_small_asteroid(&asteroid[i]);
 							} else if (asteroid[i].size == 4) {
@@ -468,8 +475,8 @@ void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth
 
 	for(int i = 0; i < 3; i++, powerups++) {
 		if (!powerups->onField) {
-			powerups->pos.x = width;
-			powerups->pos.y = height;
+			powerups->pos.x = width << 14;
+			powerups->pos.y = height << 14;
 
 			if (buff == 2) {
 				powerups->rapidFire = true;
@@ -487,7 +494,7 @@ bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid) {
 
 	for (int i = 0; i < asteroid.amountOfPoints; i++) {
 		if (ship.pos.x + (1 << 14) > asteroid.points[i].x
-				&& ship.pos.x- (wide << 14) < asteroid.points[i].x
+				&& ship.pos.x - (wide << 14) < asteroid.points[i].x
 				&& ship.pos.y + (height << 14) > asteroid.points[i].y
 				&& ship.pos.y - (height << 14) < asteroid.points[i].y) {
 			return 1;
@@ -680,11 +687,10 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 // Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
-				bulletptr->pos.x = ship.pos.x + 5;
+				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
-				bulletptr->vel.x = 1;
+				bulletptr->vel.x = (1 << 14);
 				bulletptr->alive = 1;
-
 				break;
 			}
 		}
@@ -697,7 +703,7 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 // Function to shoot a bullet
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
-				bulletptr->pos.x = ship.pos.x + 5;
+				bulletptr->pos.x = ship.pos.x + (1 << 14);
 				bulletptr->pos.y = ship.pos.y;
 				bulletptr->vel.x = 1;
 				bulletptr->alive = 1;
