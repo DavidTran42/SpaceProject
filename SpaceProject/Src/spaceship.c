@@ -8,6 +8,9 @@
  */
 
 void print_ship1(struct ship position) {
+	position.pos.x = position.pos.x >> 14;
+	position.pos.y = position.pos.y >> 14;
+
 	gotoxy(position.pos.x-4, position.pos.y - 2);
 	fgcolor(6);
 	printf("%c", 219);
@@ -32,6 +35,9 @@ void print_ship1(struct ship position) {
 
 }
 void clear_ship1(struct ship position) {
+	position.pos.x = position.pos.x >> 14;
+	position.pos.y = position.pos.y >> 14;
+
 	fgcolor(0);
 	gotoxy(position.pos.x-4, position.pos.y - 2);
 	printf("%c", 219);
@@ -60,6 +66,8 @@ void clear_ship1(struct ship position) {
 
 void print_ship2(struct ship position) {
 	// printf("%c[?25l", ESC); //Hiding curser
+	position.pos.x = position.pos.x >> 14;
+	position.pos.y = position.pos.y >> 14;
 	gotoxy(position.pos.x-4, position.pos.y - 2);
 	fgcolor(2);
 	printf("%c", 219);
