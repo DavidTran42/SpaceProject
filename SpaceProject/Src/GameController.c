@@ -413,6 +413,7 @@ void drawBullets(struct ship ship, struct bullet *bulletptr,
 			} else {
 				printf("-");
 			}
+			resetbgcolor();
 
 			// For better collision detection
 			bulletptr->prev_pos.x = bulletptr->pos.x;
@@ -616,7 +617,7 @@ void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		shipptr->vel.x -= acc;
 		if (shipptr->vel.x < (-3 << 14)) {
 			shipptr->vel.x = (-3 << 14);
-		}
+			}
 	}
 	if ((controls.up) && shipptr->pos.y > 1 << 14) {
 		shipptr->vel.y -= acc;
@@ -637,6 +638,7 @@ void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		}
 	}
 }
+
 
 void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight, int32_t acc) {
@@ -660,16 +662,20 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 	if (shipptr->vel.x < 0) {
 		shipptr->pos.x += shipptr->vel.x;
 		shipptr->vel.x += acc;
+		print_flames(shipptr);
 	} else if (shipptr->vel.x > 0){
 		shipptr->pos.x += shipptr->vel.x;
 		shipptr->vel.x -= acc;
+		print_flames(shipptr);
 	}
 	if (shipptr->vel.y < 0) {
 		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y += acc;
+		print_flames(shipptr);
 	} else if (shipptr->vel.y > 0){
 		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y -= acc;
+		print_flames(shipptr);
 	}
 }
 
