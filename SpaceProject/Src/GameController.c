@@ -59,26 +59,24 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	settings.gameLevel = 1, settings.asteroidSpeed = 16, settings.amountOfAsteroids =
 			5, settings.gameLoop = 1, settings.clock = 90;
 	struct powers powerups[3] = { 0 };
-	struct ship ship1, ship2;
+	struct ship ship1 = {0}, ship2 = {0};
 	ship1.bulletAmount = 5;
 	ship1.hearts = 3;
-	ship1.score = 0;
-	ship1.fuel = 200;
+	ship1.fuel = 255;
 	ship1.alive = true;
 	ship1.bulletSpeed = 2;
 	if (gameMode == 2) {
 		ship2.bulletAmount = 5; // More ships due to power ups
 		ship2.hearts = 3;
-		ship2.score = 0;
-		ship2.fuel = 200;
+		ship2.fuel = 255;
 		ship2.alive = true;
 		ship2.bulletSpeed = 2;
 	}
 	struct asteroid asteroid[10] = { 0 };
 	struct bullet bullet1[10] = { 0 }, bullet2[10] = { 0 };
 	struct joystick controls; // For joystick support
-	uint8_t r, type, buff = rand() % 3;
-	uint16_t t, l, g, s, limiter, deacceleration = (1<<9);
+	uint8_t r, type;
+	uint16_t t, l, g, s, limiter, deacceleration = (1 << 10);
 	bool move = false;
 	char input;
 
@@ -141,9 +139,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				clear_ship1(ship1);
 				updateShipPos(input, &ship1, borderWidth, borderHeight);
 				makeBullet1(input, &bullet1[0], ship1, ship1.bulletAmount);
-
 			}
-
+			print_ship1(ship1);
 			stars_only(); //updating stars
 		}
 
@@ -158,7 +155,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					updateShip2Pos(&ship2, controls, borderWidth, borderHeight);
 					makeBullet2(controls, &bullet2[0], ship2,
 							ship2.bulletAmount);
+
 				}
+				print_ship2(ship2);
 			}
 		}
 
@@ -181,10 +180,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			gotoxy(1,2);
 			printf("Countdown to next level: %d  ", settings.clock);
 			gotoxy(1,3);
-			printf("Ship 1 (Fuel): %d  ", ship1.fuel);
+			printf("Ship 1 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ", ship1.db_time, ship1.rf_time, ship1.fuel);
 			if (gameMode == 2) {
-				gotoxy(1,4);
-				printf("Ship 2 (Fuel): %d  ", ship2.fuel);
+			gotoxy(1,4);
+				printf("Ship 2 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ", ship2.db_time, ship2.rf_time, ship2.fuel);
 			}
 
 
@@ -213,15 +212,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						settings.amountOfAsteroids, type, r);
 			}
 
-			// Make random powerup
-			/*if (s > 5000) {
-				s = 0;
-				buff = rand() % 5;
-				uint16_t width = rand() % borderWidth - 1, height = rand() % borderHeight
-						- 1;
-				setRandomPowerUp(buff, &powerups[0], width, height);
-			} */
-
 			t = 0;
 
 			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, '1');
@@ -232,6 +222,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				drawBullets(ship2, &bullet2[0], borderWidth, borderHeight, s,
 						'2');
 			}
+
+			// Draw powerups
+			drawPowerUps(&powerups[0]);
 
 			// Updating asteroid
 			for (int i = 0; i < settings.amountOfAsteroids; i++) {
@@ -283,7 +276,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					}
 
 					checkCollisionWithBullet(&bullet1[0], &asteroid[i], &ship1,
-							s_score, buffer);
+							s_score, buffer, &settings, &powerups[0]);
 					// Display score if hit
 					lcd_write_string(buffer, s_score, 4);
 
@@ -291,7 +284,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					if (gameMode == 2) {
 
 						checkCollisionWithBullet(&bullet2[0], &asteroid[i],
-								&ship2, s_score2, buffer);
+								&ship2, s_score2, buffer, &settings, &powerups[0]);
 						lcd_write_string2(buffer, s_score2, 4);
 					}
 
@@ -417,6 +410,18 @@ void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
 
 }
 
+void drawPowerUps(struct powers *powerup) {
+	for(int i = 0 ; i < 3; i++, powerup++) {
+		if (powerup->onField) {
+			// Draw powerup
+			bgcolor(2);
+			gotoxy(powerup->pos.x >> 14, powerup->pos.y >> 14);
+			printf("?");
+			resetbgcolor();
+		}
+	}
+}
+
 void drawBullets(struct ship ship, struct bullet *bulletptr,
 		uint16_t borderWidth, uint16_t borderHeight, uint16_t s,
 		char playerNumber) {
@@ -473,7 +478,7 @@ void checkActivePowerUp(struct ship *shipptr) {
 		if (shipptr->db_time > 0 && shipptr->doubleBullets) {
 			shipptr->db_time--;
 		} else if (shipptr->doubleBullets) {
-			shipptr->bulletAmount /= 2;
+			shipptr->bulletAmount = 5;
 			shipptr->doubleBullets = false;
 		}
 		if (shipptr->rf_time > 0 && shipptr->rapidFire) {
@@ -482,32 +487,47 @@ void checkActivePowerUp(struct ship *shipptr) {
 			shipptr->bulletSpeed = 2;
 			shipptr->rapidFire = false;
 		}
+
+		if(!(shipptr->rapidFire) && !(shipptr->doubleBullets)) {
+			shipptr->powered_up = false;
+		}
 	}
 }
 
 void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
+	uint8_t wide = 7, height = 3;
+
 	for (int i = 0; i < 4; i++, powerptr++) {
 		if (powerptr->onField) {
-			if (shipptr->pos.x == powerptr->pos.x
-					&& shipptr->pos.y == powerptr->pos.y) {
-				shipptr->powered_up = true;
+			if (shipptr->pos.x + (1 >> 14) > powerptr->pos.x
+					&& shipptr->pos.x - (wide << 14) < powerptr->pos.x
+					&& shipptr->pos.y + (height << 14) > powerptr->pos.y
+					&& shipptr->pos.y - (height << 14) < powerptr->pos.y) {
 				if (powerptr->doubleBullets) {
-					shipptr->bulletAmount *= 2;
-					shipptr->db_time = 30000;
+					shipptr->bulletAmount = 10;
+					shipptr->db_time = 3000;
 					powerptr->doubleBullets = false;
 					shipptr->doubleBullets = true;
 				} else if (powerptr->moreHearts) {
-					shipptr->hearts += 1;
+					// No more hearts if higher or equal 3 hearts
+					if (shipptr->hearts < 3) {
+						shipptr->hearts += 1;
 					powerptr->moreHearts = false;
+					}
 				} else if (powerptr->rapidFire) {
 					shipptr->bulletSpeed = 1;
-					shipptr->rf_time = 30000;
+					shipptr->rf_time = 3000;
 					powerptr->rapidFire = false;
 					shipptr->rapidFire = true;
 				} else if (powerptr->refill) {
-					shipptr->fuel = 200;
+					shipptr->fuel = 255;
 				}
-				powerptr->onField = false;
+
+				// If the hearts doesn't get collected. Let the powerup stay
+				if (!powerptr->moreHearts) {
+					powerptr->onField = false;
+					shipptr->powered_up = true;
+				}
 			}
 		}
 	}
@@ -539,24 +559,25 @@ void setPowerUp(uint8_t buff, struct powers *powerups, struct asteroid asteroid)
 		if (!powerups->onField) {
 			powerups->pos.x = asteroid.pos.x;
 			powerups->pos.y = asteroid.pos.y;
-
+			powerups->onField = true;
 			if (buff == 3) {
-				powerups->refill = true;
+				powerups->doubleBullets = true;
 			}
 			else if (buff == 2) {
 				powerups->rapidFire = true;
 			} else if (buff == 1) {
 				powerups->moreHearts = true;
 			} else {
-				powerups->doubleBullets = true;
+				powerups->refill = true;
 			}
+			break;
 		}
 	}
 }
 
 void checkCollisionWithBullet(struct bullet *bulletptr,
 		struct asteroid *asteroidptr, struct ship *shipptr, char s_score[],
-		uint8_t buffer[512]) {
+		uint8_t buffer[512], struct gameSettings *settings, struct powers *powerptr) {
 	for (int j = 0; j < shipptr->bulletAmount; j++, bulletptr++) {
 
 		if (bulletptr->alive) {
@@ -565,6 +586,13 @@ void checkCollisionWithBullet(struct bullet *bulletptr,
 				if (checkHit(*bulletptr, *asteroidptr)) {
 					asteroidptr->alive = 0;
 					bulletptr->alive = 0;
+					settings->asteroidCount += 1;
+
+					// Every fifth asteroid destroyed, place powerup
+					if(settings->asteroidCount % 5 == 0) {
+						uint8_t buff = rand() % 4;
+					setPowerUp(buff, powerptr, *asteroidptr);
+					}
 
 					gotoxy(bulletptr->prev_pos.x >> 14,
 							bulletptr->prev_pos.y >> 14);
@@ -592,7 +620,7 @@ void checkCollisionWithBullet(struct bullet *bulletptr,
 }
 
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid) {
-	int wide = 7, height = 3;
+	uint8_t wide = 7, height = 3;
 
 	for (int i = 0; i < asteroid.amountOfPoints; i++) {
 		if (ship.pos.x + (1 << 14) > asteroid.points[i].x
@@ -723,14 +751,11 @@ void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
 // Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
 
-		shipptr->pos.x = 10 << 14, shipptr->pos.y = ((borderHeight + 5) / 3)
-				<< 14;
-		shipptr2->pos.x = 10 << 14, shipptr->pos.y = (((borderHeight + 5) / 3)
-				* 2) << 14;
+		shipptr->pos.x = 10 << 14, shipptr->pos.y = (borderHeight / 3) << 14;
+		shipptr2->pos.x = 10 << 14, shipptr2->pos.y = shipptr->pos.y * 2;
 	} else { // Singleplayer
 
-		shipptr->pos.x = 10 << 14, shipptr->pos.y = ((borderHeight + 5) / 2)
-				<< 14;
+		shipptr->pos.x = 10 << 14, shipptr->pos.y = (borderHeight / 2) << 14;
 
 	}
 
@@ -791,7 +816,6 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 				break;
 			}
 		}
-		print_ship1(ship);
 	}
 }
 
@@ -809,7 +833,6 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 				break;
 			}
 		}
-		print_ship2(ship);
 	}
 }
 
@@ -1018,7 +1041,7 @@ void bosskey(char input) {
 
 		uint8_t j = 0, c = 0, t = 0, stop = 0;
 		while (pause) {
-			if (!timer.sec++ && uart_get_count() < 50) {
+			if (!timer.sec++ && c < 50) {
 				t++;
 				if (t == 100) {
 					gotoxy(j + 6, 5 + c);
