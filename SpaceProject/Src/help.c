@@ -55,7 +55,6 @@ void helpSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
-					disableTimer();
 					clrscr();
 					controllerMenu();
 
@@ -91,7 +90,6 @@ void helpSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
-					disableTimer();
 					clrscr();
 					howToPlayMenu();
 
@@ -104,7 +102,7 @@ void helpSelect() {
 				}
 			}
 		}
-		while (i == 3) { // blinker Help
+		while (i == 3) { // blinker about us
 			if (timer.sec100 == 1) {
 				inverse(1);
 				aboutUsOption();
@@ -126,7 +124,6 @@ void helpSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
-					disableTimer();
 					clrscr();
 					aboutUsMenu();
 
@@ -141,7 +138,7 @@ void helpSelect() {
 			}
 		}
 
-		while (i == 4) { // blinker Quit game
+		while (i == 4) { // blinker back
 			if (timer.sec100 == 1) {
 				inverse(1);
 				backOption();
@@ -384,7 +381,14 @@ void controllerMenu() {
 			if (input == ' ') {
 				inverse(0);
 				clrscr();
-				help_screen();
+				background();
+				helpTitle();
+				newfgcolor(226);
+				controllerOption();
+				howToPlayOption();
+				aboutUsOption();
+				backOption();
+				break;
 			}
 		}
 
@@ -447,7 +451,7 @@ void howToPlayMenu() {
 	}
 	gotoxy(70, 60);
 	printf("%c", 200);
-	repeat(220, 129);
+	repeat(205, 129);
 	printf("%c", 188);
 
 	gotoxy(90, 30);
@@ -482,7 +486,14 @@ void howToPlayMenu() {
 			if (input == ' ') {
 				inverse(0);
 				clrscr();
-				help_screen();
+				background();
+				helpTitle();
+				newfgcolor(226);
+				controllerOption();
+				howToPlayOption();
+				aboutUsOption();
+				backOption();
+				break;
 			}
 		}
 	}
@@ -531,7 +542,7 @@ void aboutUsMenu() {
 	}
 	gotoxy(70, 60);
 	printf("%c", 200);
-	repeat(220, 129);
+	repeat(205, 129);
 	printf("%c", 188);
 
 	gotoxy(120, 65);
@@ -544,7 +555,14 @@ void aboutUsMenu() {
 			if (input == ' ') {
 				inverse(0);
 				clrscr();
-				help_screen();
+				background();
+				helpTitle();
+				newfgcolor(226);
+				controllerOption();
+				howToPlayOption();
+				aboutUsOption();
+				backOption();
+				break;
 			}
 		}
 
@@ -654,7 +672,7 @@ void backOption() {
 
 }
 
-void help_screen() {
+void helpTitle() {
 	newfgcolor(214);
 	gotoxy(120, 10);
 	printf("    )       (     (     ____");
@@ -675,7 +693,11 @@ void help_screen() {
 	gotoxy(120, 17);
 	printf("|_||_||___||____||_| ((_)  ");
 
+}
+void help_screen() {
+
 	background();
+	helpTitle();
 	newfgcolor(226);
 	controllerOption();
 	howToPlayOption();
@@ -720,7 +742,12 @@ void quit_screen() {
 			input = uart_get_char();
 			uart_clear();
 			if (input == ' ') {
-				mainMenu();
+				clrscr();
+				background();
+				mainFrame(1, 1, 270, 75);
+				gameTitle();
+				mainOptions();
+				break;
 			}
 		}
 	}
