@@ -12,4 +12,15 @@
 
 #endif /* HELP_H_ */
 
-void help_screen();
+#include "background.h"
+
+//help menu:
+void controllerMenu();
+void howToPlayMenu();
+void aboutUsMenu();
+void backMenu();
+void controllerOption();
+void howToPlayOption();
+void aboutUsOption();
+void backOption();
+void helpSelect();

@@ -148,32 +148,11 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 		}
 
-		// Pause button for testing purposes
-		/* if (input == 'p') {
-		 disableTimer();
-		 int p = 1;
-		 while (p) {
-		 input = uart_get_char();
-		 if (input == 'p') {
-		 enableTimer();
-		 p = 0;
-		 break;
-		 }
-		 }
-		 }*/
-
 		// Update bullets and astroids
 		if (t > 500) {
 			l++;
 			g++;
 			s++;
-
-			gotoxy(1, 1);
-			printf("                         ");
-			gotoxy(2, 1);
-			printf("                         ");
-			gotoxy(1, 1);
-			printf("x: %ld, y: %ld", ship2.vel.x >> 14, ship2.vel.y >> 14);
 
 			// Update ship with no joystick/keypress
 			clear_ship1(ship1);
@@ -219,7 +198,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet1[k].prev_pos.x = bullet1[k].pos.x;
 					bullet1[k].prev_pos.y = bullet1[k].pos.y;
 
-					// Move bullet
+					// Move bullet & apply gravity
 					gravity(1 << 14, 400 << 14, &bullet1[k], 125 << 14,
 							35 << 14);
 					bullet1[k].pos.x += bullet1[k].vel.x;
@@ -252,7 +231,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet2[k].prev_pos.x = bullet2[k].pos.x;
 					bullet2[k].prev_pos.y = bullet2[k].pos.y;
 
-					// Move bullet
+					// Move bullet & apply gravity
 					gravity(1<<14,400<<14,&bullet2[k],125<<14,35<<14);
 					bullet2[k].pos.x += bullet2[k].vel.x;
 					bullet2[k].pos.y += bullet2[k].vel.y;
@@ -665,18 +644,12 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		if (shipptr->vel.x > (2 << 14)) {
 			shipptr->vel.x = (2 << 14);
 		}
-		if (shipptr->vel.x < (1 << 14)) {
-			shipptr->vel.x = (1 << 14);
-		}
 		shipptr->pos.x += shipptr->vel.x;
 	}
 	if ((input == 's') && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y += acc;
 		if (shipptr->vel.y > (2 << 14)) {
 			shipptr->vel.y = (2 << 14);
-		}
-		if (shipptr->vel.y < (1 << 14)) {
-			shipptr->vel.y = (1 << 14);
 		}
 		shipptr->pos.y += shipptr->vel.y;
 	}
@@ -1276,6 +1249,11 @@ void gameover_led() {
 		} else if (timer.sec100 == 13 || timer.sec100 == 37
 				|| timer.sec100 == 62 || timer.sec100 == 88) {
 			turnOff(GPIOB, 4);
+		}
+		if (uart_get_count() > 0) {
+			if (uart_get_char() == ' ') {
+				mainMenu();
+			}
 		}
 	}
 }
