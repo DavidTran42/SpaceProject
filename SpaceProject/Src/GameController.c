@@ -401,7 +401,7 @@ void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p) {
 	gotoxy(130, 40);
 	printf("--- GAME OVER ---");
-	gotoxy(120, 48);
+	gotoxy(122, 48);
 	printf("Press 'm' or 'SPACE' for Main Menu");
 	lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
 	lcd_update(buffer, 1, borderWidth, borderHeight, gameMode, p);
