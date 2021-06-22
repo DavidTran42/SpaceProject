@@ -55,7 +55,6 @@ void helpSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
-					disableTimer();
 					clrscr();
 					controllerMenu();
 
@@ -91,7 +90,6 @@ void helpSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
-					disableTimer();
 					clrscr();
 					howToPlayMenu();
 
@@ -126,7 +124,6 @@ void helpSelect() {
 					i++;
 				} else if (input == ' ') {
 					inverse(0);
-					disableTimer();
 					clrscr();
 					aboutUsMenu();
 
