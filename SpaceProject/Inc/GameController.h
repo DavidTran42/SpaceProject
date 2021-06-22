@@ -63,7 +63,7 @@ void bosskey(char input);
 void updateShip2Pos(struct ship *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();
-void lcd_update(uint8_t buffer[512], uint8_t line);
+void lcd_update(uint8_t buffer[512], uint8_t line,uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void update_pixels(struct vector *p);
 void gravity(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a, int64_t b);
 void update_bullet(struct vector bullet);
@@ -73,6 +73,11 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHei
 void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);
 void blackHole(int32_t a, int32_t b);
 void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr);
+void clearAsteroid(struct asteroid *asteroidptr);
 void checkLevelGameUp(struct gameSettings *settings);
 void checkCollisionWithBullet(struct bullet *bulletptr, struct asteroid *asteroid, struct ship *shipptr, char s_score[], uint8_t buffer[512]);
 void checkActivePowerUp(struct ship *shipptr);
+void drawBullets(struct ship ship, struct bullet *bulletptr, uint16_t borderWidth, uint16_t borderHeight, uint16_t s, char playerNumber);
+void checkLives(struct ship *shipptr, struct ship *shipptr2, uint8_t buffer[512], char playerNumber,
+		uint16_t borderWidth, uint16_t borderHeight, uint8_t gameMode);
+void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth, uint16_t borderHeight, uint8_t gameMode);

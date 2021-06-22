@@ -63,11 +63,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	ship1.bulletAmount = 5;
 	ship1.hearts = 3;
 	ship1.score = 0;
+	ship1.alive = true;
 	ship1.bulletSpeed = 2;
 	if (gameMode == 2) {
 		ship2.bulletAmount = 5; // More ships due to power ups
 		ship2.hearts = 3;
 		ship2.score = 0;
+		ship2.alive = true;
 		ship2.bulletSpeed = 2;
 	}
 	struct asteroid asteroid[5] = { 0 };
@@ -121,7 +123,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		if (uart_get_count() > 0) {
 			input = uart_get_char(); // Might need to put it outside the if statement
 			uart_clear();
-			if (input == 'm'){
+			if (input == 'm') {
 				mainMenu();
 			}
 
@@ -129,12 +131,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			bosskey(input);
 
 			// Update ships from key press
-			clear_ship1(ship1);
-			updateShipPos(input, &ship1, borderWidth, borderHeight);
+			if (ship1.alive) {
+				clear_ship1(ship1);
+				updateShipPos(input, &ship1, borderWidth, borderHeight);
+				makeBullet1(input, &bullet1[0], ship1, ship1.bulletAmount);
+			}
 
 			stars_only(); //updating stars
-
-			makeBullet1(input, &bullet1[0], ship1, ship1.bulletAmount);
 		}
 
 		// Update if multiplayer
@@ -142,9 +145,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			limiter = 0;
 			if (controls.right || controls.left || controls.down || controls.up
 					|| controls.center) {
-				clear_ship1(ship2);
-				updateShip2Pos(&ship2, controls, borderWidth, borderHeight);
-				makeBullet2(controls, &bullet2[0], ship2, ship2.bulletAmount);
+
+				if (ship2.alive) {
+					clear_ship1(ship2);
+					updateShip2Pos(&ship2, controls, borderWidth, borderHeight);
+					makeBullet2(controls, &bullet2[0], ship2,
+							ship2.bulletAmount);
+				}
 			}
 		}
 
@@ -155,12 +162,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			s++;
 
 			// Update ship with no joystick/keypress
-			clear_ship1(ship1);
-			updatingShip(&ship1, borderWidth, borderHeight, (1 << 9));
-			print_ship1(ship1);
-			update_pixels_ship(&ship1);
+			if (ship1.alive) {
+				clear_ship1(ship1);
+				updatingShip(&ship1, borderWidth, borderHeight, (1 << 9));
+				print_ship1(ship1);
+				update_pixels_ship(&ship1);
+			}
 
-			if (gameMode == 2) {
+			if (gameMode == 2 && ship2.alive) {
 				clear_ship1(ship2);
 				updatingShip(&ship2, borderWidth, borderHeight, (1 << 9));
 				print_ship2(ship2);
@@ -185,68 +194,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			t = 0;
 
-			for (int k = 0; k < ship1.bulletAmount; k++) {
-				if (bullet1[k].alive && s % ship1.bulletSpeed == 0) {
-
-					gotoxy(bullet1[k].prev_pos.x >> 14,
-							bullet1[k].prev_pos.y >> 14);
-					printf(" ");
-					gotoxy(bullet1[k].pos.x >> 14, bullet1[k].pos.y >> 14);
-					update_bullet(bullet1[k].pos);
-					printf("o");
-					// For better collision detection
-					bullet1[k].prev_pos.x = bullet1[k].pos.x;
-					bullet1[k].prev_pos.y = bullet1[k].pos.y;
-
-					// Move bullet & apply gravity
-					gravity(1 << 14, 400 << 14, &bullet1[k], 125 << 14,
-							35 << 14);
-					bullet1[k].pos.x += bullet1[k].vel.x;
-					bullet1[k].pos.y += bullet1[k].vel.y;
-
-					if ((bullet1[k].pos.x >> 14) > borderWidth
-							|| (bullet1[k].pos.x >> 14) < 0
-							|| (bullet1[k].pos.y >> 14) > borderHeight
-							|| (bullet1[k].pos.y >> 14) < 0) {
-						gotoxy(bullet1[k].prev_pos.x >> 14,
-								bullet1[k].prev_pos.y >> 14);
-
-						bullet1[k].alive = 0;
-						printf(" ");
-					}
-				}
-			}
+			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, '1');
 
 			// If multiplayer
-			for (int k = 0; k < ship2.bulletAmount; k++) {
-				if (bullet2[k].alive && s % ship2.bulletSpeed == 0) {
-
-					gotoxy(bullet2[k].prev_pos.x >> 14,
-							bullet2[k].prev_pos.y >> 14);
-					printf(" ");
-					gotoxy(bullet2[k].pos.x >> 14, bullet2[k].pos.y >> 14);
-					update_bullet(bullet2[k].pos);
-					printf("-");
-					// For better collision detection
-					bullet2[k].prev_pos.x = bullet2[k].pos.x;
-					bullet2[k].prev_pos.y = bullet2[k].pos.y;
-
-					// Move bullet & apply gravity
-					gravity(1<<14,400<<14,&bullet2[k],125<<14,35<<14);
-					bullet2[k].pos.x += bullet2[k].vel.x;
-					bullet2[k].pos.y += bullet2[k].vel.y;
-
-					if ((bullet2[k].pos.x >> 14) > borderWidth
-							|| (bullet2[k].pos.x >> 14) < 0
-							|| (bullet2[k].pos.y >> 14) > borderHeight
-							|| (bullet2[k].pos.y >> 14) < 0) {
-						gotoxy(bullet2[k].prev_pos.x >> 14,
-								bullet2[k].prev_pos.y >> 14);
-
-						bullet2[k].alive = 0;
-						printf(" ");
-					}
-				}
+			if (gameMode == 2) {
+				drawBullets(ship2, &bullet2[0], borderWidth, borderHeight, s,
+						'2');
 			}
 
 			// Updating asteroid
@@ -256,35 +209,23 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					gotoxy(asteroid[i].pos.x >> 14, asteroid[i].pos.y >> 14);
 
 					// Check collision against ship
-					if (abs(asteroid[i].pos.x - ship1.pos.x) < (9 << 14)
-							&& abs(asteroid[i].pos.y - ship1.pos.y)
-									< (8 << 14)) {
-						if (checkCollisionWithAsteroid(ship1, asteroid[i])) {
-							asteroid[i].alive = 0;
-							//update lcd
+					if (ship1.alive) {
+						if (abs(asteroid[i].pos.x - ship1.pos.x) < (9 << 14)
+								&& abs(asteroid[i].pos.y - ship1.pos.y)
+										< (8 << 14)) {
+							if (checkCollisionWithAsteroid(ship1,
+									asteroid[i])) {
+								asteroid[i].alive = 0;
+								//update lcd
 
-							if (ship1.hearts == 3) {
-								ship1.hearts--;
-								lcd_write_string(buffer, "P1 HP: ** ", 1);
-							} else if (ship1.hearts == 2) {
-								ship1.hearts--;
-								lcd_write_string(buffer, "P1 HP: *  ", 1);
-							} else if (ship1.hearts == 1) {
-								gotoxy(130, 40);
-								printf("--- GAME OVER ---");
-
-								ship1.hearts--;
-								lcd_write_string(buffer,
-										"GAME OVER!   GAME OVER!  ", 1);
-								lcd_update(buffer, 1);
-
+								checkLives(&ship1, &ship2, buffer, '1',
+										borderWidth, borderHeight, gameMode);
 							}
-
 						}
 					}
 
 					// Check for ship 2
-					if (gameMode == 2) {
+					if (gameMode == 2 && ship2.alive) {
 
 						lcd_write_string2(buffer, "SCORE: ", 3);
 						if (ship2.hearts == 3) {
@@ -301,45 +242,26 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 									asteroid[i])) {
 								asteroid[i].alive = 0;
 
-								if (ship2.hearts == 3) {
-									ship2.hearts--;
-									lcd_write_string2(buffer, "P2 HP: ** ", 1);
-								} else if (ship2.hearts == 2) {
-									ship2.hearts--;
-									lcd_write_string2(buffer, "P2 HP: *  ", 1);
-								} else if (ship2.hearts == 1) {
-									gotoxy(130, 40);
-									printf("--- GAME OVER ---");
-									ship2.hearts--;
-									lcd_write_string(buffer,
-											"GAME OVER!   GAME OVER!  ", 1);
-									lcd_update(buffer, 1);
-								}
+								checkLives(&ship2, &ship1, buffer, '2',
+										borderWidth, borderHeight, gameMode);
 							}
 						}
 
 					}
 
-					checkCollisionWithBullet(&bullet1[0], &asteroid[i], &ship1, s_score, buffer);
+					checkCollisionWithBullet(&bullet1[0], &asteroid[i], &ship1,
+							s_score, buffer);
 					// Display score if hit
 					lcd_write_string(buffer, s_score, 4);
 
 					// If multiplayer, check collision with bullet
 					if (gameMode == 2) {
-						checkCollisionWithBullet(&bullet2[0], &asteroid[i], &ship2, s_score2, buffer);
-						lcd_write_string2(buffer, s_score, 4);
+						checkCollisionWithBullet(&bullet2[0], &asteroid[i],
+								&ship2, s_score2, buffer);
+						lcd_write_string2(buffer, s_score2, 4);
 					}
 
-					if (asteroid[i].size == 2) {
-						clear_small_asteroid(&asteroid[i]);
-
-					} else if (asteroid[i].size == 4) {
-						clear_medium_asteroid(&asteroid[i]);
-
-					} else {
-						clear_large_asteroid(&asteroid[i]);
-
-					}
+					clearAsteroid(&asteroid[i]);
 
 					if (asteroid[i].alive) {
 
@@ -363,13 +285,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 						// Reset asteroid, so it can be used to make a new one
 						if (asteroid[i].pos.x <= (asteroid[i].size + 1) << 14) {
-							if (asteroid[i].size == 2) {
-								clear_small_asteroid(&asteroid[i]);
-							} else if (asteroid[i].size == 4) {
-								clear_medium_asteroid(&asteroid[i]);
-							} else {
-								clear_large_asteroid(&asteroid[i]);
-							}
+							clearAsteroid(&asteroid[i]);
 							asteroid[i].alive = 0;
 							if (asteroid[i].pos.y > (63 << 14)) {
 								game_background();
@@ -389,11 +305,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 
 			// Check collision with ship 1
-			checkCollisionWithPowerUp(&ship1, &powerups[0]);
+			if (ship1.alive) {
+				checkCollisionWithPowerUp(&ship1, &powerups[0]);
+				checkActivePowerUp(&ship1);
+			}
 
 			// Check collision with ship 2
-			if (gameMode == 2) {
+			if (gameMode == 2 && ship2.alive) {
 				checkCollisionWithPowerUp(&ship2, &powerups[0]);
+				checkActivePowerUp(&ship2);
 			}
 
 			// Controlling the asteroids speed
@@ -402,23 +322,109 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				move = false;
 			}
 
-			checkActivePowerUp(&ship1);
-			checkActivePowerUp(&ship2);
 			// If enough asteroids are destroyed. Level game up
 			checkLevelGameUp(&settings);
 		}
 	}
 }
 
-/*void clearAsteroid(struct asteroid *asteroidptr) {
-	if (asteroid.size == 2) {
-		clear_small_asteroid(&asteroid[i]);
-	} else if (asteroid[i].size == 4) {
-		clear_medium_asteroid(&asteroid[i]);
-	} else {
-		clear_large_asteroid(&asteroid[i]);
+void checkLives(struct ship *shipptr, struct ship *shipptr2,
+		uint8_t buffer[512], char playerNumber, uint16_t borderWidth,
+		uint16_t borderHeight, uint8_t gameMode) {
+	if (shipptr->hearts == 3) {
+		shipptr->hearts--;
+		if (playerNumber == '1') {
+			lcd_write_string(buffer, "P1 HP: ** ", 1);
+		} else {
+			lcd_write_string2(buffer, "P2 HP: ** ", 1);
+		}
+	} else if (shipptr->hearts == 2) {
+		shipptr->hearts--;
+		if (playerNumber == '1') {
+			lcd_write_string(buffer, "P1 HP: *  ", 1);
+		} else {
+			lcd_write_string2(buffer, "P2 HP: *  ", 1);
+		}
+	} else if (shipptr->hearts == 1) {
+		if (playerNumber == '1') {
+			lcd_write_string(buffer, "%P1 HP:    ", 1);
+			shipptr->alive = false;
+			if (gameMode == 1) {
+				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode);
+			}
+		} else {
+			lcd_write_string2(buffer, "%P2 HP:    ", 1);
+			shipptr->alive = false;
+		}
+		// Clear ship cause there hearts are now 0
+		gotoxy(shipptr->pos.x >> 14, shipptr->pos.y >> 14);
+		clear_ship1(*shipptr);
+		if (gameMode == 2) {
+			if (!shipptr->alive && !shipptr2->alive) {
+				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode);
+			}
+		}
 	}
-}*/
+}
+
+void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
+		uint16_t borderHeight, uint8_t gameMode) {
+	gotoxy(130, 40);
+	printf("--- GAME OVER ---");
+	gotoxy(130, 42);
+	printf("Press m for Main Menu or press r for restart game");
+	lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
+	lcd_update(buffer, 1, borderWidth, borderHeight, gameMode);
+}
+
+void drawBullets(struct ship ship, struct bullet *bulletptr,
+		uint16_t borderWidth, uint16_t borderHeight, uint16_t s,
+		char playerNumber) {
+	for (int k = 0; k < ship.bulletAmount; k++, bulletptr++) {
+		if (bulletptr->alive && s % ship.bulletSpeed == 0) {
+
+			gotoxy(bulletptr->prev_pos.x >> 14, bulletptr->prev_pos.y >> 14);
+			printf(" ");
+			gotoxy(bulletptr->pos.x >> 14, bulletptr->pos.y >> 14);
+			update_bullet(bulletptr->pos);
+			if (playerNumber == '1') {
+				printf("o");
+			} else {
+				printf("-");
+			}
+
+			// For better collision detection
+			bulletptr->prev_pos.x = bulletptr->pos.x;
+			bulletptr->prev_pos.y = bulletptr->pos.y;
+
+			// Move bullet & apply gravity
+			gravity(1 << 14, 400 << 14, bulletptr, 125 << 14, 35 << 14);
+			bulletptr->pos.x += bulletptr->vel.x;
+			bulletptr->pos.y += bulletptr->vel.y;
+
+			if ((bulletptr->pos.x >> 14) > borderWidth
+					|| (bulletptr->pos.x >> 14) < 0
+					|| (bulletptr->pos.y >> 14) > borderHeight
+					|| (bulletptr->pos.y >> 14) < 0) {
+				gotoxy(bulletptr->prev_pos.x >> 14,
+						bulletptr->prev_pos.y >> 14);
+
+				bulletptr->alive = 0;
+				printf(" ");
+			}
+		}
+	}
+}
+
+void clearAsteroid(struct asteroid *asteroidptr) {
+	if (asteroidptr->size == 2) {
+		clear_small_asteroid(asteroidptr);
+	} else if (asteroidptr->size == 4) {
+		clear_medium_asteroid(asteroidptr);
+	} else {
+		clear_large_asteroid(asteroidptr);
+	}
+}
 
 void checkActivePowerUp(struct ship *shipptr) {
 	if (shipptr->powered_up) {
@@ -467,16 +473,16 @@ void checkLevelGameUp(struct gameSettings *settings) {
 	// Level 2
 	if (settings->asteroidCount > 9) {
 		settings->gameLevel = 2;
-		settings->asteroidSpeed  = 8;
-	// Level 3
+		settings->asteroidSpeed = 8;
+		// Level 3
 	} else if (settings->asteroidCount > 24) {
 		settings->gameLevel = 3;
-		settings->asteroidSpeed  = 4;
+		settings->asteroidSpeed = 4;
 	}
 	// level 4
 	else if (settings->asteroidCount > 49) {
 		settings->gameLevel = 4;
-		settings-> asteroidSpeed = 1;
+		settings->asteroidSpeed = 1;
 	}
 }
 
@@ -501,15 +507,14 @@ void setRandomPowerUp(uint8_t buff, struct powers *powerups,
 	}
 }
 
-void checkCollisionWithBullet(struct bullet *bulletptr, struct asteroid *asteroidptr,
-		struct ship *shipptr, char s_score[], uint8_t buffer[512]) {
+void checkCollisionWithBullet(struct bullet *bulletptr,
+		struct asteroid *asteroidptr, struct ship *shipptr, char s_score[],
+		uint8_t buffer[512]) {
 	for (int j = 0; j < shipptr->bulletAmount; j++, bulletptr++) {
 
 		if (bulletptr->alive) {
-			if (abs(asteroidptr->pos.x - bulletptr->pos.x)
-					< (9 << 14)
-					&& abs(asteroidptr->pos.y - bulletptr->pos.y)
-							< (6 << 14)) {
+			if (abs(asteroidptr->pos.x - bulletptr->pos.x) < (9 << 14)
+					&& abs(asteroidptr->pos.y - bulletptr->pos.y) < (6 << 14)) {
 				if (checkHit(*bulletptr, *asteroidptr)) {
 					asteroidptr->alive = 0;
 					bulletptr->alive = 0;
@@ -517,8 +522,7 @@ void checkCollisionWithBullet(struct bullet *bulletptr, struct asteroid *asteroi
 					gotoxy(bulletptr->prev_pos.x >> 14,
 							bulletptr->prev_pos.y >> 14);
 					printf(" ");
-					gotoxy(bulletptr->pos.x >> 14,
-							bulletptr->pos.y >> 14);
+					gotoxy(bulletptr->pos.x >> 14, bulletptr->pos.y >> 14);
 					printf(" ");
 
 					//Count and print score for p1
@@ -672,8 +676,8 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 }
 
 // 6 wide and 5 height
-void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2, uint16_t borderWidth,
-		uint16_t borderHeight) {
+void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
+		uint16_t borderWidth, uint16_t borderHeight) {
 // Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
 
@@ -737,7 +741,13 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
-				bulletptr->pos.y = ship.pos.y;
+
+				// Compensate for gravity
+				if (ship.pos.y > (35 << 14)) {
+					bulletptr->pos.y = ship.pos.y + (1 << 14);
+				} else {
+					bulletptr->pos.y = ship.pos.y;
+				}
 				bulletptr->vel.x = (1 << 14);
 				bulletptr->vel.y = 0;
 				bulletptr->alive = 1;
@@ -754,7 +764,11 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
-				bulletptr->pos.y = ship.pos.y;
+				if (ship.pos.y > (35 << 14)) {
+					bulletptr->pos.y = ship.pos.y + (1 << 14);
+				} else {
+					bulletptr->pos.y = ship.pos.y;
+				}
 				bulletptr->vel.x = (1 << 14);
 				bulletptr->vel.y = 0;
 				bulletptr->alive = 1;
@@ -969,7 +983,7 @@ void bosskey(char input) {
 
 		uint8_t j = 0, c = 0, t = 0, stop = 0;
 		while (pause) {
-			if (!timer.sec++) {
+			if (!timer.sec++ && uart_get_count() < 50) {
 				t++;
 				if (t == 100) {
 					gotoxy(j + 6, 5 + c);
@@ -1001,7 +1015,10 @@ void bosskey(char input) {
 
 }
 
-void lcd_update(uint8_t buffer[512], uint8_t line) {
+void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
+		uint16_t borderHeight, int gameMode) {
+	char input;
+
 	turnOff(GPIOA, 9);
 	turnOff(GPIOC, 7);
 	turnOn(GPIOB, 4);
@@ -1026,6 +1043,22 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 		} else if (timer.sec100 == 13 || timer.sec100 == 37
 				|| timer.sec100 == 62 || timer.sec100 == 88) {
 			GPIOB->ODR |= (0x0001 << 4); //Set pin to high (turned off)
+		}
+
+		//Bryder ud af game over skærm
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == 'm') {
+				mainMenu();
+			}
+			if (input == 'r' && gameMode == 1) {
+				initGame(borderWidth, borderHeight, 1);
+			}
+			if (input == 'r' && gameMode == 2) {
+				initGame(borderWidth, borderHeight, 2);
+			}
+
 		}
 
 	}
