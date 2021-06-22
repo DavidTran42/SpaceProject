@@ -57,7 +57,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	char s_score[10] = "0", s_score2[10] = "0";
 	struct gameSettings settings;
 	settings.gameLevel = 1, settings.asteroidSpeed = 16, settings.amountOfAsteroids =
-			5, settings.gameLoop = 1;
+			5, settings.gameLoop = 1, settings.clock = 90;
 	struct powers powerups[3] = { 0 };
 	struct ship ship1, ship2;
 	ship1.bulletAmount = 5;
@@ -74,11 +74,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		ship2.alive = true;
 		ship2.bulletSpeed = 2;
 	}
-	struct asteroid asteroid[5] = { 0 };
-	struct bullet bullet1[10] = { 0 };
-	struct bullet bullet2[10] = { 0 };
+	struct asteroid asteroid[10] = { 0 };
+	struct bullet bullet1[10] = { 0 }, bullet2[10] = { 0 };
 	struct joystick controls; // For joystick support
-	uint8_t r = rand() % borderHeight, type = rand() % 3, buff = rand() % 3;
+	uint8_t r, type, buff = rand() % 3;
 	uint16_t t, l, g, s, limiter, deacceleration = (1<<9);
 	bool move = false;
 	char input;
@@ -114,7 +113,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	while (settings.gameLoop) {
 		level_led(settings.gameLevel);
 		t++; // For every interupt, increment
-		limiter++;
 
 		controls.right = GPIOC->IDR & (0x0001 << 0);
 		controls.up = GPIOA->IDR & (0x0001 << 4);
@@ -149,7 +147,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		}
 
 		// Update if multiplayer
-		if (gameMode == 2 && limiter > 2000) {
+		if (gameMode == 2 && limiter > 4) {
 			limiter = 0;
 			if (controls.right || controls.left || controls.down || controls.up
 					|| controls.center) {
@@ -166,27 +164,38 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		// Update bullets and astroids
 		if (t > 500) {
 			l++;
+			limiter++;
 			g++;
 			s++;
 
+			// Countdown for level change
+			if (s > 40 && settings.clock > 0) {
+				s = 0;
+				settings.clock--;
+			}
+
 			// Simple fuel system
 			gotoxy(1,1);
+			printf("Current level: %d", settings.gameLevel);
+			gotoxy(1,2);
+			printf("Countdown to next level: %d  ", settings.clock);
+			gotoxy(1,3);
 			printf("Ship 1 (Fuel): %d  ", ship1.fuel);
 			if (gameMode == 2) {
-				gotoxy(1,2);
+				gotoxy(1,4);
 				printf("Ship 2 (Fuel): %d  ", ship2.fuel);
 			}
 
 
 			// Update ship with no joystick/keypress
-			if (ship1.alive) {
+			if (ship1.alive && (abs(ship1.vel.x) > deacceleration || abs(ship1.vel.y) > deacceleration)) {
 				clear_ship1(ship1);
 				updatingShip(&ship1, borderWidth, borderHeight, deacceleration);
 				print_ship1(ship1);
 				update_pixels_ship(&ship1);
 			}
 
-			if (gameMode == 2 && ship2.alive) {
+			if (gameMode == 2 && ship2.alive && (abs(ship2.vel.x) > deacceleration || abs(ship2.vel.y) > deacceleration)) {
 				clear_ship1(ship2);
 				updatingShip(&ship2, borderWidth, borderHeight, deacceleration);
 				print_ship2(ship2);
@@ -203,13 +212,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 
 			// Make random powerup
-			if (s > 5000) {
+			/*if (s > 5000) {
 				s = 0;
 				buff = rand() % 5;
 				uint16_t width = rand() % borderWidth - 1, height = rand() % borderHeight
 						- 1;
 				setRandomPowerUp(buff, &powerups[0], width, height);
-			}
+			} */
 
 			t = 0;
 
@@ -500,28 +509,30 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 
 void checkLevelGameUp(struct gameSettings *settings) {
 	// Level 2
-	if (settings->asteroidCount > 9) {
+	if (settings->clock == 0 && settings->gameLevel == 1) {
+		settings->clock = 120;
 		settings->gameLevel = 2;
 		settings->asteroidSpeed = 8;
 		// Level 3
-	} else if (settings->asteroidCount > 24) {
+	} else if (settings->clock == 0 && settings->gameLevel == 2) {
+		settings->clock = 180;
 		settings->gameLevel = 3;
 		settings->asteroidSpeed = 4;
 	}
 	// level 4
-	else if (settings->asteroidCount > 49) {
+	else if (settings->clock == 0 && settings->gameLevel == 3) {
+		timer.min = 0;
 		settings->gameLevel = 4;
 		settings->asteroidSpeed = 1;
 	}
 }
 
-void setRandomPowerUp(uint8_t buff, struct powers *powerups,
-		uint16_t width, uint16_t height) {
+void setPowerUp(uint8_t buff, struct powers *powerups, struct asteroid asteroid) {
 
 	for (int i = 0; i < 4; i++, powerups++) {
 		if (!powerups->onField) {
-			powerups->pos.x = width << 14;
-			powerups->pos.y = height << 14;
+			powerups->pos.x = asteroid.pos.x;
+			powerups->pos.y = asteroid.pos.y;
 
 			if (buff == 3) {
 				powerups->refill = true;
