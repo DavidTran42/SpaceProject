@@ -12,16 +12,16 @@ void print_ship1(struct ship position) {
 	position.pos.x = position.pos.x >> 14;
 	position.pos.y = position.pos.y >> 14;
 
-	gotoxy(position.pos.x-4, position.pos.y - 2);
+	gotoxy(position.pos.x - 4, position.pos.y - 2);
 	fgcolor(6);
 	printf("%c", 219);
-	gotoxy(position.pos.x-4, position.pos.y - 1);
+	gotoxy(position.pos.x - 4, position.pos.y - 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.pos.x-4, position.pos.y);
+	gotoxy(position.pos.x - 4, position.pos.y);
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
-	gotoxy(position.pos.x-4, position.pos.y + 1);
+	gotoxy(position.pos.x - 4, position.pos.y + 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.pos.x-4, position.pos.y + 2);
+	gotoxy(position.pos.x - 4, position.pos.y + 2);
 	printf("%c", 219);
 	gotoxy(position.pos.x - 5, position.pos.y - 1);
 	fgcolor(1);
@@ -40,45 +40,34 @@ void clear_ship1(struct ship position) {
 	position.pos.y = position.pos.y >> 14;
 
 	fgcolor(0);
-	gotoxy(position.pos.x-4, position.pos.y - 2);
-	printf(" ");
-	gotoxy(position.pos.x-4, position.pos.y - 1);
-	printf("   ");
-	gotoxy(position.pos.x-4, position.pos.y);
-	printf("     ");
-	gotoxy(position.pos.x-4, position.pos.y + 1);
-	printf("   ");
-	gotoxy(position.pos.x-4, position.pos.y + 2);
-	printf(" ");
-	gotoxy(position.pos.x - 5, position.pos.y - 1);
-
-	printf(" ");
-	gotoxy(position.pos.x - 5, position.pos.y + 1);
+	gotoxy(position.pos.x - 4, position.pos.y + 2);
 	printf(" ");
 	gotoxy(position.pos.x - 6, position.pos.y + 1);
-
-	printf(" ");
+	printf("     ");
+	gotoxy(position.pos.x - 4, position.pos.y);
+	printf("     ");
 	gotoxy(position.pos.x - 6, position.pos.y - 1);
+	printf("     ");
+	gotoxy(position.pos.x - 4, position.pos.y - 2);
 	printf(" ");
 
-
+	resetbgcolor();
 }
-
 
 void print_ship2(struct ship position) {
 	// printf("%c[?25l", ESC); //Hiding curser
 	position.pos.x = position.pos.x >> 14;
 	position.pos.y = position.pos.y >> 14;
-	gotoxy(position.pos.x-4, position.pos.y - 2);
+	gotoxy(position.pos.x - 4, position.pos.y - 2);
 	fgcolor(2);
 	printf("%c", 219);
-	gotoxy(position.pos.x-4, position.pos.y - 1);
+	gotoxy(position.pos.x - 4, position.pos.y - 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.pos.x-4, position.pos.y);
+	gotoxy(position.pos.x - 4, position.pos.y);
 	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
-	gotoxy(position.pos.x-4, position.pos.y + 1);
+	gotoxy(position.pos.x - 4, position.pos.y + 1);
 	printf("%c%c%c", 219, 219, 219);
-	gotoxy(position.pos.x-4, position.pos.y + 2);
+	gotoxy(position.pos.x - 4, position.pos.y + 2);
 	printf("%c", 219);
 	gotoxy(position.pos.x - 5, position.pos.y - 1);
 	fgcolor(1);

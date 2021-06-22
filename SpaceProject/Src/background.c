@@ -748,6 +748,8 @@ void game_background() {
 void update_pixels_ship(struct ship *p) {
 	p->pos.x = p->pos.x >> 14;
 	p->pos.y = p->pos.y >> 14;
+
+
 	if (p->pos.y  == 65) {
 		gotoxy(p->pos.x  - 4, p->pos.y  + 3);
 		newbgcolor(17);
@@ -761,7 +763,7 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(p->pos.x  - 6, p->pos.y  + 2);
 		printf("  ");
 		gotoxy(p->pos.x  - 3, p->pos.y  + 2);
-		printf("  ");
+		printf("   ");
 
 	} else if (p->pos.y  == 67) {
 		gotoxy(p->pos.x  - 4, p->pos.y + 3);
@@ -771,10 +773,10 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(p->pos.x - 6, p->pos.y  + 2);
 		printf("  ");
 		gotoxy(p->pos.x  - 3, p->pos.y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(p->pos.x  - 7, p->pos.y  + 1);
-		printf(" ");
+		gotoxy(p->pos.x  - 8, p->pos.y  + 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y  + 1);
 		printf("  ");
 
@@ -788,15 +790,15 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(p->pos.x  - 3, p->pos.y  + 2);
 		printf("  ");
 		newbgcolor(18);
-		gotoxy(p->pos.x  - 7, p->pos.y  + 1);
-		printf(" ");
+		gotoxy(p->pos.x  - 8, p->pos.y  + 1);
+		printf("  ");
 		gotoxy(p->pos.x  - 1, p->pos.y  + 1);
-		printf("  ");
+		printf("      ");
 		newbgcolor(17);
-		gotoxy(p->pos.x - 6, p->pos.y );
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y );
+		printf("    ");
 		gotoxy(p->pos.x + 1, p->pos.y);
-		printf(" ");
+		printf("  ");
 
 	} else if (p->pos.y == 69) {
 		gotoxy(p->pos.x - 4, p->pos.y  + 3);
@@ -806,157 +808,156 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(p->pos.x - 6, p->pos.y  + 2);
 		printf("  ");
 		gotoxy(p->pos.x - 3, p->pos.y + 2);
-		printf("  ");
+		printf("    ");
 		newbgcolor(19);
-		gotoxy(p->pos.x - 7, p->pos.y  + 1);
-		printf(" ");
-		gotoxy(p->pos.x  - 1, p->pos.y + 1);
+		gotoxy(p->pos.x - 8, p->pos.y  + 1);
 		printf("  ");
+		gotoxy(p->pos.x  - 1, p->pos.y + 1);
+		printf("   ");
 		newbgcolor(18);
-		gotoxy(p->pos.x - 6, p->pos.y );
+		gotoxy(p->pos.x - 8, p->pos.y );
 		printf("  ");
 		gotoxy(p->pos.x + 1, p->pos.y);
-		printf(" ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(p->pos.x  - 7, p->pos.y  - 1);
-		printf(" ");
-		gotoxy(p->pos.x  - 1, p->pos.y  - 1);
+		gotoxy(p->pos.x  - 8, p->pos.y  - 1);
 		printf("  ");
+		gotoxy(p->pos.x  - 1, p->pos.y  - 1);
+		printf(" ");
 
 	} else if (p->pos.y  == 70) {
 		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(15);
 		printf(" ");
 		newbgcolor(21);
-		gotoxy(p->pos.x - 6, p->pos.y + 2);
+		gotoxy(p->pos.x - 8, p->pos.y + 2);
 		printf("  ");
 		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(20);
-		gotoxy(p->pos.x - 7, p->pos.y + 1);
-		printf(" ");
+		gotoxy(p->pos.x - 8, p->pos.y + 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(19);
-		gotoxy(p->pos.x - 6, p->pos.y);
+		gotoxy(p->pos.x - 8, p->pos.y);
 		printf("  ");
 		gotoxy(p->pos.x + 1, p->pos.y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(18);
-		gotoxy(p->pos.x - 7, p->pos.y - 1);
-		printf(" ");
+		gotoxy(p->pos.x - 8, p->pos.y - 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(17);
-		gotoxy(p->pos.x - 6, p->pos.y - 2);
+		gotoxy(p->pos.x - 8, p->pos.y - 2);
 		printf("  ");
 		gotoxy(p->pos.x - 3, p->pos.y - 2);
 		printf("  ");
 
 	} else if (p->pos.y == 71) {
-		gotoxy(p->pos.x - 4, p->pos.y + 3);
+		gotoxy(p->pos.x - 5, p->pos.y + 3);
 		newbgcolor(195);
-		printf(" ");
+		printf("   ");
 		newbgcolor(15);
-		gotoxy(p->pos.x - 6, p->pos.y + 2);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y + 2);
+		printf("    ");
 		gotoxy(p->pos.x - 3, p->pos.y + 2);
-		printf("  ");
+		printf("     ");
 		newbgcolor(21);
-		gotoxy(p->pos.x - 7, p->pos.y + 1);
-		printf(" ");
+		gotoxy(p->pos.x - 10, p->pos.y + 1);
+		printf("    ");
 		gotoxy(p->pos.x - 1, p->pos.y + 1);
-		printf("  ");
+		printf("     ");
 		newbgcolor(20);
-		gotoxy(p->pos.x - 6, p->pos.y);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y);
+		printf("    ");
 		gotoxy(p->pos.x + 1, p->pos.y);
-		printf(" ");
+		printf("    ");
 		newbgcolor(19);
-		gotoxy(p->pos.x - 7, p->pos.y - 1);
-		printf(" ");
+		gotoxy(p->pos.x - 10, p->pos.y - 1);
+		printf("    ");
 		gotoxy(p->pos.x - 1, p->pos.y - 1);
-		printf("  ");
+		printf("     ");
 		newbgcolor(18);
-		gotoxy(p->pos.x - 6, p->pos.y - 2);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y - 2);
+		printf("    ");
 		gotoxy(p->pos.x - 3, p->pos.y - 2);
-		printf("  ");
+		printf("     ");
 		newbgcolor(17);
-		gotoxy(p->pos.x - 4, p->pos.y - 3);
-		printf(" ");
+		gotoxy(p->pos.x - 5, p->pos.y - 3);
+		printf("   ");
 
 	} else if (p->pos.y == 72) {
-		gotoxy(p->pos.x - 4, p->pos.y + 3);
+		gotoxy(p->pos.x - 5, p->pos.y + 3);
 		newbgcolor(159);
-		printf(" ");
+		printf("   ");
 		newbgcolor(195);
-		gotoxy(p->pos.x - 6, p->pos.y + 2);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y + 2);
+		printf("    ");
 		gotoxy(p->pos.x - 3, p->pos.y + 2);
-		printf("  ");
+		printf("    ");
 		newbgcolor(15);
-		gotoxy(p->pos.x - 7, p->pos.y + 1);
-		printf(" ");
+		gotoxy(p->pos.x - 10, p->pos.y + 1);
+		printf("    ");
 		gotoxy(p->pos.x - 1, p->pos.y + 1);
-		printf("  ");
+		printf("     ");
 		newbgcolor(21);
-		gotoxy(p->pos.x - 6, p->pos.y);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y);
+		printf("    ");
 		gotoxy(p->pos.x + 1, p->pos.y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(20);
-		gotoxy(p->pos.x - 7, p->pos.y - 1);
-		printf(" ");
+		gotoxy(p->pos.x - 10, p->pos.y - 1);
+		printf("    ");
 		gotoxy(p->pos.x - 1, p->pos.y - 1);
-		printf("  ");
+		printf("     ");
 		newbgcolor(19);
-		gotoxy(p->pos.x - 6, p->pos.y - 2);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y - 2);
+		printf("    ");
 		gotoxy(p->pos.x - 3, p->pos.y - 2);
-		printf("  ");
+		printf("    ");
 		newbgcolor(18);
-		gotoxy(p->pos.x - 4, p->pos.y - 3);
-		printf(" ");
+		gotoxy(p->pos.x - 5, p->pos.y - 3);
+		printf("   ");
 
 	} else if (p->pos.y == 73) {
-		gotoxy(p->pos.x - 4, p->pos.y + 3);
 		newbgcolor(159);
-		gotoxy(p->pos.x - 6, p->pos.y + 2);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y + 2);
+		printf("    ");
 		gotoxy(p->pos.x - 3, p->pos.y + 2);
-		printf("  ");
+		printf("    ");
 		newbgcolor(195);
-		gotoxy(p->pos.x - 7, p->pos.y + 1);
-		printf(" ");
+		gotoxy(p->pos.x - 10, p->pos.y + 1);
+		printf("    ");
 		gotoxy(p->pos.x - 1, p->pos.y + 1);
-		printf("  ");
+		printf("    ");
 		newbgcolor(15);
-		gotoxy(p->pos.x - 6, p->pos.y);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y);
+		printf("    ");
 		gotoxy(p->pos.x + 1, p->pos.y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(21);
-		gotoxy(p->pos.x - 7, p->pos.y - 1);
-		printf(" ");
+		gotoxy(p->pos.x - 10, p->pos.y - 1);
+		printf("    ");
 		gotoxy(p->pos.x - 1, p->pos.y - 1);
-		printf("  ");
+		printf("    ");
 		newbgcolor(20);
-		gotoxy(p->pos.x - 6, p->pos.y - 2);
-		printf("  ");
+		gotoxy(p->pos.x - 8, p->pos.y - 2);
+		printf("    ");
 		gotoxy(p->pos.x - 3, p->pos.y - 2);
-		printf("  ");
+		printf("    ");
 		newbgcolor(19);
-		gotoxy(p->pos.x - 4, p->pos.y - 3);
-		printf(" ");
-
+		gotoxy(p->pos.x - 5, p->pos.y - 3);
+		printf("   ");
+/*
 	} else if (p->pos.y == 74) {
 
 		gotoxy(p->pos.x - 3, p->pos.y + 2);
 		printf("  ");
 		newbgcolor(159);
-		gotoxy(p->pos.x - 7, p->pos.y + 1);
-		printf(" ");
+		gotoxy(p->pos.x - 8, p->pos.y + 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(195);
@@ -965,8 +966,8 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(15);
-		gotoxy(p->pos.x - 7, p->pos.y - 1);
-		printf(" ");
+		gotoxy(p->pos.x - 8, p->pos.y - 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(21);
@@ -979,8 +980,8 @@ void update_pixels_ship(struct ship *p) {
 		printf(" ");
 	} else if (p->pos.y == 75) {
 
-		gotoxy(p->pos.x - 7, p->pos.y + 1);
-		printf(" ");
+		gotoxy(p->pos.x - 8, p->pos.y + 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y + 1);
 		printf("  ");
 		newbgcolor(159);
@@ -989,8 +990,8 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(p->pos.x + 1, p->pos.y);
 		printf(" ");
 		newbgcolor(195);
-		gotoxy(p->pos.x - 7, p->pos.y - 1);
-		printf(" ");
+		gotoxy(p->pos.x - 8, p->pos.y - 1);
+		printf("  ");
 		gotoxy(p->pos.x - 1, p->pos.y - 1);
 		printf("  ");
 		newbgcolor(15);
@@ -1001,6 +1002,7 @@ void update_pixels_ship(struct ship *p) {
 		newbgcolor(21);
 		gotoxy(p->pos.x - 4, p->pos.y - 3);
 		printf(" ");
+		*/
 	}
 	p->pos.x = p->pos.x << 14;
 	p->pos.y = p->pos.y << 14;
@@ -1476,4 +1478,22 @@ void update_bullet(struct vector bullet) {
  */
 
 
+void blackHole(int32_t a, int32_t b){
+		newbgcolor(52);
+		gotoxy(a-1,b);
+		printf("   ");
+
+		newbgcolor(88);
+		gotoxy(a-2,b);
+		printf(" ");
+		gotoxy(a + 2 , b);
+		printf(" ");
+		gotoxy(a - 1, b -1);
+		printf("   ");
+
+		gotoxy(a - 1, b + 1);
+		printf("   ");
+		resetbgcolor();
+
+}
 

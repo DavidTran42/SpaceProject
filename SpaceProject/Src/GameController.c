@@ -302,11 +302,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 							} else if (ship1.hearts == 1) {
 								gotoxy(130, 40);
 								printf("--- GAME OVER ---");
+								gotoxy(130, 42);
+								printf(
+										"Press m for Main Menu or press r for restart game");
 
 								ship1.hearts--;
 								lcd_write_string(buffer,
 										"GAME OVER!   GAME OVER!  ", 1);
-								lcd_update(buffer, 1);
+								lcd_update(buffer, 1, borderWidth, borderHeight,
+										gameMode);
 
 							}
 
@@ -340,10 +344,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								} else if (ship2.hearts == 1) {
 									gotoxy(130, 40);
 									printf("--- GAME OVER ---");
+									gotoxy(130, 42);
+									printf("Press m for Main Menu or press r for restart game");
 									ship2.hearts--;
 									lcd_write_string(buffer,
 											"GAME OVER!   GAME OVER!  ", 1);
-									lcd_update(buffer, 1);
+									lcd_update(buffer, 1, borderWidth, borderHeight,
+																			gameMode);
 								}
 							}
 						}
@@ -1045,7 +1052,7 @@ void bosskey(char input) {
 		clrscr();
 		for (int i = 1; i < 65; i++) {
 			gotoxy(2, i);
-			printf("%02d ", i);
+			printf("%2d ", i);
 		}
 		gotoxy(6, 1);
 		printf("#include <stdio.h>");
@@ -1092,7 +1099,16 @@ void bosskey(char input) {
 
 }
 
-void lcd_update(uint8_t buffer[512], uint8_t line) {
+
+void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
+		uint16_t borderHeight, int gameMode) {
+	char input;
+
+	 RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	 enableTimer();
+	 TIM2->ARR = 63999999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	 TIM2->PSC = 0; // prescale value
+	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
 	turnOff(GPIOA, 9);
 	turnOff(GPIOC, 7);
@@ -1118,6 +1134,22 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 		} else if (timer.sec100 == 13 || timer.sec100 == 37
 				|| timer.sec100 == 62 || timer.sec100 == 88) {
 			GPIOB->ODR |= (0x0001 << 4); //Set pin to high (turned off)
+		}
+
+		//Bryder ud af game over skærm
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == 'm') {
+				mainMenu();
+			}
+			if (input == 'r' && gameMode == 1) {
+				initGame(borderWidth, borderHeight, 1);
+			}
+			if (input == 'r' && gameMode == 2) {
+				initGame(borderWidth, borderHeight, 2);
+			}
+
 		}
 
 	}

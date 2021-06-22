@@ -63,7 +63,7 @@ void bosskey(char input);
 void updateShip2Pos(struct ship *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();
-void lcd_update(uint8_t buffer[512], uint8_t line);
+void lcd_update(uint8_t buffer[512], uint8_t line,uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void update_pixels(struct vector *p);
 void gravity(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a, int64_t b);
 void update_bullet(struct vector bullet);

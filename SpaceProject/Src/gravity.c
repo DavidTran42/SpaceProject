@@ -33,20 +33,4 @@ void gravity2(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a,
 	}
 }
 
-void blackHole(int32_t a, int32_t b) {
-	newbgcolor(52);
-	gotoxy(a - 1, b);
-	printf("   ");
 
-	newbgcolor(88);
-	gotoxy(a - 2, b);
-	printf(" ");
-	gotoxy(a + 2, b);
-	printf(" ");
-	gotoxy(a - 1, b - 1);
-	printf("   ");
-
-	gotoxy(a - 1, b + 1);
-	printf("   ");
-	resetbgcolor();
-}
