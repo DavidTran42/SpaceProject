@@ -225,7 +225,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								//update lcd
 
 								checkLives(&ship1, &ship2, buffer, '1',
-										borderWidth, borderHeight, gameMode, &settings);
+										borderWidth, borderHeight, gameMode,
+										&settings);
 							}
 						}
 					}
@@ -249,7 +250,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								asteroid[i].alive = 0;
 
 								checkLives(&ship2, &ship1, buffer, '2',
-										borderWidth, borderHeight, gameMode, &settings);
+										borderWidth, borderHeight, gameMode,
+										&settings);
 							}
 						}
 
@@ -357,7 +359,8 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 			lcd_write_string(buffer, "%P1 HP:    ", 1);
 			shipptr->alive = false;
 			if (gameMode == 1) {
-				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode, p);
+				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode,
+						p);
 
 			}
 		} else {
@@ -369,7 +372,8 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 		clear_ship1(*shipptr);
 		if (gameMode == 2) {
 			if (!shipptr->alive && !shipptr2->alive) {
-				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode, p);
+				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode,
+						p);
 
 			}
 		}
@@ -688,6 +692,10 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 // 6 wide and 5 height
 void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
 		uint16_t borderWidth, uint16_t borderHeight) {
+	shipptr->vel.x = 0;
+	shipptr->vel.y = 0;
+	shipptr2->vel.x = 0;
+	shipptr2->vel.y = 0;
 // Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
 
@@ -701,8 +709,7 @@ void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
 				<< 14;
 
 	}
-	shipptr->vel.x=0;
-	shipptr->vel.y=0;
+
 }
 
 struct joystick addJoystick() {
