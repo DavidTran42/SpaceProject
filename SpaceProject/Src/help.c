@@ -373,7 +373,7 @@ void controllerMenu() {
 	gotoxy(224, 40);
 	printf("    /");
 
-	gotoxy(110, 65);
+	gotoxy(120, 65);
 	printf("Press SPACE to go back");
 
 	while (1) {
@@ -397,57 +397,57 @@ void howToPlayMenu() {
 	char input;
 // printer overskrift
 	fgcolor(13);
-	gotoxy(90, 5);
+	gotoxy(80, 5);
 	printf(
 			" __    __                                ________               _______   __                       ____ ");
-	gotoxy(90, 6);
+	gotoxy(80, 6);
 	printf(
 			"/  |  /  |                              /        |             /       \\ /  |                     /    \\");
-	gotoxy(90, 7);
+	gotoxy(80, 7);
 	printf(
 			"$$ |  $$ |  ______   __   __   __       $$$$$$$$/______        $$$$$$$  |$$ |  ______   __    __ /$$$$  |");
-	gotoxy(90, 8);
+	gotoxy(80, 8);
 	printf(
 			"$$ |__$$ | /      \\ /  | /  | /  |         $$ | /      \\       $$ |__$$ |$$ | /      \\ /  |  /  |$$  $$ |");
-	gotoxy(90, 9);
+	gotoxy(80, 9);
 	printf(
 			"$$    $$ |/$$$$$$  |$$ | $$ | $$ |         $$ |/$$$$$$  |      $$    $$/ $$ | $$$$$$  |$$ |  $$ |   /$$/ ");
-	gotoxy(90, 10);
+	gotoxy(80, 10);
 	printf(
 			"$$$$$$$$ |$$ |  $$ |$$ | $$ | $$ |         $$ |$$ |  $$ |      $$$$$$$/  $$ | /    $$ |$$ |  $$ |  /$$/");
-	gotoxy(90, 11);
+	gotoxy(80, 11);
 	printf(
 			"$$ |  $$ |$$ \\__$$ |$$ \\_$$ \\_$$ |         $$ |$$ \\__$$ |      $$ |      $$ |/$$$$$$$ |$$ \\__$$ |  $$/ ");
-	gotoxy(90, 12);
+	gotoxy(80, 12);
 	printf(
 			"$$ |  $$ |$$    $$/ $$   $$   $$/          $$ |$$    $$/       $$ |      $$ |$$    $$ |$$    $$ |  /  |");
-	gotoxy(90, 13);
+	gotoxy(80, 13);
 	printf(
 			"$$/   $$/  $$$$$$/   $$$$$/$$$$/           $$/  $$$$$$/        $$/       $$/  $$$$$$$/  $$$$$$$ |  $$/");
-	gotoxy(90, 14);
+	gotoxy(80, 14);
 	printf(
 			"                                                                                       /  \\__$$ |");
-	gotoxy(90, 15);
+	gotoxy(80, 15);
 	printf(
 			"                                                                                       $$    $$/ ");
-	gotoxy(90, 16);
+	gotoxy(80, 16);
 	printf(
 			"                                                                                        $$$$$$/");
 
 // Print box to
-	gotoxy(85, 22);
+	gotoxy(70, 22);
 	printf("%c", 201);
-	repeat(205, 114);
+	repeat(205, 129);
 	printf("%c", 187);
 	for (int i = 22 + 1; i < 61 - 1; i++) {
-		gotoxy(85, i);
+		gotoxy(70, i);
 		printf("%c", 186);
 		gotoxy(200, i);
 		printf("%c\n", 186);
 	}
-	gotoxy(85, 60);
+	gotoxy(70, 60);
 	printf("%c", 200);
-	repeat(205, 114);
+	repeat(220, 129);
 	printf("%c", 188);
 
 	gotoxy(90, 30);
@@ -471,7 +471,7 @@ void howToPlayMenu() {
 	printf(
 			"Dette hul tiltrækker skudende så det bliver sværer at ramme asteroiderne.");
 
-	gotoxy(110, 65);
+	gotoxy(120, 65);
 	printf("Press SPACE to go back");
 
 	while (1) {
@@ -491,46 +491,50 @@ void aboutUsMenu() {
 	char input;
 	// printer overskrift
 	fgcolor(13);
-	gotoxy(90, 5);
+	gotoxy(95, 5);
 	printf("  ______   __                              __            __    __");
-	gotoxy(90, 6);
+	gotoxy(95, 6);
 	printf(
 			" /      \\ /  |                            /  |          /  |  /  | ");
-	gotoxy(90, 7);
+	gotoxy(95, 7);
 	printf(
 			"/$$$$$$  |$$ |____    ______   __    __  _$$ |_         $$ |  $$ |  _______ ");
-	gotoxy(90, 8);
+	gotoxy(95, 8);
 	printf(
 			"$$ |__$$ |$$      \\  /      \\ /  |  /  |/ $$   |        $$ |  $$ | /       |");
-	gotoxy(90, 9);
+	gotoxy(95, 9);
 	printf(
 			"$$    $$ |$$$$$$$  |/$$$$$$  |$$ |  $$ |$$$$$$/         $$ |  $$ |/$$$$$$$/  ");
-	gotoxy(90, 10);
+	gotoxy(95, 10);
 	printf(
 			"$$$$$$$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ | __       $$ |  $$ |$$      \\");
-	gotoxy(90, 11);
+	gotoxy(95, 11);
 	printf(
 			"$$ |  $$ |$$ |__$$ |$$ \\__$$ |$$ \\__$$ |  $$ |/  |      $$ \\__$$ | $$$$$$  | ");
-	gotoxy(90, 12);
+	gotoxy(95, 12);
 	printf(
 			"$$ |  $$ |$$    $$/ $$    $$/ $$    $$/   $$  $$/       $$    $$/ /     $$/ ");
-	gotoxy(90, 13);
+	gotoxy(95, 13);
 	printf(
 			"$$/   $$/ $$$$$$$/   $$$$$$/   $$$$$$/     $$$$/         $$$$$$/  $$$$$$$/");
 
 	// Print box to
-	gotoxy(85, 22);
+	gotoxy(70, 22);
 	printf("%c", 201);
-	repeat(205, 114);
+	repeat(205, 129);
 	printf("%c", 187);
 	for (int i = 22 + 1; i < 61 - 1; i++) {
-		gotoxy(85, i);
+		gotoxy(70, i);
 		printf("%c", 186);
 		gotoxy(200, i);
 		printf("%c\n", 186);
 	}
+	gotoxy(70, 60);
+	printf("%c", 200);
+	repeat(220, 129);
+	printf("%c", 188);
 
-	gotoxy(110, 65);
+	gotoxy(120, 65);
 	printf("Press SPACE to go back");
 	while (1) {
 
