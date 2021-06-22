@@ -8,7 +8,8 @@
 #define MULTIPLEAYER 2;
 #define HELP 3;
 
-int main(void) {	uart_init(2000000);
+int main(void) {
+	uart_init(2000000);
 	clrscr();
 	lcd_init();
 	//test();
