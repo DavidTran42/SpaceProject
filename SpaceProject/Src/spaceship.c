@@ -40,25 +40,25 @@ void clear_ship1(struct ship position) {
 
 	fgcolor(0);
 	gotoxy(position.pos.x-4, position.pos.y - 2);
-	printf("%c", 219);
+	printf(" ");
 	gotoxy(position.pos.x-4, position.pos.y - 1);
-	printf("%c%c%c", 219, 219, 219);
+	printf("   ");
 	gotoxy(position.pos.x-4, position.pos.y);
-	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	printf("     ");
 	gotoxy(position.pos.x-4, position.pos.y + 1);
-	printf("%c%c%c", 219, 219, 219);
+	printf("   ");
 	gotoxy(position.pos.x-4, position.pos.y + 2);
-	printf("%c", 219);
+	printf(" ");
 	gotoxy(position.pos.x - 5, position.pos.y - 1);
 
-	printf("%c", 219);
+	printf(" ");
 	gotoxy(position.pos.x - 5, position.pos.y + 1);
-	printf("%c", 219);
+	printf(" ");
 	gotoxy(position.pos.x - 6, position.pos.y + 1);
 
-	printf("%c", 219);
+	printf(" ");
 	gotoxy(position.pos.x - 6, position.pos.y - 1);
-	printf("%c", 219);
+	printf(" ");
 
 
 }
