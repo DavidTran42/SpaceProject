@@ -5,12 +5,12 @@
  *      Author: silas
  */
 #define ESC 0x1B
-#include "main.h"
 #include "ansi.h"
 #include "30010_io.h"
 #include "GameController.h"
 #include "background.h"
 #include "help.h"
+#include "mainMenu.h"
 
 void repeat(int c, int count) {
 	for (int i = 0; i < count; i++)
