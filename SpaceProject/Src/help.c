@@ -451,7 +451,7 @@ void howToPlayMenu() {
 	}
 	gotoxy(70, 60);
 	printf("%c", 200);
-	repeat(220, 129);
+	repeat(205, 129);
 	printf("%c", 188);
 
 	gotoxy(90, 30);
@@ -542,7 +542,7 @@ void aboutUsMenu() {
 	}
 	gotoxy(70, 60);
 	printf("%c", 200);
-	repeat(220, 129);
+	repeat(205, 129);
 	printf("%c", 188);
 
 	gotoxy(120, 65);

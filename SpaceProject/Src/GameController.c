@@ -701,6 +701,8 @@ void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
 				<< 14;
 
 	}
+	shipptr->vel.x=0;
+	shipptr->vel.y=0;
 }
 
 struct joystick addJoystick() {
