@@ -121,7 +121,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		if (uart_get_count() > 0) {
 			input = uart_get_char(); // Might need to put it outside the if statement
 			uart_clear();
-			if (input == 'm'){
+			if (input == 'm') {
 				mainMenu();
 			}
 
@@ -253,7 +253,8 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 					bullet2[k].prev_pos.y = bullet2[k].pos.y;
 
 					// Move bullet
-					gravity(1<<14,400<<14,&bullet2[k],125<<14,35<<14);
+					gravity(1 << 14, 400 << 14, &bullet2[k], 125 << 14,
+							35 << 14);
 					bullet2[k].pos.x += bullet2[k].vel.x;
 					bullet2[k].pos.y += bullet2[k].vel.y;
 
@@ -293,11 +294,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 							} else if (ship1.hearts == 1) {
 								gotoxy(130, 40);
 								printf("--- GAME OVER ---");
+								gotoxy(130, 42);
+								printf(
+										"Press m for Main Menu or press r for restart game");
 
 								ship1.hearts--;
 								lcd_write_string(buffer,
 										"GAME OVER!   GAME OVER!  ", 1);
-								lcd_update(buffer, 1);
+								lcd_update(buffer, 1, borderWidth, borderHeight,
+										gameMode);
 
 							}
 
@@ -331,10 +336,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								} else if (ship2.hearts == 1) {
 									gotoxy(130, 40);
 									printf("--- GAME OVER ---");
+									gotoxy(130, 42);
+									printf("Press m for Main Menu or press r for restart game");
 									ship2.hearts--;
 									lcd_write_string(buffer,
 											"GAME OVER!   GAME OVER!  ", 1);
-									lcd_update(buffer, 1);
+									lcd_update(buffer, 1, borderWidth, borderHeight,
+																			gameMode);
 								}
 							}
 						}
@@ -580,16 +588,16 @@ void checkLevelGameUp(struct gameSettings *settings) {
 	// Level 2
 	if (settings->asteroidCount > 9) {
 		settings->gameLevel = 2;
-		settings->asteroidSpeed  = 8;
-	// Level 3
+		settings->asteroidSpeed = 8;
+		// Level 3
 	} else if (settings->asteroidCount > 24) {
 		settings->gameLevel = 3;
-		settings->asteroidSpeed  = 4;
+		settings->asteroidSpeed = 4;
 	}
 	// level 4
 	else if (settings->asteroidCount > 49) {
 		settings->gameLevel = 4;
-		settings-> asteroidSpeed = 1;
+		settings->asteroidSpeed = 1;
 	}
 }
 
@@ -752,8 +760,8 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 }
 
 // 6 wide and 5 height
-void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2, uint16_t borderWidth,
-		uint16_t borderHeight) {
+void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
+		uint16_t borderWidth, uint16_t borderHeight) {
 // Initialize the ships positions
 	if (gameMode == 2) { // Multiplayer
 
@@ -1174,7 +1182,9 @@ void bosskey(char input) {
 
  }
  */
-void lcd_update(uint8_t buffer[512], uint8_t line) {
+void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
+		uint16_t borderHeight, int gameMode) {
+	char input;
 	/*
 	 RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	 enableTimer();
@@ -1209,6 +1219,22 @@ void lcd_update(uint8_t buffer[512], uint8_t line) {
 		} else if (timer.sec100 == 13 || timer.sec100 == 37
 				|| timer.sec100 == 62 || timer.sec100 == 88) {
 			GPIOB->ODR |= (0x0001 << 4); //Set pin to high (turned off)
+		}
+
+		//Bryder ud af game over skærm
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == 'm') {
+				mainMenu();
+			}
+			if (input == 'r' && gameMode == 1) {
+				initGame(borderWidth, borderHeight, 1);
+			}
+			if (input == 'r' && gameMode == 2) {
+				initGame(borderWidth, borderHeight, 2);
+			}
+
 		}
 
 	}
