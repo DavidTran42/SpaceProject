@@ -1493,6 +1493,9 @@ void blackHole(int32_t a, int32_t b){
 
 		gotoxy(a - 1, b + 1);
 		printf("   ");
+		newbgcolor(0);
+		gotoxy(a , b );
+				printf(" ");
 		resetbgcolor();
 
 }

@@ -167,6 +167,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			g++;
 			s++;
 
+
 			// Update ship with no joystick/keypress
 			if (ship1.alive) {
 				clear_ship1(ship1);
@@ -181,6 +182,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				print_ship2(ship2);
 				update_pixels_ship(&ship2);
 			}
+
 
 			// Make random asteroid
 			if (l > 500) {
@@ -1034,13 +1036,6 @@ void bosskey(char input) {
 void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 		uint16_t borderHeight, int gameMode, struct gameSettings *p) {
 	char input;
-
-	 RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
-	 enableTimer();
-	 TIM2->ARR = 63999999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	 TIM2->PSC = 0; // prescale value
-	 TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
-
 
 	turnOff(GPIOA, 9);
 	turnOff(GPIOC, 7);
