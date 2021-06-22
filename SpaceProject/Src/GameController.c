@@ -141,6 +141,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				clear_ship1(ship1);
 				updateShipPos(input, &ship1, borderWidth, borderHeight);
 				makeBullet1(input, &bullet1[0], ship1, ship1.bulletAmount);
+
 			}
 
 			stars_only(); //updating stars
@@ -202,6 +203,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				update_pixels_ship(&ship2);
 			}
 
+
 			// Make random asteroid
 			if (l > 500) {
 				l = 0;
@@ -225,6 +227,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, '1');
 
 			// If multiplayer
+
 			if (gameMode == 2) {
 				drawBullets(ship2, &bullet2[0], borderWidth, borderHeight, s,
 						'2');
@@ -286,6 +289,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					// If multiplayer, check collision with bullet
 					if (gameMode == 2) {
+
 						checkCollisionWithBullet(&bullet2[0], &asteroid[i],
 								&ship2, s_score2, buffer);
 						lcd_write_string2(buffer, s_score2, 4);
@@ -378,7 +382,7 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 		}
 	} else if (shipptr->hearts == 1) {
 		if (playerNumber == '1') {
-			lcd_write_string(buffer, "%P1 HP:    ", 1);
+			lcd_write_string(buffer, "P1 HP:    ", 1);
 			shipptr->alive = false;
 			if (gameMode == 1) {
 				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode,
@@ -386,7 +390,7 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 
 			}
 		} else {
-			lcd_write_string2(buffer, "%P2 HP:    ", 1);
+			lcd_write_string2(buffer, "P2 HP:    ", 1);
 			shipptr->alive = false;
 		}
 		// Clear ship cause there hearts are now 0
@@ -406,8 +410,8 @@ void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p) {
 	gotoxy(130, 40);
 	printf("--- GAME OVER ---");
-	gotoxy(130, 42);
-	printf("Press m or space for Main Menu");
+	gotoxy(122, 48);
+	printf("Press 'm' or 'SPACE' for Main Menu");
 	lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
 	lcd_update(buffer, 1, borderWidth, borderHeight, gameMode, p);
 
@@ -420,6 +424,7 @@ void drawBullets(struct ship ship, struct bullet *bulletptr,
 		if (bulletptr->alive && s % ship.bulletSpeed == 0) {
 
 			gotoxy(bulletptr->prev_pos.x >> 14, bulletptr->prev_pos.y >> 14);
+			update_bullet(bulletptr->prev_pos);
 			printf(" ");
 			gotoxy(bulletptr->pos.x >> 14, bulletptr->pos.y >> 14);
 			update_bullet(bulletptr->pos);
@@ -428,6 +433,7 @@ void drawBullets(struct ship ship, struct bullet *bulletptr,
 			} else {
 				printf("-");
 			}
+			resetbgcolor();
 
 			// For better collision detection
 			bulletptr->prev_pos.x = bulletptr->pos.x;
@@ -984,7 +990,7 @@ void bosskey(char input) {
 		clrscr();
 		for (int i = 1; i < 65; i++) {
 			gotoxy(2, i);
-			printf("%02d ", i);
+			printf("%2d ", i);
 		}
 		gotoxy(6, 1);
 		printf("#include <stdio.h>");
@@ -1014,7 +1020,8 @@ void bosskey(char input) {
 			}
 
 			if (stop == 60) {
-				break;
+				clrscr();
+				c = 0;
 			}
 			if (uart_get_count() > 0) {
 				input = uart_get_char();
@@ -1036,7 +1043,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 
 	turnOff(GPIOA, 9);
 	turnOff(GPIOC, 7);
-	turnOn(GPIOB, 4);
+	turnOff(GPIOB, 4);
 
 	while (1) {
 		if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
@@ -1079,45 +1086,16 @@ void level_led(uint8_t gameLevel) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOB, 4);
 		turnOn(GPIOC, 7);
-		/*
-		 while (1) {
-		 if (timer.sec100 == 1) {
-		 turnOn(GPIOC, 7);
-		 } else if (timer.sec100 == 50) {
-		 turnOff(GPIOC, 7);
-		 }
 
-		 }
-		 */
 	} else if (gameLevel == 2) {
 		turnOff(GPIOA, 9);
 		turnOn(GPIOB, 4);
 		turnOn(GPIOC, 7);
-		/*
-		 while (1) {
-		 if (timer.sec100 == 1 || timer.sec100 == 50) {
-		 turnOn(GPIOB, 4);
-		 turnOn(GPIOC, 7);
-		 } else if (timer.sec100 == 25 || timer.sec100 == 75) {
-		 turnOff(GPIOB, 4);
-		 turnOff(GPIOC, 7);
-		 }
-		 }
-		 */
+
 	} else if (gameLevel == 3) {
 		turnOff(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		turnOn(GPIOB, 4);
-		/*
-		 while (1) {
-		 if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
-		 || timer.sec100 == 75) {
-		 turnOn(GPIOB, 4);
-		 } else if (timer.sec100 == 13 || timer.sec100 == 37
-		 || timer.sec100 == 62 || timer.sec100 == 88) {
-		 turnOff(GPIOB, 4);
-		 }
-		 }*/
 	}
 
 }

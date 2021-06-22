@@ -690,6 +690,7 @@ void stars_only() {
 		gotoxy(33 * i, 60);
 		printf("*");
 	}
+
 	blackHole(125,35);
 
 }
@@ -745,218 +746,234 @@ void game_background() {
 }
 
 void update_pixels_ship(struct ship *p) {
+
 	int32_t x = (p->pos.x >> 14);
 	int32_t y =  (p->pos.y >> 14);
 	if (y  == 65) {
-		gotoxy(x  - 4, y  + 3);
+		gotoxy(x  - 5, y  + 3);
 		newbgcolor(17);
-		printf(" ");
+		printf("   ");
 
 	} else if (y == 66) {
-		gotoxy(x - 4, y + 3);
+		gotoxy(x - 5, y + 3);
 		newbgcolor(18);
-		printf(" ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(x  - 6, y  + 2);
-		printf("  ");
+		gotoxy(x  - 7, y  + 2);
+		printf("   ");
 		gotoxy(x  - 3, y  + 2);
-		printf("  ");
+		printf("   ");
 
 	} else if (y  == 67) {
-		gotoxy(x  - 4, y + 3);
+		gotoxy(x  - 5, y + 3);
 		newbgcolor(19);
-		printf(" ");
+		printf("   ");
 		newbgcolor(18);
-		gotoxy(x - 6, y  + 2);
-		printf("  ");
+		gotoxy(x - 7, y  + 2);
+		printf("   ");
 		gotoxy(x  - 3, y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(x  - 7, y  + 1);
-		printf(" ");
-		gotoxy(x - 1, y  + 1);
+		gotoxy(x  - 8, y  + 1);
 		printf("  ");
+		gotoxy(x - 1, y  + 1);
+		printf("   ");
 
 	} else if (y == 68) {
-		gotoxy(x - 4, y  + 3);
+		gotoxy(x - 5, y  + 3);
 		newbgcolor(20);
-		printf(" ");
+		printf("   ");
 		newbgcolor(19);
-		gotoxy(x  - 6, y  + 2);
-		printf("  ");
+		gotoxy(x  - 7, y  + 2);
+		printf("   ");
 		gotoxy(x  - 3, y  + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(18);
-		gotoxy(x  - 7, y  + 1);
-		printf(" ");
+		gotoxy(x  - 8, y  + 1);
+		printf("  ");
 		gotoxy(x  - 1, y  + 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(x - 6, y );
-		printf("  ");
+
+		gotoxy(x - 8, y );
+		printf("    ");
 		gotoxy(x + 1, y);
-		printf(" ");
+		printf("  ");
 
 	} else if (y == 69) {
-		gotoxy(x - 4, y  + 3);
+		gotoxy(x - 5, y  + 3);
 		newbgcolor(21);
-		printf(" ");
+		printf("   ");
 		newbgcolor(20);
-		gotoxy(x - 6, y  + 2);
-		printf("  ");
+		gotoxy(x - 7, y  + 2);
+		printf("   ");
 		gotoxy(x - 3, y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(19);
-		gotoxy(x - 7, y  + 1);
-		printf(" ");
+		gotoxy(x - 8, y  + 1);
+		printf("  ");
 		gotoxy(x  - 1, y + 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(18);
-		gotoxy(x - 6, y );
-		printf("  ");
+
+		gotoxy(x - 8, y );
+		printf("    ");
 		gotoxy(x + 1, y);
-		printf(" ");
-		newbgcolor(17);
-		gotoxy(x  - 7, y  - 1);
-		printf(" ");
-		gotoxy(x  - 1, y  - 1);
 		printf("  ");
+		newbgcolor(17);
+		gotoxy(x  - 8, y  - 1);
+		printf("  ");
+		gotoxy(x  - 1, y  - 1);
+		printf("   ");
 
 	} else if (y  == 70) {
-		gotoxy(x - 4, y + 3);
+		gotoxy(x - 5, y + 3);
 		newbgcolor(15);
-		printf(" ");
+		printf("   ");
 		newbgcolor(21);
-		gotoxy(x - 6, y + 2);
-		printf("  ");
+		gotoxy(x - 7, y + 2);
+		printf("   ");
 		gotoxy(x - 3, y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(20);
-		gotoxy(x - 7, y + 1);
-		printf(" ");
+		gotoxy(x - 8, y + 1);
+		printf("  ");
 		gotoxy(x - 1, y + 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(19);
-		gotoxy(x - 6, y);
-		printf("  ");
+
+		gotoxy(x - 8, y);
+		printf("    ");
 		gotoxy(x + 1, y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(18);
-		gotoxy(x - 7, y - 1);
-		printf(" ");
+		gotoxy(x - 8, y - 1);
+		printf("  ");
 		gotoxy(x - 1, y - 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(x - 6, y - 2);
-		printf("  ");
+		gotoxy(x - 7, y - 2);
+		printf("   ");
 		gotoxy(x - 3, y - 2);
-		printf("  ");
+		printf("   ");
 
 	} else if (y == 71) {
-		gotoxy(x - 4, y + 3);
+		gotoxy(x - 5, y + 3);
 		newbgcolor(195);
-		printf(" ");
+		printf("   ");
 		newbgcolor(15);
-		gotoxy(x - 6, y + 2);
-		printf("  ");
+		gotoxy(x - 7, y + 2);
+		printf("   ");
 		gotoxy(x - 3, y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(21);
-		gotoxy(x - 7, y + 1);
-		printf(" ");
+		gotoxy(x - 8, y + 1);
+		printf("  ");
 		gotoxy(x - 1, y + 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(20);
-		gotoxy(x - 6, y);
-		printf("  ");
+
+		gotoxy(x - 8, y);
+		printf("    ");
 		gotoxy(x + 1, y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(19);
-		gotoxy(x - 7, y - 1);
-		printf(" ");
+		gotoxy(x - 8, y - 1);
+		printf("  ");
 		gotoxy(x - 1, y - 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(18);
-		gotoxy(x - 6, y - 2);
-		printf("  ");
+		gotoxy(x - 7, y - 2);
+		printf("   ");
 		gotoxy(x - 3, y - 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(17);
-		gotoxy(x - 4, y - 3);
-		printf(" ");
+		gotoxy(x - 5, y - 3);
+		printf("   ");
 
 	} else if (y == 72) {
-		gotoxy(x - 4, y + 3);
+		gotoxy(x - 5, y + 3);
 		newbgcolor(159);
-		printf(" ");
+		printf("   ");
 		newbgcolor(195);
-		gotoxy(x - 6, y + 2);
-		printf("  ");
+		gotoxy(x - 7, y + 2);
+		printf("   ");
 		gotoxy(x - 3, y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(15);
-		gotoxy(x - 7, y + 1);
-		printf(" ");
+		gotoxy(x - 8, y + 1);
+		printf("  ");
 		gotoxy(x - 1, y + 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(21);
-		gotoxy(x - 6, y);
-		printf("  ");
+		gotoxy(x - 8, y);
+		printf("    ");
 		gotoxy(x + 1, y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(20);
-		gotoxy(x - 7, y - 1);
-		printf(" ");
+		gotoxy(x - 8, y - 1);
+		printf("  ");
 		gotoxy(x - 1, y - 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(19);
-		gotoxy(x - 6, y - 2);
-		printf("  ");
+		gotoxy(x - 7, y - 2);
+		printf("   ");
 		gotoxy(x - 3, y - 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(18);
-		gotoxy(x - 4, y - 3);
-		printf(" ");
+		gotoxy(x - 5, y - 3);
+		printf("   ");
 
 	} else if (y == 73) {
-		gotoxy(x - 4, y + 3);
+		gotoxy(x - 5, y + 3);
 		newbgcolor(159);
-		gotoxy(x - 6, y + 2);
-		printf("  ");
+		gotoxy(x - 7, y + 2);
+		printf("   ");
 		gotoxy(x - 3, y + 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(195);
-		gotoxy(x - 7, y + 1);
-		printf(" ");
+		gotoxy(x - 8, y + 1);
+		printf("  ");
 		gotoxy(x - 1, y + 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(15);
-		gotoxy(x - 6, y);
-		printf("  ");
+		gotoxy(x - 8, y);
+		printf("    ");
 		gotoxy(x + 1, y);
-		printf(" ");
+		printf("  ");
 		newbgcolor(21);
-		gotoxy(x - 7, y - 1);
-		printf(" ");
+		gotoxy(x - 8, y - 1);
+		printf("  ");
 		gotoxy(x - 1, y - 1);
-		printf("  ");
+		printf("   ");
 		newbgcolor(20);
-		gotoxy(x - 6, y - 2);
-		printf("  ");
+		gotoxy(x - 8, y - 2);
+		printf("    ");
 		gotoxy(x - 3, y - 2);
-		printf("  ");
+		printf("   ");
 		newbgcolor(19);
-		gotoxy(x - 4, y - 3);
-		printf(" ");
+		gotoxy(x - 5, y - 3);
+		printf("   ");
+
+/*
+	} else if (p->pos.y == 74) {
+=======
 
 	} else if (y == 74) {
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 
 		gotoxy(x - 3, y + 2);
 		printf("  ");
 		newbgcolor(159);
+<<<<<<< HEAD
+		gotoxy(p->pos.x - 8, p->pos.y + 1);
+		printf("  ");
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
+=======
 		gotoxy(x - 7, y + 1);
 		printf(" ");
 		gotoxy(x - 1, y + 1);
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 		printf("  ");
 		newbgcolor(195);
 		gotoxy(x - 6, y);
@@ -964,9 +981,15 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(x + 1, y);
 		printf(" ");
 		newbgcolor(15);
+<<<<<<< HEAD
+		gotoxy(p->pos.x - 8, p->pos.y - 1);
+		printf("  ");
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
+=======
 		gotoxy(x - 7, y - 1);
 		printf(" ");
 		gotoxy(x - 1, y - 1);
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 		printf("  ");
 		newbgcolor(21);
 		gotoxy(x - 6, y - 2);
@@ -978,9 +1001,15 @@ void update_pixels_ship(struct ship *p) {
 		printf(" ");
 	} else if (y == 75) {
 
+<<<<<<< HEAD
+		gotoxy(p->pos.x - 8, p->pos.y + 1);
+		printf("  ");
+		gotoxy(p->pos.x - 1, p->pos.y + 1);
+=======
 		gotoxy(x - 7, y + 1);
 		printf(" ");
 		gotoxy(x - 1, y + 1);
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 		printf("  ");
 		newbgcolor(159);
 		gotoxy(x - 6, y);
@@ -988,9 +1017,15 @@ void update_pixels_ship(struct ship *p) {
 		gotoxy(x + 1, y);
 		printf(" ");
 		newbgcolor(195);
+<<<<<<< HEAD
+		gotoxy(p->pos.x - 8, p->pos.y - 1);
+		printf("  ");
+		gotoxy(p->pos.x - 1, p->pos.y - 1);
+=======
 		gotoxy(x - 7, y - 1);
 		printf(" ");
 		gotoxy(x - 1, y - 1);
+>>>>>>> branch 'master' of https://github.com/DavidTran42/SpaceProject
 		printf("  ");
 		newbgcolor(15);
 		gotoxy(x - 6, y - 2);
@@ -1000,6 +1035,7 @@ void update_pixels_ship(struct ship *p) {
 		newbgcolor(21);
 		gotoxy(x - 4, y - 3);
 		printf(" ");
+		*/
 	}
 	resetbgcolor();
 }
@@ -1473,9 +1509,8 @@ void update_bullet(struct vector bullet) {
  */
 
 
-
 void blackHole(int32_t a, int32_t b){
-		newbgcolor(52);
+		newfgcolor(52);
 		gotoxy(a-1,b);
 		printf("   ");
 
@@ -1489,6 +1524,10 @@ void blackHole(int32_t a, int32_t b){
 
 		gotoxy(a - 1, b + 1);
 		printf("   ");
+		newbgcolor(0);
+		gotoxy(a , b );
+				printf(" ");
 		resetbgcolor();
 
 }
+
