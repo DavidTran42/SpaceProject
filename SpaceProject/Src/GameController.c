@@ -189,7 +189,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 
 			// Update ship with no joystick/keypress
-			if (ship1.alive && (abs(ship1.vel.x) > deacceleration || abs(ship1.vel.y) > deacceleration)) {
+			if (ship1.alive && (abs(ship1.vel.x) > 0 || abs(ship1.vel.y) > 0)) {
 				clear_ship1(ship1);
 				updatingShip(&ship1, borderWidth, borderHeight, deacceleration);
 				print_ship1(ship1);
@@ -682,21 +682,33 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 
 	// Deacceleration
 	if (shipptr->vel.x < 0) {
-		shipptr->pos.x += shipptr->vel.x;
-		shipptr->vel.x += acc;
-		print_flames(shipptr);
+			shipptr->pos.x += shipptr->vel.x;
+			shipptr->vel.x += acc;
+		if (shipptr->vel.x > 0) {
+			shipptr->vel.x = 0;
+		}
 	} else if (shipptr->vel.x > 0){
 		shipptr->pos.x += shipptr->vel.x;
 		shipptr->vel.x -= acc;
-		print_flames(shipptr);
+		if (shipptr->vel.x < 0) {
+			shipptr->vel.x = 0;
+		}
 	}
 	if (shipptr->vel.y < 0) {
 		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y += acc;
-		print_flames(shipptr);
+		if (shipptr->vel.y > 0) {
+				shipptr->vel.y = 0;
+		}
 	} else if (shipptr->vel.y > 0){
 		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y -= acc;
+		if (shipptr->vel.y < 0) {
+				shipptr->vel.y = 0;
+		}
+	}
+
+	if (abs(shipptr->vel.x) > acc || abs(shipptr->vel.y > acc)) {
 		print_flames(shipptr);
 	}
 }
@@ -779,6 +791,7 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 				break;
 			}
 		}
+		print_ship1(ship);
 	}
 }
 
@@ -796,6 +809,7 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 				break;
 			}
 		}
+		print_ship2(ship);
 	}
 }
 
