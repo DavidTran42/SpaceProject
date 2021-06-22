@@ -27,11 +27,6 @@ void print_ship1(struct ship position) {
 	printf("%c", 219);
 	gotoxy(position.pos.x - 5, position.pos.y + 1);
 	printf("%c", 219);
-	gotoxy(position.pos.x - 6, position.pos.y + 1);
-	fgcolor(3);
-	printf("%c", 219);
-	gotoxy(position.pos.x - 6, position.pos.y - 1);
-	printf("%c", 219);
 
 }
 void clear_ship1(struct ship position) {
@@ -84,12 +79,16 @@ void print_ship2(struct ship position) {
 	printf("%c", 219);
 	gotoxy(position.pos.x - 5, position.pos.y + 1);
 	printf("%c", 219);
-	gotoxy(position.pos.x - 6, position.pos.y + 1);
+}
+
+void print_flames(struct ship *position) {
+	int32_t x = (position->pos.x >> 14);
+	int32_t y = (position->pos.y >> 14);
+	gotoxy(x - 6, y+ 1);
 	fgcolor(3);
 	printf("%c", 219);
-	gotoxy(position.pos.x - 6, position.pos.y - 1);
+	gotoxy(x - 6, y - 1);
 	printf("%c", 219);
-
 }
 
 /*
