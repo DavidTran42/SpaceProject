@@ -332,7 +332,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			checkLevelGameUp(&settings);
 		}
 	}
-	mainMenu();
+
 }
 
 void checkLives(struct ship *shipptr, struct ship *shipptr2,
@@ -1060,12 +1060,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 			input = uart_get_char();
 			uart_clear();
 			if (input == 'm' || input == ' ') {
-				background();
-				mainFrame(1, 1, 270, 75);
-				gameTitle();
-				mainOptions();
-				p->gameLoop = 0;
-				break;
+				mainMenu();
 			}
 
 		}
