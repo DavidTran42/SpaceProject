@@ -17,9 +17,644 @@ typedef struct time1 {
 
 struct time1 timer; // Global timer
 
-void help_screen() {
+void helpSelect() {
+	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
+	enableTimer();
+	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
+	TIM2->PSC = 0; // prescale value
+	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
+
+	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
+	NVIC_EnableIRQ(TIM2_IRQn);
+
+	uint8_t i = 1;
 	char input;
 
+	while (1) {
+
+		while (i == 1) { // blinker controller menu
+
+			if (timer.sec100 == 1) {
+				inverse(1);
+				controllerOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				controllerOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					controllerOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					controllerOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					controllerMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+			}
+		}
+
+		while (i == 2) { // blinker Help Option
+			if (timer.sec100 == 1) {
+				inverse(1);
+				howToPlayOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				howToPlayOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					howToPlayOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					howToPlayOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					howToPlayMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+			}
+		}
+		while (i == 3) { // blinker Help
+			if (timer.sec100 == 1) {
+				inverse(1);
+				aboutUsOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				aboutUsOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					aboutUsOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					aboutUsOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					aboutUsMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+
+			}
+		}
+
+		while (i == 4) { // blinker Quit game
+			if (timer.sec100 == 1) {
+				inverse(1);
+				backOption();
+			} else if (timer.sec100 == 50) {
+				inverse(0);
+				backOption();
+			}
+
+			if (uart_get_count() > 0) {
+				input = uart_get_char();
+				uart_clear();
+				if (input == 'w') {
+					inverse(0);
+					backOption();
+					i--;
+				} else if (input == 's') {
+					inverse(0);
+					backOption();
+					i++;
+				} else if (input == ' ') {
+					inverse(0);
+					disableTimer();
+					clrscr();
+					mainMenu();
+
+				}
+				if (i > 4) {
+					i = 1;
+				}
+				if (i < 1) {
+					i = 4;
+				}
+			}
+
+		}
+	}
+}
+void controllerMenu() {
+	char input;
+	// printer
+	fgcolor(13);
+	gotoxy(90, 5);
+	printf(
+			"  ______                         __                          __  __ ");
+	gotoxy(90, 6);
+	printf(
+			" /      \\                       /  |                        /  |/  | ");
+	gotoxy(90, 7);
+	printf(
+			"/$$$$$$  |  ______   _______   _$$ |_     ______    ______  $$ |$$ |  ______    ______ ");
+	gotoxy(90, 8);
+	printf(
+			"$$ |  $$/  /      \\ /       \\ / $$   |   /      \\  /      \\ $$ |$$ | /      \\  /      \\");
+	gotoxy(90, 9);
+	printf(
+			"$$ |      /$$$$$$  |$$$$$$$  |$$$$$$/   /$$$$$$  |/$$$$$$  |$$ |$$ |/$$$$$$  |/$$$$$$  |");
+	gotoxy(90, 10);
+	printf(
+			"$$ |   __ $$ |  $$ |$$ |  $$ |  $$ | __ $$ |  $$/ $$ |  $$ |$$ |$$ |$$    $$ |$$ |  $$/");
+	gotoxy(90, 11);
+	printf(
+			"$$ \\__/  |$$ \\__$$ |$$ |  $$ |  $$ |/  |$$ |      $$ \\__$$ |$$ |$$ |$$$$$$$$/ $$ |");
+	gotoxy(90, 12);
+	printf(
+			"$$    $$/ $$    $$/ $$ |  $$ |  $$  $$/ $$ |      $$    $$/ $$ |$$ |$$       |$$ |");
+	gotoxy(90, 13);
+	printf(
+			" $$$$$$/   $$$$$$/  $$/   $$/    $$$$/  $$/        $$$$$$/  $$/ $$/  $$$$$$$/ $$/");
+
+	//keyboard box
+	gotoxy(20, 22);
+	printf("%c", 201);
+	repeat(205, 84);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 51 - 1; i++) {
+		gotoxy(20, i);
+		printf("%c", 186);
+		gotoxy(105, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(20, 50);
+	printf("%c", 200);
+	repeat(205, 84);
+	printf("%c", 188);
+
+	// text
+	gotoxy(45, 23);
+	printf(". . .-. . . .-. .-. .-. .-. .-.");
+	gotoxy(45, 24);
+	printf("|<  |-   |  |(  | | |-| |(  |  )");
+	gotoxy(45, 25);
+	printf("' ` `-'  `  `-' `-' ` ' ' ' `-'");
+	gotoxy(20, 26);
+	printf("%c", 204);
+	repeat(205, 84);
+	printf("%c", 186);
+
+//W
+	gotoxy(50, 30);
+	printf("__      __");
+	gotoxy(50, 31);
+	printf("\\ \\    / /");
+	gotoxy(50, 32);
+	printf(" \\ \\/\\/ /  =  UP");
+	gotoxy(50, 33);
+	printf("  \\_/\\_/");
+
+//A
+	gotoxy(30, 37);
+	printf("   _");
+	gotoxy(30, 38);
+	printf("  /_\\");
+	gotoxy(30, 39);
+	printf(" / _ \\  =  LEFT");
+	gotoxy(30, 40);
+	printf("/_/ \\_\\");
+
+//S
+	gotoxy(52, 37);
+	printf(" ___ ");
+	gotoxy(52, 38);
+	printf("/ __|");
+	gotoxy(52, 39);
+	printf("\\__ \\  =  DOWN");
+	gotoxy(52, 40);
+	printf("|___/");
+
+//D
+	gotoxy(72, 37);
+	printf(" ___ ");
+	gotoxy(72, 38);
+	printf("|   \\");
+	gotoxy(72, 39);
+	printf("| |) |  =  RIGHT");
+	gotoxy(72, 40);
+	printf("|___/");
+
+//SPACE
+	gotoxy(40, 45);
+	printf("%c", 201);
+	repeat(205, 30);
+	printf("%c", 187);
+	gotoxy(40, 46);
+	printf("%c", 186);
+	gotoxy(71, 46);
+	printf("%c\n", 186);
+	gotoxy(40, 47);
+	printf("%c", 200);
+	repeat(205, 30);
+	printf("%c", 188);
+	gotoxy(41, 46);
+	printf("       SPACE  =  SHOOT    ");
+
+	//Joystick box
+	gotoxy(165, 22);
+	printf("%c", 201);
+	repeat(205, 84);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 51 - 1; i++) {
+		gotoxy(165, i);
+		printf("%c", 186);
+		gotoxy(250, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(165, 50);
+	printf("%c", 200);
+	repeat(205, 84);
+	printf("%c", 188);
+
+	// text
+	gotoxy(195, 23);
+	printf("  . .-. . . .-. .-. .-. .-. . .");
+	gotoxy(195, 24);
+	printf("  | | |  |  `-.  |   |  |   |< ");
+	gotoxy(195, 25);
+	printf("`-' `-'  `  `-'  '  `-' `-' ' `");
+	gotoxy(165, 26);
+	printf("%c", 204);
+	repeat(205, 84);
+	printf("%c", 186);
+
+//Up
+	gotoxy(202, 30);
+	printf("  /\\");
+	gotoxy(202, 31);
+	printf(" /||\\");
+	gotoxy(202, 32);
+	printf("/ || \\  =  UP");
+	gotoxy(202, 33);
+	printf("  ||");
+
+//Left
+	gotoxy(180, 37);
+	printf(" /");
+	gotoxy(180, 38);
+	printf("/-----");
+	gotoxy(180, 39);
+	printf("\\-----  =  LEFT");
+	gotoxy(180, 40);
+	printf(" \\");
+
+//Center
+	gotoxy(202, 37);
+	printf("  ___");
+	gotoxy(202, 38);
+	printf(" / _ \\");
+	gotoxy(202, 39);
+	printf("| (_) |  =  SHOOT");
+	gotoxy(202, 40);
+	printf(" \\___/");
+
+//Down
+	gotoxy(202, 45);
+	printf("  || ");
+	gotoxy(202, 46);
+	printf("\\ || /");
+	gotoxy(202, 47);
+	printf(" \\||/  =  DOWN");
+	gotoxy(202, 48);
+	printf("  \\/");
+
+//RIGHT
+	gotoxy(224, 37);
+	printf("   \\");
+	gotoxy(224, 38);
+	printf("-----\\");
+	gotoxy(224, 39);
+	printf("-----/  =  RIGHT");
+	gotoxy(224, 40);
+	printf("    /");
+
+	gotoxy(120, 65);
+	printf("Press SPACE to go back");
+
+	while (1) {
+
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == ' ') {
+				inverse(0);
+				clrscr();
+				help_screen();
+			}
+		}
+
+	}
+}
+
+//Menuerne!!
+
+void howToPlayMenu() {
+	char input;
+// printer overskrift
+	fgcolor(13);
+	gotoxy(80, 5);
+	printf(
+			" __    __                                ________               _______   __                       ____ ");
+	gotoxy(80, 6);
+	printf(
+			"/  |  /  |                              /        |             /       \\ /  |                     /    \\");
+	gotoxy(80, 7);
+	printf(
+			"$$ |  $$ |  ______   __   __   __       $$$$$$$$/______        $$$$$$$  |$$ |  ______   __    __ /$$$$  |");
+	gotoxy(80, 8);
+	printf(
+			"$$ |__$$ | /      \\ /  | /  | /  |         $$ | /      \\       $$ |__$$ |$$ | /      \\ /  |  /  |$$  $$ |");
+	gotoxy(80, 9);
+	printf(
+			"$$    $$ |/$$$$$$  |$$ | $$ | $$ |         $$ |/$$$$$$  |      $$    $$/ $$ | $$$$$$  |$$ |  $$ |   /$$/ ");
+	gotoxy(80, 10);
+	printf(
+			"$$$$$$$$ |$$ |  $$ |$$ | $$ | $$ |         $$ |$$ |  $$ |      $$$$$$$/  $$ | /    $$ |$$ |  $$ |  /$$/");
+	gotoxy(80, 11);
+	printf(
+			"$$ |  $$ |$$ \\__$$ |$$ \\_$$ \\_$$ |         $$ |$$ \\__$$ |      $$ |      $$ |/$$$$$$$ |$$ \\__$$ |  $$/ ");
+	gotoxy(80, 12);
+	printf(
+			"$$ |  $$ |$$    $$/ $$   $$   $$/          $$ |$$    $$/       $$ |      $$ |$$    $$ |$$    $$ |  /  |");
+	gotoxy(80, 13);
+	printf(
+			"$$/   $$/  $$$$$$/   $$$$$/$$$$/           $$/  $$$$$$/        $$/       $$/  $$$$$$$/  $$$$$$$ |  $$/");
+	gotoxy(80, 14);
+	printf(
+			"                                                                                       /  \\__$$ |");
+	gotoxy(80, 15);
+	printf(
+			"                                                                                       $$    $$/ ");
+	gotoxy(80, 16);
+	printf(
+			"                                                                                        $$$$$$/");
+
+// Print box to
+	gotoxy(70, 22);
+	printf("%c", 201);
+	repeat(205, 129);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 61 - 1; i++) {
+		gotoxy(70, i);
+		printf("%c", 186);
+		gotoxy(200, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(70, 60);
+	printf("%c", 200);
+	repeat(220, 129);
+	printf("%c", 188);
+
+	gotoxy(90, 30);
+	printf("Dette spil handler om at destroere asteroieder!");
+	gotoxy(90, 31);
+	printf("Men styre rumskibene med enten keyboard eller joystick.");
+	gotoxy(90, 32);
+	printf(
+			"Hvis der spilles multiplayer er player 1 på keyboard og player 2 på joysticket.");
+	gotoxy(90, 33);
+	printf("Man får point ved at skyde de asteroider der flyver mod én!");
+	gotoxy(90, 34);
+	printf(
+			"Man har 3 liv og man mister et liv ved, at flyve ind i en asteroide.");
+	gotoxy(90, 35);
+	printf(
+			"Når en spiller mister alle liv er der game over/den modsatte spille vinder.");
+	gotoxy(90, 36);
+	printf("Der er et sort hul som er mærkeret med rødt.");
+	gotoxy(90, 37);
+	printf(
+			"Dette hul tiltrækker skudende så det bliver sværer at ramme asteroiderne.");
+
+	gotoxy(120, 65);
+	printf("Press SPACE to go back");
+
+	while (1) {
+
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == ' ') {
+				inverse(0);
+				clrscr();
+				help_screen();
+			}
+		}
+	}
+}
+void aboutUsMenu() {
+	char input;
+	// printer overskrift
+	fgcolor(13);
+	gotoxy(95, 5);
+	printf("  ______   __                              __            __    __");
+	gotoxy(95, 6);
+	printf(
+			" /      \\ /  |                            /  |          /  |  /  | ");
+	gotoxy(95, 7);
+	printf(
+			"/$$$$$$  |$$ |____    ______   __    __  _$$ |_         $$ |  $$ |  _______ ");
+	gotoxy(95, 8);
+	printf(
+			"$$ |__$$ |$$      \\  /      \\ /  |  /  |/ $$   |        $$ |  $$ | /       |");
+	gotoxy(95, 9);
+	printf(
+			"$$    $$ |$$$$$$$  |/$$$$$$  |$$ |  $$ |$$$$$$/         $$ |  $$ |/$$$$$$$/  ");
+	gotoxy(95, 10);
+	printf(
+			"$$$$$$$$ |$$ |  $$ |$$ |  $$ |$$ |  $$ |  $$ | __       $$ |  $$ |$$      \\");
+	gotoxy(95, 11);
+	printf(
+			"$$ |  $$ |$$ |__$$ |$$ \\__$$ |$$ \\__$$ |  $$ |/  |      $$ \\__$$ | $$$$$$  | ");
+	gotoxy(95, 12);
+	printf(
+			"$$ |  $$ |$$    $$/ $$    $$/ $$    $$/   $$  $$/       $$    $$/ /     $$/ ");
+	gotoxy(95, 13);
+	printf(
+			"$$/   $$/ $$$$$$$/   $$$$$$/   $$$$$$/     $$$$/         $$$$$$/  $$$$$$$/");
+
+	// Print box to
+	gotoxy(70, 22);
+	printf("%c", 201);
+	repeat(205, 129);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 61 - 1; i++) {
+		gotoxy(70, i);
+		printf("%c", 186);
+		gotoxy(200, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(70, 60);
+	printf("%c", 200);
+	repeat(220, 129);
+	printf("%c", 188);
+
+	gotoxy(120, 65);
+	printf("Press SPACE to go back");
+	while (1) {
+
+		if (uart_get_count() > 0) {
+			input = uart_get_char();
+			uart_clear();
+			if (input == ' ') {
+				inverse(0);
+				clrscr();
+				help_screen();
+			}
+		}
+
+	}
+}
+
+//Opstions
+
+void controllerOption() {
+	gotoxy(110, 22);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 22 + 1; i < 27 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 26);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 23);
+	printf("     .-. .-. . . .-. .-. .-. .   .   .-. .-.      ");
+	gotoxy(111, 24);
+	printf("     |   | | |\\|  |  |(  | | |   |   |-  |(       ");
+	gotoxy(111, 25);
+	printf("     `-' `-' ' `  '  ' ' `-' `-' `-' `-' ' '      ");
+
+}
+void howToPlayOption() {
+	gotoxy(110, 29);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 29 + 1; i < 34 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 33);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 30);
+	printf("  . . .-. . . .   .-. .-.   .-. .   .-. . . .-.   ");
+	gotoxy(111, 31);
+	printf("  |-| | | | | |    |  | |   |-' |   |-|  |   .'   ");
+	gotoxy(111, 32);
+	printf("  ' ` `-' `.'.'    '  `-'   '   `-' ` '  `   .    ");
+
+}
+void aboutUsOption() {
+	gotoxy(110, 36);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 36 + 1; i < 41 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 40);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 37);
+	printf("          .-. .-. .-. . . .-.   . . .-.           ");
+	gotoxy(111, 38);
+	printf("          |-| |(  | | | |  |    | | `-.           ");
+	gotoxy(111, 39);
+	printf("          ` ' `-' `-' `-'  '    `-' `-'           ");
+
+}
+void backOption() {
+	gotoxy(110, 43);
+	printf("%c", 201);
+	repeat(205, 50);
+	printf("%c", 187);
+	for (int i = 43 + 1; i < 48 - 1; i++) {
+		gotoxy(110, i);
+		printf("%c", 186);
+		gotoxy(161, i);
+		printf("%c\n", 186);
+	}
+	gotoxy(110, 47);
+	printf("%c", 200);
+	repeat(205, 50);
+	printf("%c", 188);
+
+	// text
+	gotoxy(111, 44);
+	printf("                 .-. .-. .-. . .                  ");
+	gotoxy(111, 45);
+	printf("                 |(  |-| |   |<                   ");
+	gotoxy(111, 46);
+	printf("                 `-' ` ' `-' ' `                  ");
+
+}
+
+void help_screen() {
 	newfgcolor(214);
 	gotoxy(120, 10);
 	printf("    )       (     (     ____");
@@ -39,15 +674,16 @@ void help_screen() {
 	printf("| __ || _| | |__ |  _/)\\  ");
 	gotoxy(120, 17);
 	printf("|_||_||___||____||_| ((_)  ");
-	while (1) {
-		if (uart_get_count() > 0) {
-			input = uart_get_char();
-			uart_clear();
-			if (input == ' ') {
-				mainMenu();
-			}
-		}
-	}
+
+	background();
+	newfgcolor(226);
+	controllerOption();
+	howToPlayOption();
+	aboutUsOption();
+	backOption();
+
+	helpSelect();
+
 }
 
 void quit_screen() {
@@ -59,7 +695,8 @@ void quit_screen() {
 		if (timer.sec100 == 1 || timer.sec100 == 50) {
 			for (int i = 0; i < 75; i++) {
 				gotoxy(100, i);
-				printf("                                                                          ");
+				printf(
+						"                                                                          ");
 			}
 			gotoxy(122, t - 6);
 			printf("THANK YOU FOR PLAYING !");

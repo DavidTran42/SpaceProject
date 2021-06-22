@@ -33,6 +33,17 @@ void newbgcolor(uint8_t background);
 void blackHole(int32_t a, int32_t b);
 
 
+//help menu:
+void controllerMenu();
+void howToPlayMenu();
+void aboutUsMenu();
+void backMenu();
+void controllerOption();
+void howToPlayOption();
+void aboutUsOption();
+void backOption();
+void helpSelect();
+
 
 
 

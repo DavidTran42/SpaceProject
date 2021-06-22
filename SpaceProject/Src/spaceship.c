@@ -1,5 +1,6 @@
 #include "ansi.h"
 #include "spaceship.h"
+#include "main.h"
 /*
  * spacehip.c
  *

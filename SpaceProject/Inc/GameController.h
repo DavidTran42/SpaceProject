@@ -39,14 +39,14 @@ struct powers {
 	bool rapidFire, onField, doubleBullets, moreHearts;
 };
 
-struct gamesettings {
-	uint8_t gameLevel, amountOfAsteroids, asteroidSpeed, gameLoop;
+struct gameSettings {
+	uint8_t gameLevel, amountOfAsteroids, asteroidSpeed, gameLoop, asteroidCount;
 };
 
 
 void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode);
 void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
-void initializeShips(int gameMode, struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight);
+void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2, uint16_t borderWidth, uint16_t borderHeight);
 struct joystick addJoystick();
 void setUpTimer();
 void enableTimer();
@@ -72,3 +72,4 @@ bool checkHit(struct bullet bullet, struct asteroid asteroid);
 void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight, int16_t acc);
 void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);
 void blackHole(int32_t a, int32_t b);
+void checkLevelGameUp(struct gameSettings *settings);
