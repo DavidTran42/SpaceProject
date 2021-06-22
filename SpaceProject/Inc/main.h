@@ -15,6 +15,7 @@ void test();
 #include <string.h>
 #include <stdlib.h>
 #include "30010_io.h"
+#include "ansi.h"
 
 
 #endif /* MAIN_H_ */
@@ -43,6 +44,7 @@ void howToPlayOption();
 void aboutUsOption();
 void backOption();
 void helpSelect();
+
 
 
 

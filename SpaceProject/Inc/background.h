@@ -12,7 +12,6 @@
 
 #endif /* BACKGROUND_H_ */
 
-
 void background();
 void game_background();
 void stars_only();
