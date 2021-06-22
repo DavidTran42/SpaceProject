@@ -14,6 +14,7 @@ void gravity(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a, int6
 
 	int32_t x1 = bulletptr->pos.x, y1 = bulletptr->pos.y;
 	int64_t x = a - x1 , y = b - y1;
+
 	int32_t r = FIX14_MULT(x, x) + FIX14_MULT(y, y);
 	int64_t r2 = (sqrt_i32_to_fx16_16(r>>14))>>2;
 	//gotoxy(10,10);
@@ -30,8 +31,8 @@ void gravity(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a, int6
 		bulletptr->vel.x = 2<<14;
 	}
 	if (bulletptr->vel.y>>14 >= 3){
-			bulletptr->vel.y = 2<<14;
-		}
+		bulletptr->vel.y = 2<<14;
+	}
 }
 
 

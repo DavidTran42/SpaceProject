@@ -72,4 +72,7 @@ bool checkHit(struct bullet bullet, struct asteroid asteroid);
 void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight, int16_t acc);
 void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);
 void blackHole(int32_t a, int32_t b);
+void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr);
 void checkLevelGameUp(struct gameSettings *settings);
+void checkCollisionWithBullet(struct bullet *bulletptr, struct asteroid *asteroid, struct ship *shipptr, char s_score[], uint8_t buffer[512]);
+void checkActivePowerUp(struct ship *shipptr);
