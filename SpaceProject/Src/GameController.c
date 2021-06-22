@@ -169,14 +169,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			s++;
 
 			// Update ship with no joystick/keypress
-			if (ship1.alive) {
+			if (ship1.alive  /*&& (ship1.vel.x < ship1.acc || ship1.vel.y < ship1.acc)*/) {
 				clear_ship1(ship1);
 				updatingShip(&ship1, borderWidth, borderHeight, (1 << 9));
 				print_ship1(ship1);
 				update_pixels_ship(&ship1);
 			}
 
-			if (gameMode == 2 && ship2.alive) {
+			if (gameMode == 2 && ship2.alive /*&& (ship2.vel.x < ship1.acc || ship2.vel.y < ship2.acc)*/) {
 				clear_ship1(ship2);
 				updatingShip(&ship2, borderWidth, borderHeight, (1 << 9));
 				print_ship2(ship2);
@@ -197,7 +197,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			if (s > 5000) {
 				s = 0;
 				buff = rand() % 5;
-				setRandomPowerUp(buff, &powerups[0], borderWidth, borderHeight);
+				uint16_t width = rand() % borderWidth - 1, height = rand() % borderHeight
+						- 1;
+				setRandomPowerUp(buff, &powerups[0], width, height);
 			}
 
 			t = 0;
@@ -360,7 +362,7 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 		}
 	} else if (shipptr->hearts == 1) {
 		if (playerNumber == '1') {
-			lcd_write_string(buffer, "%P1 HP:    ", 1);
+			lcd_write_string(buffer, "P1 HP:    ", 1);
 			shipptr->alive = false;
 			if (gameMode == 1) {
 				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode,
@@ -368,7 +370,7 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 
 			}
 		} else {
-			lcd_write_string2(buffer, "%P2 HP:    ", 1);
+			lcd_write_string2(buffer, "P2 HP:    ", 1);
 			shipptr->alive = false;
 		}
 		// Clear ship cause there hearts are now 0
@@ -388,8 +390,8 @@ void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p) {
 	gotoxy(130, 40);
 	printf("--- GAME OVER ---");
-	gotoxy(130, 42);
-	printf("Press m or space for Main Menu");
+	gotoxy(120, 48);
+	printf("Press 'm' or 'SPACE' for Main Menu");
 	lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
 	lcd_update(buffer, 1, borderWidth, borderHeight, gameMode, p);
 
@@ -506,9 +508,7 @@ void checkLevelGameUp(struct gameSettings *settings) {
 }
 
 void setRandomPowerUp(uint8_t buff, struct powers *powerups,
-		uint8_t borderWidth, uint8_t borderHeight) {
-	uint8_t width = rand() % borderWidth - 1, height = rand() % borderHeight
-			- 1;
+		uint16_t width, uint16_t height) {
 
 	for (int i = 0; i < 3; i++, powerups++) {
 		if (!powerups->onField) {
@@ -593,35 +593,18 @@ bool checkHit(struct bullet bullet, struct asteroid asteroid) {
 
 void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight) {
-	int16_t acc = 1 << 12;
 // Player 1 controls
 	if ((input == 'a') && shipptr->pos.x > 1 << 14) {
-		shipptr->vel.x -= acc;
-		if (shipptr->vel.x < -(2 << 14)) {
-			shipptr->vel.x = -(2 << 14);
-		}
-		shipptr->pos.x += shipptr->vel.x;
+		shipptr->vel.x = -(1 << 14);
 	}
 	if ((input == 'w') && shipptr->pos.y > 1 << 14) {
-		shipptr->vel.y -= acc;
-		if (shipptr->vel.y < -(2 << 14)) {
-			shipptr->vel.y = -(2 << 14);
-		}
-		shipptr->pos.y += shipptr->vel.y;
+		shipptr->vel.y = -(1 << 14);
 	}
 	if ((input == 'd') && shipptr->pos.x < borderWidth << 14) {
-		shipptr->vel.x += acc;
-		if (shipptr->vel.x > (2 << 14)) {
-			shipptr->vel.x = (2 << 14);
-		}
-		shipptr->pos.x += shipptr->vel.x;
+		shipptr->vel.x = +(1 << 14);
 	}
 	if ((input == 's') && shipptr->pos.y < borderHeight << 14) {
-		shipptr->vel.y += acc;
-		if (shipptr->vel.y > (2 << 14)) {
-			shipptr->vel.y = (2 << 14);
-		}
-		shipptr->pos.y += shipptr->vel.y;
+		shipptr->vel.y = +(1 << 14);
 	}
 }
 
@@ -631,39 +614,32 @@ void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 // Player 1 controls
 	if ((controls.left) && shipptr->pos.x > 1 << 14) {
 		shipptr->vel.x -= acc;
-		if (shipptr->vel.x < -(3 << 14)) {
-			shipptr->vel.x = -(3 << 14);
+		if (shipptr->vel.x < (-3 << 14)) {
+			shipptr->vel.x = (-3 << 14);
 		}
-		shipptr->pos.x += shipptr->vel.x;
 	}
 	if ((controls.up) && shipptr->pos.y > 1 << 14) {
 		shipptr->vel.y -= acc;
-		if (shipptr->vel.y < -(3 << 14)) {
-			shipptr->vel.y = -(3 << 14);
+		if (shipptr->vel.y < (-3 << 14)) {
+			shipptr->vel.y = (-3 << 14);
 		}
-		shipptr->pos.y += shipptr->vel.y;
 	}
 	if ((controls.right) && shipptr->pos.x < borderWidth << 14) {
 		shipptr->vel.x += acc;
 		if (shipptr->vel.x > (3 << 14)) {
 			shipptr->vel.x = (3 << 14);
 		}
-		shipptr->pos.x += shipptr->vel.x;
 	}
 	if ((controls.down) && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y += acc;
 		if (shipptr->vel.y > (3 << 14)) {
 			shipptr->vel.y = (3 << 14);
 		}
-		shipptr->pos.y += shipptr->vel.y;
 	}
 }
 
 void updatingShip(struct ship *shipptr, uint16_t borderWidth,
-		uint16_t borderHeight, int16_t acc) {
-
-	shipptr->pos.x += shipptr->vel.x;
-	shipptr->pos.y += shipptr->vel.y;
+		uint16_t borderHeight, int32_t acc) {
 
 	if (shipptr->pos.x < (8 << 14)) {
 		shipptr->pos.x = (7 << 14);
@@ -679,18 +655,21 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		shipptr->pos.y = (borderHeight - 2) << 14;
 	}
 
+
 	// Deacceleration
-	if (shipptr->vel.x > 0) {
+	if (shipptr->vel.x < 0) {
+		shipptr->pos.x += shipptr->vel.x;
+		shipptr->vel.x += acc;
+	} else if (shipptr->vel.x > 0){
+		shipptr->pos.x += shipptr->vel.x;
 		shipptr->vel.x -= acc;
 	}
-	if (shipptr->vel.y > 0) {
-		shipptr->vel.y -= acc;
-	}
-	if (shipptr->vel.x < 0) {
-		shipptr->vel.x += acc;
-	}
 	if (shipptr->vel.y < 0) {
+		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y += acc;
+	} else if (shipptr->vel.y > 0){
+		shipptr->pos.y += shipptr->vel.y;
+		shipptr->vel.y -= acc;
 	}
 }
 
