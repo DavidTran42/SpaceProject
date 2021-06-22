@@ -69,8 +69,8 @@ void gravity(uint32_t m1, uint32_t m2, struct bullet *bulletptr, int64_t a, int6
 void update_bullet(struct vector bullet);
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid);
 bool checkHit(struct bullet bullet, struct asteroid asteroid);
-void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight, int16_t acc);
-void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint8_t borderWidth, uint8_t borderHeight);
+void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight, int32_t acc);
+void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint16_t width, uint16_t height);
 void blackHole(int32_t a, int32_t b);
 void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr);
 void clearAsteroid(struct asteroid *asteroidptr);
