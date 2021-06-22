@@ -24,3 +24,4 @@ void howToPlayOption();
 void aboutUsOption();
 void backOption();
 void helpSelect();
+void helpTitle();

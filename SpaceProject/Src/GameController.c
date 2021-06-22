@@ -124,7 +124,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			input = uart_get_char(); // Might need to put it outside the if statement
 			uart_clear();
 			if (input == 'm') {
-				mainMenu();
+				clrscr();
+				background();
+				mainFrame(1, 1, 270, 75);
+				gameTitle();
+				mainOptions();
+				break;
+
 			}
 
 			// Check if boss key has been pressed
@@ -222,7 +228,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								//update lcd
 
 								checkLives(&ship1, &ship2, buffer, '1',
-										borderWidth, borderHeight, gameMode);
+										borderWidth, borderHeight, gameMode, &settings);
 							}
 						}
 					}
@@ -246,7 +252,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								asteroid[i].alive = 0;
 
 								checkLives(&ship2, &ship1, buffer, '2',
-										borderWidth, borderHeight, gameMode);
+										borderWidth, borderHeight, gameMode, &settings);
 							}
 						}
 
@@ -330,11 +336,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			checkLevelGameUp(&settings);
 		}
 	}
+
 }
 
 void checkLives(struct ship *shipptr, struct ship *shipptr2,
 		uint8_t buffer[512], char playerNumber, uint16_t borderWidth,
-		uint16_t borderHeight, uint8_t gameMode) {
+		uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p) {
 	if (shipptr->hearts == 3) {
 		shipptr->hearts--;
 		if (playerNumber == '1') {
@@ -354,7 +361,8 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 			lcd_write_string(buffer, "%P1 HP:    ", 1);
 			shipptr->alive = false;
 			if (gameMode == 1) {
-				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode);
+				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode, p);
+
 			}
 		} else {
 			lcd_write_string2(buffer, "%P2 HP:    ", 1);
@@ -365,20 +373,22 @@ void checkLives(struct ship *shipptr, struct ship *shipptr2,
 		clear_ship1(*shipptr);
 		if (gameMode == 2) {
 			if (!shipptr->alive && !shipptr2->alive) {
-				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode);
+				makeGameOverScreen(buffer, borderWidth, borderHeight, gameMode, p);
+
 			}
 		}
 	}
 }
 
 void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
-		uint16_t borderHeight, uint8_t gameMode) {
+		uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p) {
 	gotoxy(130, 40);
 	printf("--- GAME OVER ---");
 	gotoxy(130, 42);
-	printf("Press m for Main Menu or press r for restart game");
+	printf("Press m or space for Main Menu");
 	lcd_write_string(buffer, "GAME OVER!   GAME OVER!  ", 1);
-	lcd_update(buffer, 1, borderWidth, borderHeight, gameMode);
+	lcd_update(buffer, 1, borderWidth, borderHeight, gameMode, p);
+
 }
 
 void drawBullets(struct ship ship, struct bullet *bulletptr,
@@ -1022,7 +1032,7 @@ void bosskey(char input) {
 }
 
 void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
-		uint16_t borderHeight, int gameMode) {
+		uint16_t borderHeight, int gameMode, struct gameSettings *p) {
 	char input;
 
 	 RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
@@ -1062,14 +1072,8 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 		if (uart_get_count() > 0) {
 			input = uart_get_char();
 			uart_clear();
-			if (input == 'm') {
+			if (input == 'm' || input == ' ') {
 				mainMenu();
-			}
-			if (input == 'r' && gameMode == 1) {
-				initGame(borderWidth, borderHeight, 1);
-			}
-			if (input == 'r' && gameMode == 2) {
-				initGame(borderWidth, borderHeight, 2);
 			}
 
 		}
