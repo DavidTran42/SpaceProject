@@ -167,6 +167,19 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			g++;
 			s++;
 
+			for(int j = 0; j < 3; j++){
+			gotoxy(powerups[j].pos.x,powerups[j].pos.y);
+			if ( j==0){
+			bgcolor(6);
+			} else if (j==1){
+			bgcolor(13);
+			} else {
+			bgcolor(2);
+			}
+			printf(" ");
+			resetbgcolor();
+			}
+
 			// Update ship with no joystick/keypress
 			if (ship1.alive) {
 				clear_ship1(ship1);
