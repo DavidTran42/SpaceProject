@@ -1479,7 +1479,7 @@ void update_bullet(struct vector bullet) {
 
 
 void blackHole(int32_t a, int32_t b){
-		newbgcolor(52);
+		newfgcolor(52);
 		gotoxy(a-1,b);
 		printf("   ");
 

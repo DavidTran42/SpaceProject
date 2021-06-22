@@ -141,6 +141,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				clear_ship1(ship1);
 				updateShipPos(input, &ship1, borderWidth, borderHeight);
 				makeBullet1(input, &bullet1[0], ship1, ship1.bulletAmount);
+
 			}
 
 			stars_only(); //updating stars
@@ -166,7 +167,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			l++;
 			g++;
 			s++;
-
 
 			// Update ship with no joystick/keypress
 			if (ship1.alive) {
@@ -202,9 +202,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			t = 0;
 
-
 			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, '1');
-
 
 			// If multiplayer
 
@@ -1048,7 +1046,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 
 	turnOff(GPIOA, 9);
 	turnOff(GPIOC, 7);
-	turnOn(GPIOB, 4);
+	turnOff(GPIOB, 4);
 
 	while (1) {
 		if (timer.sec100 == 1 || timer.sec100 == 25 || timer.sec100 == 50
