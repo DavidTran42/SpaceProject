@@ -16,7 +16,7 @@ struct vector{
 
 struct ship {
 	struct vector pos, vel;
-	uint8_t hearts, score, bulletAmount, bulletSpeed;
+	uint8_t hearts, score, bulletAmount, bulletSpeed, fuel;
 	int16_t rf_time, db_time, ds_time, acc;
 	bool powered_up, rapidFire, doubleBullets, alive;
 };
