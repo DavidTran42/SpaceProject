@@ -36,7 +36,7 @@ struct bullet{
 
 struct powers {
 	struct vector pos;
-	bool rapidFire, onField, doubleBullets, moreHearts;
+	bool rapidFire, onField, doubleBullets, moreHearts, refill;
 };
 
 struct gameSettings {

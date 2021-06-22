@@ -63,12 +63,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	ship1.bulletAmount = 5;
 	ship1.hearts = 3;
 	ship1.score = 0;
+	ship1.fuel = 200;
 	ship1.alive = true;
 	ship1.bulletSpeed = 2;
 	if (gameMode == 2) {
 		ship2.bulletAmount = 5; // More ships due to power ups
 		ship2.hearts = 3;
 		ship2.score = 0;
+		ship2.fuel = 200;
 		ship2.alive = true;
 		ship2.bulletSpeed = 2;
 	}
@@ -77,7 +79,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	struct bullet bullet2[10] = { 0 };
 	struct joystick controls; // For joystick support
 	uint8_t r = rand() % borderHeight, type = rand() % 3, buff = rand() % 3;
-	uint16_t t, l, g, s, limiter;
+	uint16_t t, l, g, s, limiter, deacceleration = (1<<9);
 	bool move = false;
 	char input;
 
@@ -137,7 +139,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			bosskey(input);
 
 			// Update ships from key press
-			if (ship1.alive) {
+			if (ship1.alive && ship1.fuel > 0) {
 				clear_ship1(ship1);
 				updateShipPos(input, &ship1, borderWidth, borderHeight);
 				makeBullet1(input, &bullet1[0], ship1, ship1.bulletAmount);
@@ -152,7 +154,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			if (controls.right || controls.left || controls.down || controls.up
 					|| controls.center) {
 
-				if (ship2.alive) {
+				if (ship2.alive && ship2.fuel > 0) {
 					clear_ship1(ship2);
 					updateShip2Pos(&ship2, controls, borderWidth, borderHeight);
 					makeBullet2(controls, &bullet2[0], ship2,
@@ -167,17 +169,26 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			g++;
 			s++;
 
+			// Simple fuel system
+			gotoxy(1,1);
+			printf("Ship 1 (Fuel): %d  ", ship1.fuel);
+			if (gameMode == 2) {
+				gotoxy(1,2);
+				printf("Ship 2 (Fuel): %d  ", ship2.fuel);
+			}
+
+
 			// Update ship with no joystick/keypress
-			if (ship1.alive  /*&& (ship1.vel.x < ship1.acc || ship1.vel.y < ship1.acc)*/) {
+			if (ship1.alive) {
 				clear_ship1(ship1);
-				updatingShip(&ship1, borderWidth, borderHeight, (1 << 9));
+				updatingShip(&ship1, borderWidth, borderHeight, deacceleration);
 				print_ship1(ship1);
 				update_pixels_ship(&ship1);
 			}
 
-			if (gameMode == 2 && ship2.alive /*&& (ship2.vel.x < ship1.acc || ship2.vel.y < ship2.acc)*/) {
+			if (gameMode == 2 && ship2.alive) {
 				clear_ship1(ship2);
-				updatingShip(&ship2, borderWidth, borderHeight, (1 << 9));
+				updatingShip(&ship2, borderWidth, borderHeight, deacceleration);
 				print_ship2(ship2);
 				update_pixels_ship(&ship2);
 			}
@@ -478,6 +489,8 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 					shipptr->rf_time = 30000;
 					powerptr->rapidFire = false;
 					shipptr->rapidFire = true;
+				} else if (powerptr->refill) {
+					shipptr->fuel = 200;
 				}
 				powerptr->onField = false;
 			}
@@ -505,12 +518,15 @@ void checkLevelGameUp(struct gameSettings *settings) {
 void setRandomPowerUp(uint8_t buff, struct powers *powerups,
 		uint16_t width, uint16_t height) {
 
-	for (int i = 0; i < 3; i++, powerups++) {
+	for (int i = 0; i < 4; i++, powerups++) {
 		if (!powerups->onField) {
 			powerups->pos.x = width << 14;
 			powerups->pos.y = height << 14;
 
-			if (buff == 2) {
+			if (buff == 3) {
+				powerups->refill = true;
+			}
+			else if (buff == 2) {
 				powerups->rapidFire = true;
 			} else if (buff == 1) {
 				powerups->moreHearts = true;
@@ -591,45 +607,40 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 // Player 1 controls
 	if ((input == 'a') && shipptr->pos.x > 1 << 14) {
 		shipptr->vel.x = -(1 << 14);
+		shipptr->fuel--;
 	}
 	if ((input == 'w') && shipptr->pos.y > 1 << 14) {
 		shipptr->vel.y = -(1 << 14);
+		shipptr->fuel--;
 	}
 	if ((input == 'd') && shipptr->pos.x < borderWidth << 14) {
 		shipptr->vel.x = +(1 << 14);
+		shipptr->fuel--;
 	}
 	if ((input == 's') && shipptr->pos.y < borderHeight << 14) {
 		shipptr->vel.y = +(1 << 14);
+		shipptr->fuel--;
 	}
 }
 
 void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight) {
-	int16_t acc = 1 << 12;
-// Player 1 controls
-	if ((controls.left) && shipptr->pos.x > 1 << 14) {
-		shipptr->vel.x -= acc;
-		if (shipptr->vel.x < (-3 << 14)) {
-			shipptr->vel.x = (-3 << 14);
-			}
+// Player 2 controls
+	if (controls.left && shipptr->pos.x > 1 << 14) {
+		shipptr->vel.x = -(1 << 14);
+		shipptr->fuel--;
 	}
-	if ((controls.up) && shipptr->pos.y > 1 << 14) {
-		shipptr->vel.y -= acc;
-		if (shipptr->vel.y < (-3 << 14)) {
-			shipptr->vel.y = (-3 << 14);
-		}
+	if (controls.up && shipptr->pos.y > 1 << 14) {
+		shipptr->vel.y = -(1 << 14);
+		shipptr->fuel--;
 	}
-	if ((controls.right) && shipptr->pos.x < borderWidth << 14) {
-		shipptr->vel.x += acc;
-		if (shipptr->vel.x > (3 << 14)) {
-			shipptr->vel.x = (3 << 14);
-		}
+	if (controls.right && shipptr->pos.x < borderWidth << 14) {
+		shipptr->vel.x = +(1 << 14);
+		shipptr->fuel--;
 	}
-	if ((controls.down) && shipptr->pos.y < borderHeight << 14) {
-		shipptr->vel.y += acc;
-		if (shipptr->vel.y > (3 << 14)) {
-			shipptr->vel.y = (3 << 14);
-		}
+	if (controls.down && shipptr->pos.y < borderHeight << 14) {
+		shipptr->vel.y = +(1 << 14);
+		shipptr->fuel--;
 	}
 }
 
@@ -744,13 +755,7 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
-
-				// Compensate for gravity
-				if (ship.pos.y > (35 << 14)) {
-					bulletptr->pos.y = ship.pos.y + (1 << 14);
-				} else {
-					bulletptr->pos.y = ship.pos.y;
-				}
+				bulletptr->pos.y = ship.pos.y;
 				bulletptr->vel.x = (1 << 14);
 				bulletptr->vel.y = 0;
 				bulletptr->alive = 1;
@@ -767,11 +772,7 @@ void makeBullet2(struct joystick controls, struct bullet *bulletptr,
 		for (int i = 0; i < bListSize; i++, bulletptr++) {
 			if (!(bulletptr->alive)) {
 				bulletptr->pos.x = ship.pos.x + (1 << 14);
-				if (ship.pos.y > (35 << 14)) {
-					bulletptr->pos.y = ship.pos.y + (1 << 14);
-				} else {
-					bulletptr->pos.y = ship.pos.y;
-				}
+				bulletptr->pos.y = ship.pos.y;
 				bulletptr->vel.x = (1 << 14);
 				bulletptr->vel.y = 0;
 				bulletptr->alive = 1;
