@@ -446,11 +446,11 @@ void clear_small_asteroid(struct asteroid *asteroid1) {
 	asteroid1->pos.y = asteroid1->pos.y >> 14;
 	newfgcolor(0);
 	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y - 1);
-	printf("%c%c%c", 219, 219, 219);
+	printf("   ");
 	gotoxy(asteroid1->pos.x - 2, asteroid1->pos.y);
-	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	printf("     ");
 	gotoxy(asteroid1->pos.x - 1, asteroid1->pos.y + 1);
-	printf("%c%c%c", 219, 219, 219);
+	printf("   ");
 	asteroid1->pos.x = asteroid1->pos.x << 14;
 	asteroid1->pos.y = asteroid1->pos.y << 14;
 	resetbgcolor();
@@ -515,20 +515,21 @@ void clear_medium_asteroid(struct asteroid *asteroid2) {
 	asteroid2->pos.x = asteroid2->pos.x >> 14;
 	asteroid2->pos.y = asteroid2->pos.y >> 14;
 	newfgcolor(0);
+	newbgcolor(0);
 	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y - 3);
-	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	printf("     ");
 	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y - 2);
-	printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	printf("       ");
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y - 1);
-	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	printf("         ");
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y);
-	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	printf("         ");
 	gotoxy(asteroid2->pos.x - 4, asteroid2->pos.y + 1);
-	printf("%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	printf("         ");
 	gotoxy(asteroid2->pos.x - 3, asteroid2->pos.y + 2);
-	printf("%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219);
+	printf("       ");
 	gotoxy(asteroid2->pos.x - 2, asteroid2->pos.y + 3);
-	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	printf("     ");
 	asteroid2->pos.x = asteroid2->pos.x << 14;
 	asteroid2->pos.y = asteroid2->pos.y << 14;
 }
@@ -614,38 +615,28 @@ void clear_large_asteroid(struct asteroid *asteroid3) {
 	asteroid3->pos.y = asteroid3->pos.y >> 14;
 	newfgcolor(0);
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y - 5);
-	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
-
+	printf("     ");
 	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y - 4);
-	printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
-			219, 219, 219);
+	printf("           ");
 	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y - 3);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219);
+	printf("             ");
 	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y - 2);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219, 219, 219, 219);
+	printf("               ");
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y - 1);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	printf("                 ");
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	printf("                 ");
 	gotoxy(asteroid3->pos.x - 8, asteroid3->pos.y + 1);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219, 219, 219, 219, 219, 219, 219);
+	printf("                 ");
 	gotoxy(asteroid3->pos.x - 7, asteroid3->pos.y + 2);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219, 219, 219, 219);
+	printf("               ");
 
 	gotoxy(asteroid3->pos.x - 6, asteroid3->pos.y + 3);
-	printf("%c%c%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
-			219, 219, 219, 219, 219);
+	printf("             ");
 	gotoxy(asteroid3->pos.x - 5, asteroid3->pos.y + 4);
-	printf("%c%c%c%c%c%c%c%c%c%c%c", 219, 219, 219, 219, 219, 219, 219, 219,
-			219, 219, 219);
+	printf("           ");
 	gotoxy(asteroid3->pos.x - 2, asteroid3->pos.y + 5);
-	printf("%c%c%c%c%c", 219, 219, 219, 219, 219);
+	printf("     ");
 	asteroid3->pos.x = asteroid3->pos.x << 14;
 	asteroid3->pos.y = asteroid3->pos.y << 14;
 }
