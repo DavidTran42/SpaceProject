@@ -59,7 +59,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	settings.gameLevel = 1, settings.asteroidSpeed = 16, settings.amountOfAsteroids =
 			5, settings.gameLoop = 1, settings.clock = 90;
 	struct powers powerups[3] = { 0 };
-	struct ship ship1 = {0}, ship2 = {0};
+	struct ship ship1 = { 0 }, ship2 = { 0 };
 	ship1.bulletAmount = 5;
 	ship1.hearts = 3;
 	ship1.fuel = 255;
@@ -102,10 +102,18 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 	// Start timer
 	setUpTimer();
 
+	// Setting up displaying score and health on LCD
 	lcd_write_string(buffer, "SCORE: ", 3);
 	lcd_write_string(buffer, "P1 HP: ***", 1);
 	itoa(ship1.score, s_score, 10);
 	lcd_write_string(buffer, s_score, 4);
+
+	if (gameMode == 2) {
+		lcd_write_string2(buffer, "SCORE: ", 3);
+		lcd_write_string2(buffer, "P2 HP: ***", 1);
+		itoa(ship2.score, s_score2, 10);
+		lcd_write_string2(buffer, s_score2, 4);
+	}
 
 	// Game loop
 	while (settings.gameLoop) {
@@ -175,18 +183,22 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				settings.clock--;
 			}
 
-			// Simple fuel system
-			gotoxy(1,1);
+			// Display information on top left of the game screen
+			fgcolor(15);
+			gotoxy(1, 1);
 			printf("Current level: %d", settings.gameLevel);
-			gotoxy(1,2);
+			gotoxy(1, 2);
 			printf("Countdown to next level: %d  ", settings.clock);
-			gotoxy(1,3);
-			printf("Ship 1 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ", ship1.db_time, ship1.rf_time, ship1.fuel);
+			gotoxy(1, 3);
+			printf(
+					"Ship 1 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ",
+					ship1.db_time, ship1.rf_time, ship1.fuel);
 			if (gameMode == 2) {
-			gotoxy(1,4);
-				printf("Ship 2 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ", ship2.db_time, ship2.rf_time, ship2.fuel);
+				gotoxy(1, 4);
+				printf(
+						"Ship 2 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ",
+						ship2.db_time, ship2.rf_time, ship2.fuel);
 			}
-
 
 
 			// Update ship with no joystick/keypress
@@ -197,13 +209,14 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 				update_pixels_ship(&ship1);
 			}
 
-			if (gameMode == 2 && ship2.alive && (abs(ship2.vel.x) > deacceleration || abs(ship2.vel.y) > deacceleration)) {
+			if (gameMode == 2 && ship2.alive
+					&& (abs(ship2.vel.x) > deacceleration
+							|| abs(ship2.vel.y) > deacceleration)) {
 				clear_ship1(ship2);
 				updatingShip(&ship2, borderWidth, borderHeight, deacceleration);
 				print_ship2(ship2);
 				update_pixels_ship(&ship2);
 			}
-
 
 			// Make random asteroid
 			if (l > 500) {
@@ -218,8 +231,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, '1');
 
-			// If multiplayer
-
 			if (gameMode == 2) {
 				drawBullets(ship2, &bullet2[0], borderWidth, borderHeight, s,
 						'2');
@@ -232,7 +243,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			for (int i = 0; i < settings.amountOfAsteroids; i++) {
 
 				if (asteroid[i].alive) {
-					gotoxy(asteroid[i].pos.x >> 14, asteroid[i].pos.y >> 14);
 
 					// Check collision against ship
 					if (ship1.alive) {
@@ -247,19 +257,15 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								checkLives(&ship1, &ship2, buffer, '1',
 										borderWidth, borderHeight, gameMode,
 										&settings);
+
+								// Clear asteroid
+								clearAsteroid(&asteroid[i]);
 							}
 						}
 					}
 
 					// Check for ship 2
 					if (gameMode == 2 && ship2.alive) {
-
-						lcd_write_string2(buffer, "SCORE: ", 3);
-						if (ship2.hearts == 3) {
-							lcd_write_string2(buffer, "P2 HP: ***", 1);
-						}
-						itoa(ship2.score, s_score2, 10);
-						lcd_write_string2(buffer, s_score2, 4);
 
 						if (abs(asteroid[i].pos.x - ship2.pos.x) < (9 << 14)
 								&& abs(asteroid[i].pos.y - ship2.pos.y)
@@ -272,6 +278,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								checkLives(&ship2, &ship1, buffer, '2',
 										borderWidth, borderHeight, gameMode,
 										&settings);
+
+								// Clear asteroid
+								clearAsteroid(&asteroid[i]);
 							}
 						}
 
@@ -284,46 +293,43 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 					// If multiplayer, check collision with bullet
 					if (gameMode == 2) {
-
 						checkCollisionWithBullet(&bullet2[0], &asteroid[i],
-								&ship2, s_score2, buffer, &settings, &powerups[0]);
+								&ship2, s_score2, buffer, &settings,
+								&powerups[0]);
 						lcd_write_string2(buffer, s_score2, 4);
 					}
-
-					clearAsteroid(&asteroid[i]);
 
 					if (asteroid[i].alive) {
 
 						// Higher number = slower asteroid.
 						if (g > settings.asteroidSpeed) {
+							clearAsteroid(&asteroid[i]);
 							move = true;
 							asteroid[i].pos.x -= (1 << 14);
-						}
 
-						if (asteroid[i].size == 2) {
-							small_asteroid(&asteroid[i]);
-							update_small_background(&asteroid[i]);
+							if (asteroid[i].size == 2) {
+								small_asteroid(&asteroid[i]);
+								update_small_background(&asteroid[i]);
 
-						} else if (asteroid[i].size == 4) {
-							medium_asteroid(&asteroid[i]);
-							update_medium_background(&asteroid[i]);
-						} else {
-							large_asteroid(&asteroid[i]);
-							update_large_background(&asteroid[i]);
-						}
-
-						// Reset asteroid, so it can be used to make a new one
-						if (asteroid[i].pos.x <= (asteroid[i].size + 1) << 14) {
-							clearAsteroid(&asteroid[i]);
-							asteroid[i].alive = 0;
-							if (asteroid[i].pos.y > (63 << 14)) {
-								game_background();
+							} else if (asteroid[i].size == 4) {
+								medium_asteroid(&asteroid[i]);
+								update_medium_background(&asteroid[i]);
+							} else {
+								large_asteroid(&asteroid[i]);
+								update_large_background(&asteroid[i]);
 							}
 
-						}
+							// Reset asteroid, so it can be used to make a new one
+							if (asteroid[i].pos.x
+									<= (asteroid[i].size + 1) << 14) {
+								clearAsteroid(&asteroid[i]);
+								asteroid[i].alive = 0;
+								if (asteroid[i].pos.y > (63 << 14)) {
+									game_background();
+								}
 
-						// Higher speed -> slower asteroid
-						if (g > settings.asteroidSpeed) {
+							}
+
 							for (int j = 0; j < asteroid[i].amountOfPoints;
 									j++) {
 								asteroid[i].points[j].x -= (1 << 14);
@@ -413,7 +419,7 @@ void makeGameOverScreen(uint8_t buffer[512], uint16_t borderWidth,
 }
 
 void drawPowerUps(struct powers *powerup) {
-	for(int i = 0 ; i < 3; i++, powerup++) {
+	for (int i = 0; i < 3; i++, powerup++) {
 		if (powerup->onField) {
 			// Draw powerup
 			bgcolor(2);
@@ -490,7 +496,7 @@ void checkActivePowerUp(struct ship *shipptr) {
 			shipptr->rapidFire = false;
 		}
 
-		if(!(shipptr->rapidFire) && !(shipptr->doubleBullets)) {
+		if (!(shipptr->rapidFire) && !(shipptr->doubleBullets)) {
 			shipptr->powered_up = false;
 		}
 	}
@@ -514,8 +520,8 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 					// No more hearts if higher or equal 3 hearts
 					if (shipptr->hearts < 3) {
 						shipptr->hearts += 1;
-					powerptr->moreHearts = false;
 					}
+					powerptr->moreHearts = false;
 				} else if (powerptr->rapidFire) {
 					shipptr->bulletSpeed = 1;
 					shipptr->rf_time = 3000;
@@ -523,13 +529,11 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 					shipptr->rapidFire = true;
 				} else if (powerptr->refill) {
 					shipptr->fuel = 255;
+					powerptr->refill = false;
 				}
 
 				// If the hearts doesn't get collected. Let the powerup stay
-				if (!powerptr->moreHearts) {
-					powerptr->onField = false;
-					shipptr->powered_up = true;
-				}
+				powerptr->onField = false;
 			}
 		}
 	}
@@ -564,8 +568,7 @@ void setPowerUp(uint8_t buff, struct powers *powerups, struct asteroid asteroid)
 			powerups->onField = true;
 			if (buff == 3) {
 				powerups->doubleBullets = true;
-			}
-			else if (buff == 2) {
+			} else if (buff == 2) {
 				powerups->rapidFire = true;
 			} else if (buff == 1) {
 				powerups->moreHearts = true;
@@ -579,7 +582,8 @@ void setPowerUp(uint8_t buff, struct powers *powerups, struct asteroid asteroid)
 
 void checkCollisionWithBullet(struct bullet *bulletptr,
 		struct asteroid *asteroidptr, struct ship *shipptr, char s_score[],
-		uint8_t buffer[512], struct gameSettings *settings, struct powers *powerptr) {
+		uint8_t buffer[512], struct gameSettings *settings,
+		struct powers *powerptr) {
 	for (int j = 0; j < shipptr->bulletAmount; j++, bulletptr++) {
 
 		if (bulletptr->alive) {
@@ -590,10 +594,13 @@ void checkCollisionWithBullet(struct bullet *bulletptr,
 					bulletptr->alive = 0;
 					settings->asteroidCount += 1;
 
+					// Clear asteroid
+					clearAsteroid(asteroidptr);
+
 					// Every fifth asteroid destroyed, place powerup
-					if(settings->asteroidCount % 5 == 0) {
+					if (settings->asteroidCount % 5 == 0) {
 						uint8_t buff = rand() % 4;
-					setPowerUp(buff, powerptr, *asteroidptr);
+						setPowerUp(buff, powerptr, *asteroidptr);
 					}
 
 					gotoxy(bulletptr->prev_pos.x >> 14,
@@ -691,7 +698,6 @@ void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 	}
 }
 
-
 void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		uint16_t borderHeight, int32_t acc) {
 
@@ -709,15 +715,14 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		shipptr->pos.y = (borderHeight - 2) << 14;
 	}
 
-
 	// Deacceleration
 	if (shipptr->vel.x < 0) {
-			shipptr->pos.x += shipptr->vel.x;
-			shipptr->vel.x += acc;
+		shipptr->pos.x += shipptr->vel.x;
+		shipptr->vel.x += acc;
 		if (shipptr->vel.x > 0) {
 			shipptr->vel.x = 0;
 		}
-	} else if (shipptr->vel.x > 0){
+	} else if (shipptr->vel.x > 0) {
 		shipptr->pos.x += shipptr->vel.x;
 		shipptr->vel.x -= acc;
 		if (shipptr->vel.x < 0) {
@@ -728,13 +733,13 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y += acc;
 		if (shipptr->vel.y > 0) {
-				shipptr->vel.y = 0;
+			shipptr->vel.y = 0;
 		}
-	} else if (shipptr->vel.y > 0){
+	} else if (shipptr->vel.y > 0) {
 		shipptr->pos.y += shipptr->vel.y;
 		shipptr->vel.y -= acc;
 		if (shipptr->vel.y < 0) {
-				shipptr->vel.y = 0;
+			shipptr->vel.y = 0;
 		}
 	}
 
@@ -1121,18 +1126,22 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 
 void level_led(uint8_t gameLevel) {
 	//setUpTimer();
-	if (gameLevel == 1) {
+	if (gameLevel == 1) {  //difficulty 1, color green.
 		turnOff(GPIOA, 9);
 		turnOff(GPIOB, 4);
 		turnOn(GPIOC, 7);
 
-	} else if (gameLevel == 2) {
+	} else if (gameLevel == 2) { //difficulty 2, color yellow.
 		turnOff(GPIOA, 9);
 		turnOn(GPIOB, 4);
 		turnOn(GPIOC, 7);
 
-	} else if (gameLevel == 3) {
+	} else if (gameLevel == 3) { //difficulty 3, color red
 		turnOff(GPIOA, 9);
+		turnOff(GPIOC, 7);
+		turnOn(GPIOB, 4);
+	} else if (gameLevel == 4) { //difficulty 4, color purple
+		turnOn(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		turnOn(GPIOB, 4);
 	}
