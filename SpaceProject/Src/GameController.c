@@ -175,7 +175,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			g++;
 			s++;
 
-
 			// Countdown for level change
 			if (s > 40 && settings.clock > 0) {
 				s = 0;
@@ -198,7 +197,6 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						"Ship 2 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ",
 						ship2.db_time, ship2.rf_time, ship2.fuel);
 			}
-
 
 			// Update ship with no joystick/keypress
 			if (ship1.alive && (abs(ship1.vel.x) > 0 || abs(ship1.vel.y) > 0)) {
@@ -425,7 +423,15 @@ void drawPowerUps(struct powers *powerup) {
 	for (int i = 0; i < 3; i++, powerup++) {
 		if (powerup->onField) {
 			// Draw powerup
-			bgcolor(2);
+			if (powerup->moreHearts) {
+				bgcolor(1);
+			} else if (powerup->rapidFire) {
+				bgcolor(6);
+			} else if (powerup->refill){
+				newbgcolor(11);
+			} else {
+				bgcolor(2);
+			}
 			gotoxy(powerup->pos.x >> 14, powerup->pos.y >> 14);
 			printf("?");
 			resetbgcolor();
@@ -545,7 +551,7 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 }
 
 void checkLevelGameUp(struct gameSettings *settings) {
-	// Level 2
+// Level 2
 	if (settings->clock == 0 && settings->gameLevel == 1) {
 		settings->clock = 120;
 		settings->gameLevel = 2;
@@ -556,7 +562,7 @@ void checkLevelGameUp(struct gameSettings *settings) {
 		settings->gameLevel = 3;
 		settings->asteroidSpeed = 4;
 	}
-	// level 4
+// level 4
 	else if (settings->clock == 0 && settings->gameLevel == 3) {
 		timer.min = 0;
 		settings->gameLevel = 4;
@@ -720,7 +726,7 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 		shipptr->pos.y = (borderHeight - 2) << 14;
 	}
 
-	// Deacceleration
+// Deacceleration
 	if (shipptr->vel.x < 0) {
 		shipptr->pos.x += shipptr->vel.x;
 		shipptr->vel.x += acc;
@@ -1130,7 +1136,7 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 }
 
 void level_led(uint8_t gameLevel) {
-	//setUpTimer();
+//setUpTimer();
 	if (gameLevel == 1) {  //difficulty 1, color green.
 		turnOff(GPIOA, 9);
 		turnOff(GPIOB, 4);
