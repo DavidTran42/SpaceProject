@@ -1150,6 +1150,7 @@ void update_medium_background(struct vector *p) {
 	}
 	p->x = p->x << 14;
 	p->y = p->y << 14;
+	resetbgcolor();
 }
 
 void update_large_background(struct vector *p) {
@@ -1274,6 +1275,7 @@ void update_large_background(struct vector *p) {
 	}
 	p->x = p->x << 14;
 	p->y = p->y << 14;
+	resetbgcolor();
 }
 
 void update_bullet(struct vector bullet) {
