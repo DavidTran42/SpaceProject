@@ -512,8 +512,8 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 					// No more hearts if higher or equal 3 hearts
 					if (shipptr->hearts < 3) {
 						shipptr->hearts += 1;
-					powerptr->moreHearts = false;
 					}
+					powerptr->moreHearts = false;
 				} else if (powerptr->rapidFire) {
 					shipptr->bulletSpeed = 1;
 					shipptr->rf_time = 3000;
@@ -521,13 +521,11 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 					shipptr->rapidFire = true;
 				} else if (powerptr->refill) {
 					shipptr->fuel = 255;
+					powerptr->refill = false;
 				}
 
 				// If the hearts doesn't get collected. Let the powerup stay
-				if (!powerptr->moreHearts) {
-					powerptr->onField = false;
-					shipptr->powered_up = true;
-				}
+				powerptr->onField = false;
 			}
 		}
 	}
