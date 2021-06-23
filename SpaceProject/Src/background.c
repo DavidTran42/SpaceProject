@@ -532,6 +532,7 @@ void clear_medium_asteroid(struct asteroid *asteroid2) {
 	printf("     ");
 	asteroid2->pos.x = asteroid2->pos.x << 14;
 	asteroid2->pos.y = asteroid2->pos.y << 14;
+	resetbgcolor();
 }
 
 void large_asteroid(struct asteroid *asteroid3) {
@@ -639,6 +640,7 @@ void clear_large_asteroid(struct asteroid *asteroid3) {
 	printf("     ");
 	asteroid3->pos.x = asteroid3->pos.x << 14;
 	asteroid3->pos.y = asteroid3->pos.y << 14;
+	resetbgcolor();
 }
 
 
@@ -1148,6 +1150,7 @@ void update_medium_background(struct vector *p) {
 	}
 	p->x = p->x << 14;
 	p->y = p->y << 14;
+	resetbgcolor();
 }
 
 void update_large_background(struct vector *p) {
@@ -1272,6 +1275,7 @@ void update_large_background(struct vector *p) {
 	}
 	p->x = p->x << 14;
 	p->y = p->y << 14;
+	resetbgcolor();
 }
 
 void update_bullet(struct vector bullet) {

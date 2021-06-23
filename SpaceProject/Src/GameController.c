@@ -258,6 +258,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 								// Clear asteroid
 								clearAsteroid(&asteroid[i]);
+								if (asteroid[i].pos.y > 63) {
+									game_background();
+								}
 							}
 						}
 					}
@@ -279,6 +282,9 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 								// Clear asteroid
 								clearAsteroid(&asteroid[i]);
+								if (asteroid[i].pos.y > 63) {
+									game_background();
+								}
 							}
 						}
 
@@ -509,6 +515,7 @@ void clearAsteroid(struct asteroid *asteroidptr) {
 	} else {
 		clear_large_asteroid(asteroidptr);
 	}
+
 }
 
 void checkActivePowerUp(struct ship *shipptr) {
@@ -626,6 +633,9 @@ void checkCollisionWithBullet(struct bullet *bulletptr,
 
 					// Clear asteroid
 					clearAsteroid(asteroidptr);
+					if (asteroidptr->pos.y > 63) {
+						game_background();
+					}
 
 					// Every fifth asteroid destroyed, place powerup
 					if (settings->asteroidCount % 5 == 0) {
