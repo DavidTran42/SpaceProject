@@ -478,10 +478,13 @@ void drawBullets(struct ship ship, struct bullet *bulletptr,
 			gotoxy(bulletptr->pos.x >> 14, bulletptr->pos.y >> 14);
 			update_bullet(bulletptr->pos);
 			if (playerNumber == '1') {
-				printf("o");
+				newfgcolor(202);
+				printf("%c",220);
 			} else {
-				printf("-");
+				newfgcolor(201);
+				printf("%c",220);
 			}
+			newfgcolor(15);
 			resetbgcolor();
 
 			// For better collision detection
