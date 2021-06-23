@@ -213,13 +213,13 @@ void controllerMenu() {
 	printf("%c", 201);
 	repeat(205, 84);
 	printf("%c", 187);
-	for (int i = 22 + 1; i < 51 - 1; i++) {
+	for (int i = 22 + 1; i < 61 - 1; i++) {
 		gotoxy(20, i);
 		printf("%c", 186);
 		gotoxy(105, i);
 		printf("%c\n", 186);
 	}
-	gotoxy(20, 50);
+	gotoxy(20, 60);
 	printf("%c", 200);
 	repeat(205, 84);
 	printf("%c", 188);
@@ -292,18 +292,38 @@ void controllerMenu() {
 	gotoxy(41, 46);
 	printf("       SPACE  =  SHOOT    ");
 
+	//A
+	gotoxy(30, 51);
+	printf(" __  __ ");
+	gotoxy(30, 52);
+	printf("|  \\/  |");
+	gotoxy(30, 53);
+	printf("| |\\/| |  =  Go to Main Menu");
+	gotoxy(30, 54);
+	printf("|_|  |_|");
+
+	//B
+	gotoxy(72, 51);
+	printf(" ___ ");
+	gotoxy(72, 52);
+	printf("| _ )");
+	gotoxy(72, 53);
+	printf("| _ \\  =  Boss Key");
+	gotoxy(72, 54);
+	printf("|___/");
+
 	//Joystick box
 	gotoxy(165, 22);
 	printf("%c", 201);
 	repeat(205, 84);
 	printf("%c", 187);
-	for (int i = 22 + 1; i < 51 - 1; i++) {
+	for (int i = 22 + 1; i < 61 - 1; i++) {
 		gotoxy(165, i);
 		printf("%c", 186);
 		gotoxy(250, i);
 		printf("%c\n", 186);
 	}
-	gotoxy(165, 50);
+	gotoxy(165, 60);
 	printf("%c", 200);
 	repeat(205, 84);
 	printf("%c", 188);
@@ -362,7 +382,7 @@ void controllerMenu() {
 
 //RIGHT
 	gotoxy(224, 37);
-	printf("   \\");
+	printf("    \\");
 	gotoxy(224, 38);
 	printf("-----\\");
 	gotoxy(224, 39);
@@ -457,25 +477,29 @@ void howToPlayMenu() {
 	gotoxy(90, 30);
 	printf("The purpose of this game is to destroy all of the asteroids!");
 	gotoxy(90, 31);
-	printf("You will control the spaceship with either the keyboard or the joystick.");
+	printf(
+			"You will control the spaceship with either the keyboard or the joystick.");
 	gotoxy(90, 32);
-	printf("If You are playing multiplayer mode, player one is controlled by the keyboard");
+	printf(
+			"If You are playing multiplayer mode, player one is controlled by the keyboard");
 	gotoxy(90, 33);
 	printf("and player two is controlled by the joystick.");
 	gotoxy(90, 35);
-	printf("The players will receive points by shooting the moving asteroids, but be careful");
+	printf(
+			"The players will receive points by shooting the moving asteroids, but be careful");
 	gotoxy(90, 36);
 	printf("not to hit them with your vehicle!");
 	gotoxy(90, 37);
 	printf(
 			"Both players depending on game-mode will start the game with 3 lives each,");
 	gotoxy(90, 38);
-		printf("one life is lost when a collision with an asteroid is detected.");
+	printf("one life is lost when a collision with an asteroid is detected.");
 	gotoxy(90, 40);
 	printf(
 			"When a player have lost 3 lives, the player dies. If a player is remaining, they will continue.");
 	gotoxy(90, 42);
-	printf("Watch out! A black hole has been spotted on the map, your bullets might be affected by a force.");
+	printf(
+			"Watch out! A black hole has been spotted on the map, your bullets might be affected by a force.");
 	gotoxy(90, 43);
 	printf(
 			"Look for power-ups on the map to increase your chances of winning!");

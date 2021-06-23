@@ -176,6 +176,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			g++;
 			s++;
 
+
 			// Countdown for level change
 			if (s > 40 && settings.clock > 0) {
 				s = 0;
@@ -198,6 +199,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 						"Ship 2 (DoubleBullets): %04d, (RapidFire): %04d, (Fuel): %d  ",
 						ship2.db_time, ship2.rf_time, ship2.fuel);
 			}
+
 
 			// Update ship with no joystick/keypress
 			if (ship1.alive && (abs(ship1.vel.x) > 0 || abs(ship1.vel.y) > 0)) {
