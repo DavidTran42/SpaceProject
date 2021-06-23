@@ -1124,18 +1124,22 @@ void lcd_update(uint8_t buffer[512], uint8_t line, uint16_t borderWidth,
 
 void level_led(uint8_t gameLevel) {
 	//setUpTimer();
-	if (gameLevel == 1) {
+	if (gameLevel == 1) {  //difficulty 1, color green.
 		turnOff(GPIOA, 9);
 		turnOff(GPIOB, 4);
 		turnOn(GPIOC, 7);
 
-	} else if (gameLevel == 2) {
+	} else if (gameLevel == 2) { //difficulty 2, color yellow.
 		turnOff(GPIOA, 9);
 		turnOn(GPIOB, 4);
 		turnOn(GPIOC, 7);
 
-	} else if (gameLevel == 3) {
+	} else if (gameLevel == 3) { //difficulty 3, color red
 		turnOff(GPIOA, 9);
+		turnOff(GPIOC, 7);
+		turnOn(GPIOB, 4);
+	} else if (gameLevel == 4) { //difficulty 4, color purple
+		turnOn(GPIOA, 9);
 		turnOff(GPIOC, 7);
 		turnOn(GPIOB, 4);
 	}
