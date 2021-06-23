@@ -72,6 +72,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 		ship2.alive = true;
 		ship2.bulletSpeed = 2;
 	}
+
 	struct asteroid asteroid[10] = { 0 };
 	struct bullet bullet1[10] = { 0 }, bullet2[10] = { 0 };
 	struct joystick controls; // For joystick support
@@ -253,7 +254,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								asteroid[i].alive = 0;
 								//update lcd
 
-								checkLives(&ship1, &ship2, buffer, '1',
+								loseHearts(&ship1, &ship2, buffer, '1',
 										borderWidth, borderHeight, gameMode,
 										&settings);
 
@@ -274,7 +275,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 									asteroid[i])) {
 								asteroid[i].alive = 0;
 
-								checkLives(&ship2, &ship1, buffer, '2',
+								loseHearts(&ship2, &ship1, buffer, '2',
 										borderWidth, borderHeight, gameMode,
 										&settings);
 
@@ -327,9 +328,11 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								}
 
 								// Both ships will lose heart
-								ship1.hearts--;
+								loseHearts(&ship1, &ship2, buffer, '1', borderWidth,
+										borderHeight, gameMode, &settings);
 								if (gameMode == 2) {
-									ship2.hearts--;
+									loseHearts(&ship2, &ship1, buffer, '2', borderWidth,
+																borderHeight, gameMode, &settings);
 								}
 							}
 
@@ -344,13 +347,13 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			// Check collision with ship 1
 			if (ship1.alive) {
-				checkCollisionWithPowerUp(&ship1, &powerups[0]);
+				checkCollisionWithPowerUp(&ship1, &powerups[0], buffer, '1');
 				checkActivePowerUp(&ship1);
 			}
 
 			// Check collision with ship 2
 			if (gameMode == 2 && ship2.alive) {
-				checkCollisionWithPowerUp(&ship2, &powerups[0]);
+				checkCollisionWithPowerUp(&ship2, &powerups[0], buffer, '2');
 				checkActivePowerUp(&ship2);
 			}
 
@@ -364,10 +367,28 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			checkLevelGameUp(&settings);
 		}
 	}
-
 }
 
-void checkLives(struct ship *shipptr, struct ship *shipptr2,
+void gainHearts(struct ship *shipptr, uint8_t buffer[512], char playerNumber) {
+	if (shipptr->hearts < 3) {
+		shipptr->hearts++;
+	}
+	if (shipptr->hearts == 3) {
+		if (playerNumber == '1') {
+			lcd_write_string(buffer, "P1 HP: ***", 1);
+		} else {
+			lcd_write_string2(buffer, "P2 HP: ***", 1);
+		}
+	} else {
+		if (playerNumber == '1') {
+			lcd_write_string(buffer, "P1 HP: ** ", 1);
+		} else {
+			lcd_write_string2(buffer, "P2 HP: ** ", 1);
+		}
+	}
+}
+
+void loseHearts(struct ship *shipptr, struct ship *shipptr2,
 		uint8_t buffer[512], char playerNumber, uint16_t borderWidth,
 		uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p) {
 	if (shipptr->hearts == 3) {
@@ -505,7 +526,7 @@ void checkActivePowerUp(struct ship *shipptr) {
 	}
 }
 
-void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
+void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr, uint8_t buffer[512], char playerNumber) {
 	uint8_t wide = 7, height = 3;
 
 	for (int i = 0; i < 4; i++, powerptr++) {
@@ -522,9 +543,7 @@ void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr) {
 					shipptr->powered_up = true;
 				} else if (powerptr->moreHearts) {
 					// No more hearts if higher or equal 3 hearts
-					if (shipptr->hearts < 3) {
-						shipptr->hearts += 1;
-					}
+					gainHearts(shipptr,buffer, playerNumber);
 					powerptr->moreHearts = false;
 				} else if (powerptr->rapidFire) {
 					shipptr->bulletSpeed = 1;
