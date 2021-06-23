@@ -20,5 +20,4 @@ int main(void) {
 	//lcd_update(buffer, 1);
 	while (1) {
 	}
-
 }

@@ -36,11 +36,11 @@ struct bullet{
 
 struct powers {
 	struct vector pos;
-	bool rapidFire, onField, doubleBullets, moreHearts;
+	bool rapidFire, onField, doubleBullets, moreHearts, refill;
 };
 
 struct gameSettings {
-	uint8_t gameLevel, amountOfAsteroids, asteroidSpeed, gameLoop, asteroidCount;
+	uint8_t gameLevel, amountOfAsteroids, asteroidSpeed, gameLoop, clock, asteroidCount;
 };
 
 
@@ -70,12 +70,13 @@ void update_bullet(struct vector bullet);
 bool checkCollisionWithAsteroid(struct ship ship, struct asteroid asteroid);
 bool checkHit(struct bullet bullet, struct asteroid asteroid);
 void updatingShip(struct ship *shipptr, uint16_t borderWidth, uint16_t borderHeight, int32_t acc);
-void setRandomPowerUp(uint8_t buff, struct powers *powerups, uint16_t width, uint16_t height);
+void setPowerUp(uint8_t buff, struct powers *powerups, struct asteroid asteroid);
 void blackHole(int32_t a, int32_t b);
+void drawPowerUps(struct powers *powerup);
 void checkCollisionWithPowerUp(struct ship *shipptr, struct powers *powerptr);
 void clearAsteroid(struct asteroid *asteroidptr);
 void checkLevelGameUp(struct gameSettings *settings);
-void checkCollisionWithBullet(struct bullet *bulletptr, struct asteroid *asteroid, struct ship *shipptr, char s_score[], uint8_t buffer[512]);
+void checkCollisionWithBullet(struct bullet *bulletptr, struct asteroid *asteroid, struct ship *shipptr, char s_score[], uint8_t buffer[512], struct gameSettings *settings, struct powers *powerptr);
 void checkActivePowerUp(struct ship *shipptr);
 void drawBullets(struct ship ship, struct bullet *bulletptr, uint16_t borderWidth, uint16_t borderHeight, uint16_t s, char playerNumber);
 void checkLives(struct ship *shipptr, struct ship *shipptr2, uint8_t buffer[512], char playerNumber, uint16_t borderWidth, uint16_t borderHeight, uint8_t gameMode, struct gameSettings *p);
