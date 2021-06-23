@@ -784,7 +784,7 @@ void updatingShip(struct ship *shipptr, uint16_t borderWidth,
 	}
 
 	if (abs(shipptr->vel.x) > acc || abs(shipptr->vel.y > acc)) {
-		print_flames(shipptr);
+		print_flames(*shipptr);
 	}
 }
 

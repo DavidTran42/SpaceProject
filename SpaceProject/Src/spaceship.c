@@ -95,9 +95,9 @@ void print_ship2(struct ship position) {
 
 }
 
-void print_flames(struct ship *position) {
-	int32_t x = (position->pos.x >> 14);
-	int32_t y = (position->pos.y >> 14);
+void print_flames(struct ship position) {
+	int32_t x = position.pos.x >> 14;
+	int32_t y = position.pos.y >> 14;
 	gotoxy(x - 6, y + 1);
 	fgcolor(3);
 	printf("%c", 219);
