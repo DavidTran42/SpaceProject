@@ -31,12 +31,6 @@ void blink(uint8_t on);
 void inverse(uint8_t on);
 void repeat(int c, int count);
 
-int64_t expand(int64_t i);
-int32_t calcSin(int32_t i);
-int32_t calcCos(int32_t i);
-void printFix(int32_t i);
-int32_t expand2(int32_t i);
-
 void turnOn(GPIO_TypeDef *pin, uint32_t pinnum);
 void turnOff(GPIO_TypeDef *pin, uint32_t pinnum);
 

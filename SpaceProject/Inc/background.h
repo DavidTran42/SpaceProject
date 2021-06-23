@@ -22,7 +22,8 @@ void small_asteroid(struct asteroid *asteroid1);
 void clear_large_asteroid(struct asteroid *asteroid3);
 void clear_medium_asteroid(struct asteroid *asteroid2);
 void clear_small_asteroid(struct asteroid *asteroid1);
-
+void newbgcolor(uint8_t background);
+void newfgcolor(uint8_t forground);
 void update_pixels_ship(struct ship *p);
 void update_bullet(struct vector bullet);
 void update_large_background(struct asteroid *p);

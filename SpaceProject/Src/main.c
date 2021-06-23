@@ -1,5 +1,4 @@
-#include "stm32f30x_conf.h" // STM32 config
-#include "30010_io.h" 	// Input/output library for this course
+#include "mainMenu.h"
 #include "main.h"
 
 #define ESC 0x1B
@@ -9,15 +8,14 @@
 #define HELP 3;
 
 int main(void) {
+	// Initialize UART and LCD
 	uart_init(2000000);
 	clrscr();
 	lcd_init();
-	//test();
 
+	// Show main menu
 	mainMenu();
 
-
-	//lcd_update(buffer, 1);
 	while (1) {
 	}
 }
