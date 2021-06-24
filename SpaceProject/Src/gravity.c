@@ -1,8 +1,8 @@
+#include <sqrt.h>
 #include "ansi.h"
 #include "GameController.h"
 #include "main.h"
 #include "math.h"
-#include "fpsqrt.h"
 
 
 #define FIX14_SHIFT 14
