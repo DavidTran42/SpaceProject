@@ -29,3 +29,8 @@ void lcd_push_buffer(uint8_t* buffer);
 void lcd_reset();
 
 #endif /* _30010_IO_H_ */
+
+void lcd_write_string(uint8_t buffer[512], char *slice, uint8_t line);
+void lcd_write_string2(uint8_t buffer[512], char *slice, uint8_t line);
+void turnOn(GPIO_TypeDef *pin, uint32_t pinnum);
+void turnOff(GPIO_TypeDef *pin, uint32_t pinnum);
