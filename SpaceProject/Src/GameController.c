@@ -1,10 +1,11 @@
-#include "GameController.h"
-#include <time.h>
 #include "30010_io.h"
-#define ESC 0x1B
 #include "spaceship.h"
 #include "ansi.h"
 #include "background.h"
+#include "GameController.h"
+#include <time.h>
+#define PLAYER1 '1'
+#define PLAYER2 '2'
 
 //////////////////////// CLOCK & TIMER //////////////////////////
 
@@ -241,10 +242,10 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 			}
 
 			// Draw the bullets from all ships
-			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, '1');
+			drawBullets(ship1, &bullet1[0], borderWidth, borderHeight, s, PLAYER1);
 			if (gameMode == 2) {
 				drawBullets(ship2, &bullet2[0], borderWidth, borderHeight, s,
-						'2');
+						PLAYER2);
 			}
 
 			// Draw the power-ups on the game field
@@ -266,7 +267,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								asteroid[i].alive = 0;
 
 								// Ship loses health if hit
-								loseHearts(&ship1, &ship2, buffer, '1',
+								loseHearts(&ship1, &ship2, buffer, PLAYER1,
 										borderWidth, borderHeight, gameMode,
 										&settings);
 
@@ -291,7 +292,7 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 								asteroid[i].alive = 0;
 
 								// Ship loses health if hit
-								loseHearts(&ship2, &ship1, buffer, '2',
+								loseHearts(&ship2, &ship1, buffer, PLAYER2,
 										borderWidth, borderHeight, gameMode,
 										&settings);
 
@@ -346,11 +347,11 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 								// Both ships will lose heart when asteroid makes it
 								// to the other side
-								loseHearts(&ship1, &ship2, buffer, '1',
+								loseHearts(&ship1, &ship2, buffer, PLAYER1,
 										borderWidth, borderHeight, gameMode,
 										&settings);
 								if (gameMode == 2) {
-									loseHearts(&ship2, &ship1, buffer, '2',
+									loseHearts(&ship2, &ship1, buffer, PLAYER2,
 											borderWidth, borderHeight, gameMode,
 											&settings);
 								}
@@ -362,12 +363,12 @@ void initGame(uint16_t borderWidth, uint16_t borderHeight, int gameMode) {
 
 			// Check collision with ships against power up and check active power ups
 			if (ship1.alive) {
-				checkCollisionWithPowerUp(&ship1, &powerups[0], buffer, '1');
+				checkCollisionWithPowerUp(&ship1, &powerups[0], buffer, PLAYER1);
 				checkActivePowerUp(&ship1);
 			}
 
 			if (gameMode == 2 && ship2.alive) {
-				checkCollisionWithPowerUp(&ship2, &powerups[0], buffer, '2');
+				checkCollisionWithPowerUp(&ship2, &powerups[0], buffer, PLAYER2);
 				checkActivePowerUp(&ship2);
 			}
 
@@ -771,6 +772,47 @@ void updateShipPos(char input, struct ship *shipptr, uint16_t borderWidth,
 	}
 }
 
+struct joystick addJoystick() {
+	// Joystick
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOB; // Enable clock for GPIO Port B
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
+
+	GPIOC->MODER &= ~(0x00000003 << (0 * 2)); // Clear mode register
+	GPIOC->MODER |= (0x00000000 << (0 * 2)); // Set mode register (0x00 –
+	GPIOC->PUPDR &= ~(0x00000003 << (0 * 2)); // Clear push/pull register
+	GPIOC->PUPDR |= (0x00000002 << (0 * 2)); // Set push/pull register (0x00 -
+	uint16_t right = GPIOC->IDR & (0x0001 << 0); //Read from pin PC0
+
+	GPIOA->MODER &= ~(0x00000003 << (4 * 2)); // Clear mode register
+	GPIOA->MODER |= (0x00000000 << (4 * 2)); // Set mode register (0x00 –
+	GPIOA->PUPDR &= ~(0x00000003 << (4 * 2)); // Clear push/pull register
+	GPIOA->PUPDR |= (0x00000002 << (4 * 2)); // Set push/pull register (0x00 -
+	uint16_t up = GPIOA->IDR & (0x0001 << 4); //Read from pin PA4
+
+	GPIOB->MODER &= ~(0x00000003 << (5 * 2)); // Clear mode register
+	GPIOB->MODER |= (0x00000000 << (5 * 2)); // Set mode register (0x00 –
+	GPIOB->PUPDR &= ~(0x00000003 << (5 * 2)); // Clear push/pull register
+	GPIOB->PUPDR |= (0x00000002 << (5 * 2)); // Set push/pull register (0x00 -
+	uint16_t center = GPIOB->IDR & (0x0001 << 5); //Read from pin PB5
+
+	GPIOC->MODER &= ~(0x00000003 << (1 * 2)); // Clear mode register
+	GPIOC->MODER |= (0x00000000 << (1 * 2)); // Set mode register (0x00 –
+	GPIOC->PUPDR &= ~(0x00000003 << (1 * 2)); // Clear push/pull register
+	GPIOC->PUPDR |= (0x00000002 << (1 * 2)); // Set push/pull register (0x00 -
+	uint16_t left = GPIOC->IDR & (0x0001 << 1); //Read from pin PC5
+
+	GPIOB->MODER &= ~(0x00000003 << (0 * 2)); // Clear mode register
+	GPIOB->MODER |= (0x00000000 << (0 * 2)); // Set mode register (0x00 –
+	GPIOB->PUPDR &= ~(0x00000003 << (0 * 2)); // Clear push/pull register
+	GPIOB->PUPDR |= (0x00000002 << (0 * 2)); // Set push/pull register (0x00 -
+	uint16_t down = GPIOB->IDR & (0x0001 << 0); //Read from pin PA4
+
+	struct joystick controls = { left, right, up, down, center };
+
+	return controls;
+}
+
 void updateShip2Pos(struct ship *shipptr, struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight) {
 // Player/ship 2 controls
@@ -858,47 +900,6 @@ void initializeShips(int gameMode, struct ship *shipptr, struct ship *shipptr2,
 	} else { // Singleplayer
 		shipptr->pos.x = 10 << 14, shipptr->pos.y = (borderHeight / 2) << 14;
 	}
-}
-
-struct joystick addJoystick() {
-	// Joystick
-	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
-	RCC->AHBENR |= RCC_AHBPeriph_GPIOB; // Enable clock for GPIO Port B
-	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
-
-	GPIOC->MODER &= ~(0x00000003 << (0 * 2)); // Clear mode register
-	GPIOC->MODER |= (0x00000000 << (0 * 2)); // Set mode register (0x00 –
-	GPIOC->PUPDR &= ~(0x00000003 << (0 * 2)); // Clear push/pull register
-	GPIOC->PUPDR |= (0x00000002 << (0 * 2)); // Set push/pull register (0x00 -
-	uint16_t right = GPIOC->IDR & (0x0001 << 0); //Read from pin PC0
-
-	GPIOA->MODER &= ~(0x00000003 << (4 * 2)); // Clear mode register
-	GPIOA->MODER |= (0x00000000 << (4 * 2)); // Set mode register (0x00 –
-	GPIOA->PUPDR &= ~(0x00000003 << (4 * 2)); // Clear push/pull register
-	GPIOA->PUPDR |= (0x00000002 << (4 * 2)); // Set push/pull register (0x00 -
-	uint16_t up = GPIOA->IDR & (0x0001 << 4); //Read from pin PA4
-
-	GPIOB->MODER &= ~(0x00000003 << (5 * 2)); // Clear mode register
-	GPIOB->MODER |= (0x00000000 << (5 * 2)); // Set mode register (0x00 –
-	GPIOB->PUPDR &= ~(0x00000003 << (5 * 2)); // Clear push/pull register
-	GPIOB->PUPDR |= (0x00000002 << (5 * 2)); // Set push/pull register (0x00 -
-	uint16_t center = GPIOB->IDR & (0x0001 << 5); //Read from pin PB5
-
-	GPIOC->MODER &= ~(0x00000003 << (1 * 2)); // Clear mode register
-	GPIOC->MODER |= (0x00000000 << (1 * 2)); // Set mode register (0x00 –
-	GPIOC->PUPDR &= ~(0x00000003 << (1 * 2)); // Clear push/pull register
-	GPIOC->PUPDR |= (0x00000002 << (1 * 2)); // Set push/pull register (0x00 -
-	uint16_t left = GPIOC->IDR & (0x0001 << 1); //Read from pin PC5
-
-	GPIOB->MODER &= ~(0x00000003 << (0 * 2)); // Clear mode register
-	GPIOB->MODER |= (0x00000000 << (0 * 2)); // Set mode register (0x00 –
-	GPIOB->PUPDR &= ~(0x00000003 << (0 * 2)); // Clear push/pull register
-	GPIOB->PUPDR |= (0x00000002 << (0 * 2)); // Set push/pull register (0x00 -
-	uint16_t down = GPIOB->IDR & (0x0001 << 0); //Read from pin PA4
-
-	struct joystick controls = { left, right, up, down, center };
-
-	return controls;
 }
 
 void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
