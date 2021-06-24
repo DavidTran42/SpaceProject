@@ -4,12 +4,6 @@
  *  Created on: 11 Jun 2021
  *      Author: silas
  */
-#define ESC 0x1B
-#include "ansi.h"
-#include "30010_io.h"
-#include "GameController.h"
-#include "background.h"
-#include "help.h"
 #include "mainMenu.h"
 
 void repeat(int c, int count) {
@@ -232,7 +226,7 @@ void optionsSelect() {
 	RCC->APB1ENR |= RCC_APB1Periph_TIM2; // Enable clock line to timer 2;
 	enableTimer();
 	TIM2->ARR = 639999; // Set reload value for 64x10^3 HZ - 1 (1/100 second)
-	TIM2->PSC = 0; // prescale value
+	TIM2->PSC = 0; // Prescale value
 	TIM2->DIER |= 0x0001; // Enable timer 2 interrupts
 
 	NVIC_SetPriority(TIM2_IRQn, 0); // Can be from 0-15
@@ -244,7 +238,7 @@ void optionsSelect() {
 
 	while (1) {
 
-		while (i == 1) { // blinker singleplayer menu
+		while (i == 1) { // Blinker single-player menu
 
 			if (timer.sec100 == 1) {
 				inverse(1);
@@ -281,7 +275,7 @@ void optionsSelect() {
 			}
 		}
 
-		while (i == 2) { // blinker multiplayermenu
+		while (i == 2) { // Blinker multi-player menu
 			if (timer.sec100 == 1) {
 				inverse(1);
 				multiplayerMenu();
@@ -316,7 +310,7 @@ void optionsSelect() {
 				}
 			}
 		}
-		while (i == 3) { // blinker Help
+		while (i == 3) { // Blinker help
 			if (timer.sec100 == 1) {
 				inverse(1);
 				helpMenu();
@@ -354,7 +348,7 @@ void optionsSelect() {
 			}
 		}
 
-		while (i == 4) { // blinker Quit game
+		while (i == 4) { // Blinker quit game
 			if (timer.sec100 == 1) {
 				inverse(1);
 				quitGameMenu();
@@ -395,7 +389,7 @@ void optionsSelect() {
 
 void mainMenu() {
 	resetbgcolor();
-	printf("%c[?25l", ESC); //hiding curser
+	printf("%c[?25l", ESC); // Hiding cursor
 
 	clrscr();
 

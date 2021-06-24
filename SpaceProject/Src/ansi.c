@@ -47,8 +47,6 @@ void bgcolor(uint8_t background) {
 	printf("%c[%dm", ESC, background + 40);
 }
 
-
-
 void color(uint8_t foreground, uint8_t background) {
 // combination of fgcolor() and bgcolor() - uses less bandwidth
 	uint8_t type = 22;             // normal text
@@ -124,51 +122,6 @@ void lcd_write_string2(uint8_t buffer[512], char *slice, uint8_t line) {
 	}
 	lcd_push_buffer(buffer);
 }
-int64_t expand(int64_t i) {
-	// Converts an 18.14 fixed point number to 16.16
-	return i << 2;
-}
-
-int32_t calcSin(int32_t i) {
-	i = (i * 512) / 360;
-	if (i < 0) {
-		int temp_i = -i;
-	return -expand(SIN[temp_i]);
-	} else if (i > 512) {
-		i = i % 512;
-	}
-	return expand(SIN[i]);
-}
-
-int32_t calcCos(int32_t i) {
-	i += 90;
-	return calcSin(i);
-}
-
-
-
-void printFix(int32_t i) {
-	// Prints a signed 16.16 fixed point number
-	if ((i & 0x80000000) != 0) { // Handle negative numbers
-		printf("-");
-		i = ~i + 1;
-	}
-	printf("%ld.%04ld", i >> 16, 10000 * (uint32_t) (i & 0xFFFF) >> 16);
-	// Print a maximum of 4 decimal digits to avoid overflow
-}
-/*int32_t expand2(int32_t i){
-
-}
-
-
-
-
-void rotateVector(struct vector *v, int32_t degree) {
-	int32_t tempX;
-	tempX = v->x * calcCos(degree) - v->y * calcSin(degree);
-	v->y = v->x * calcSin(degree) + v->y * calcCos(degree);
-	v->x = tempX;
-}*/
 
 void turnOn(GPIO_TypeDef *pin, uint32_t pinnum) {
 	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A

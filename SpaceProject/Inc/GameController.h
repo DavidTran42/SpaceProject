@@ -59,7 +59,7 @@ void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
 void makeBullet2(struct joystick controls, struct bullet *bulletptr, struct ship ship,
 		int bListSize);
 void bosskey(char input);
-
+void drawAsteroid(struct asteroid *asteroidptr);
 void updateShip2Pos(struct ship *shipptr,struct joystick controls,
 		uint16_t borderWidth, uint16_t borderHeight);
 void init_pixels();

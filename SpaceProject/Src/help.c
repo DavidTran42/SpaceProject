@@ -32,7 +32,7 @@ void helpSelect() {
 
 	while (1) {
 
-		while (i == 1) { // blinker controller menu
+		while (i == 1) { // Blinker controller menu
 
 			if (timer.sec100 == 1) {
 				inverse(1);
@@ -68,7 +68,7 @@ void helpSelect() {
 			}
 		}
 
-		while (i == 2) { // blinker Help Option
+		while (i == 2) { // Blinker help option
 			if (timer.sec100 == 1) {
 				inverse(1);
 				howToPlayOption();
@@ -102,7 +102,7 @@ void helpSelect() {
 				}
 			}
 		}
-		while (i == 3) { // blinker about us
+		while (i == 3) { // Blinker about us
 			if (timer.sec100 == 1) {
 				inverse(1);
 				aboutUsOption();
@@ -138,7 +138,7 @@ void helpSelect() {
 			}
 		}
 
-		while (i == 4) { // blinker back
+		while (i == 4) { // Blinker back option
 			if (timer.sec100 == 1) {
 				inverse(1);
 				backOption();
