@@ -16,7 +16,7 @@
 
 struct joystick {
 	uint16_t left, right, up, down, center;
-} controls;
+};
 
 struct clockTimer {
 	volatile uint8_t hour, min, sec, sec100;
@@ -52,6 +52,7 @@ void setUpTimer();
 void enableTimer();
 void disableTimer();
 void level_led(uint8_t gameLevel);
+void gameover_led();
 void rotateVector(struct vector *v, int32_t degree);
 void makeAsteroid(struct asteroid *asteroidptr, uint16_t borderWidth, uint16_t borderHeight, uint8_t aListSize, uint8_t type, uint8_t r);
 void makeBullet1(char input, struct bullet *bulletptr, struct ship ship,
