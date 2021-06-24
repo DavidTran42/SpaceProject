@@ -1,4 +1,5 @@
 #include "30010_io.h"
+#include "charset.h"
 
 /****************************/
 /*** USB Serial Functions ***/
@@ -284,4 +285,58 @@ void lcd_init() {
     SPI2->CR1 |= 0x0040; // Enable SPI2
 
     lcd_reset();
+}
+
+void lcd_write_string(uint8_t buffer[512], char *slice, uint8_t line) {
+
+	uint8_t location = 0;
+
+	for (int i = 0; i < strlen(slice); i++) {
+		for (int j = 0; j < 5; j++) {
+			buffer[location + j + (line - 1) * 128] = character_data[slice[i] - 32][j];
+		}
+		location += 5;
+	}
+	lcd_push_buffer(buffer);
+}
+
+void lcd_write_string2(uint8_t buffer[512], char *slice, uint8_t line) {
+
+	uint8_t location = 65;
+
+	for (int i = 0; i < strlen(slice); i++) {
+		for (int j = 0; j < 5; j++) {
+			buffer[location + j + (line - 1) * 128] = character_data[slice[i] - 32][j];
+		}
+		location += 5;
+	}
+	lcd_push_buffer(buffer);
+}
+
+void turnOn(GPIO_TypeDef *pin, uint32_t pinnum) {
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOA; // Enable clock for GPIO Port A
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOB; // Enable clock for GPIO Port B
+	RCC->AHBENR |= RCC_AHBPeriph_GPIOC; // Enable clock for GPIO Port C
+
+	pin->OSPEEDR &= ~(0x00000003 << (pinnum * 2)); // Clear speed register
+	pin->OSPEEDR |= (0x00000002 << (pinnum * 2)); // set speed register (0x01 - 10
+	pin->OTYPER &= ~(0x0001 << (pinnum * 1)); // Clear output type register
+	pin->OTYPER |= (0x0000 << (pinnum)); // Set output type register (0x00 -
+	pin->MODER &= ~(0x00000003 << (pinnum * 2)); // Clear mode register
+	pin->MODER |= (0x00000001 << (pinnum * 2)); // Set mode register (0x00 –
+
+	pin->ODR &= ~(0x0001 << pinnum); //Set pin to low (turned on)
+
+}
+
+void turnOff(GPIO_TypeDef *pin, uint32_t pinnum) {
+
+	pin->OSPEEDR &= ~(0x00000003 << (pinnum * 2)); // Clear speed register
+	pin->OSPEEDR |= (0x00000002 << (pinnum * 2)); // set speed register (0x01 - 10
+	pin->OTYPER &= ~(0x0001 << (pinnum * 1)); // Clear output type register
+	pin->OTYPER |= (0x0000 << (pinnum)); // Set output type register (0x00 -
+	pin->MODER &= ~(0x00000003 << (pinnum * 2)); // Clear mode register
+	pin->MODER |= (0x00000001 << (pinnum * 2)); // Set mode register (0x00 –
+
+	pin->ODR |= (0x0001 << pinnum); //Set pin to high (turned off)
 }
